@@ -673,7 +673,74 @@
   - Currency mismatch and non-positive amount rejection verified.
   - Automatic invoice settlement and `PaymentProviderEvent` persistence verified.
 - **Next Step:**
-  - Section 14: SMS and Notification System.
+  - Section 14: SMS and Notification System (COMPLETED).
+
+---
+
+### Milestone Log: Section 14 — SMS and Notification System
+
+- **Completed Work:**
+  - Provider-neutral SMS foundation in shared package:
+    - `packages/shared/src/sms.interface.ts`: `SmsAdapter`, `SmsSendRequest`, `SmsSendResult`, standard Bangladeshi mobile normalization and validation (`normalizePhoneNumber`, `isValidBdPhoneNumber`), and safe variable template rendering (`renderNotificationTemplate`).
+    - `packages/shared/src/mock-sms-adapter.ts`: In-memory test and local development adapter with configurable failure simulation.
+    - `packages/shared/src/sms.test.ts`: Unit tests verifying BD phone normalization, template variable substitution, and mock provider dispatch (4/4 tests passed).
+  - Implemented backend notification service & management API:
+    - `apps/api/src/notifications/notifications.dto.ts`: DTOs for direct SMS dispatch, template SMS dispatch, and template configuration.
+    - `apps/api/src/notifications/notifications.service.ts`:
+      - Automated seeding of default templates (`INVOICE_ISSUED`, `PAYMENT_RECEIVED`, `DUE_REMINDER`, `SUSPENSION_WARNING`, `SERVICE_SUSPENDED`, `SERVICE_RESTORED`).
+      - Safe variable rendering with alias support (`name` <-> `subscriberName`, `paymentNumber` <-> `transactionReference`).
+      - Graceful handling of disabled templates without blocking billing or payment operations.
+      - Asynchronous message job queuing in `NotificationJob` table with status tracking (`QUEUED`, `DELIVERED`, `FAILED`).
+      - Provider error handling, attempt counter, and manual retry mechanism (`retryJob`).
+    - `apps/api/src/notifications/notifications.controller.ts`: Role-guarded endpoints (`/notifications/templates`, `/notifications/templates/:type`, `/notifications/logs`, `/notifications/send`, `/notifications/logs/:id/retry`).
+    - `apps/api/src/notifications/notifications.module.ts`: Modular NestJS provider module registered in `AppModule`.
+    - Integration tests in `apps/api/src/notifications/notifications.test.ts` (5/5 tests passed).
+  - Implemented modular frontend components with monochrome rounded-2xl design:
+    - `apps/web/src/components/notifications/notifications.types.ts`: Notification logs and template item models.
+    - `apps/web/src/components/notifications/NotificationStatsCards.tsx`: Sleek monochrome KPI cards displaying Total Messages, Delivery Rate, Delivery Failures, and Active Templates.
+    - `apps/web/src/components/notifications/NotificationLogsTable.tsx`: DataTable rendering recipient, message snippet, status badges, attempt counts, and manual Retry action.
+    - `apps/web/src/components/notifications/NotificationTemplatesList.tsx`: Grid of template cards with status indicators, template snippets, and configure triggers.
+    - `apps/web/src/components/notifications/TemplateEditorModal.tsx`: Modal for editing template body with click-to-insert dynamic variables tags, sample client SMS preview, and enable/disable toggle.
+    - `apps/web/src/components/notifications/SendSmsModal.tsx`: Direct manual SMS composer with phone number validation and live character/segment counter.
+    - `apps/web/src/app/dashboard/notifications/page.tsx`: Full tabbed dashboard page integrating logs and templates with search filtering.
+  - Verification & testing:
+    - `pnpm test` passed across all packages (103/103 tests passed across monorepo).
+    - `pnpm --filter @mikrotik-billing/web build` passed with exit code 0 (17/17 static pages generated).
+    - Verified HTTP 200 on `/dashboard/notifications`.
+- **Files Changed:**
+  - `packages/shared/src/sms.interface.ts`
+  - `packages/shared/src/mock-sms-adapter.ts`
+  - `packages/shared/src/sms.test.ts`
+  - `packages/shared/src/index.ts`
+  - `apps/api/src/notifications/notifications.dto.ts`
+  - `apps/api/src/notifications/notifications.service.ts`
+  - `apps/api/src/notifications/notifications.controller.ts`
+  - `apps/api/src/notifications/notifications.module.ts`
+  - `apps/api/src/notifications/notifications.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/notifications/notifications.types.ts`
+  - `apps/web/src/components/notifications/NotificationStatsCards.tsx`
+  - `apps/web/src/components/notifications/NotificationLogsTable.tsx`
+  - `apps/web/src/components/notifications/NotificationTemplatesList.tsx`
+  - `apps/web/src/components/notifications/TemplateEditorModal.tsx`
+  - `apps/web/src/components/notifications/SendSmsModal.tsx`
+  - `apps/web/src/app/dashboard/notifications/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/shared test` (26/26 tests passed)
+  - `pnpm --filter @mikrotik-billing/api test -- apps/api/src/notifications/notifications.test.ts` (5/5 tests passed)
+  - `pnpm test` (All 103 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web build` (All 17 static routes compiled with code 0)
+  - `curl -I http://localhost:3000/dashboard/notifications` (HTTP 200 OK)
+- **Tests & Verification:**
+  - BD phone normalization and validation verified.
+  - Safe variable rendering with alias support verified.
+  - Skipping disabled templates safely verified.
+  - Provider failure isolation and manual retry verified.
+  - Automated tests guarantee zero real SMS network requests.
+- **Next Step:**
+  - Section 15: Automated Billing and Service Lifecycle (Suspensions & Restorations).
+
 
 
 
