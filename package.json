@@ -1,0 +1,24 @@
+{
+  "name": "mikrotik-billing-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multi-tenant MikroTik ISP billing and network management platform",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "clean": "pnpm -r exec rimraf dist .turbo .next coverage"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

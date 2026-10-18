@@ -1,0 +1,7 @@
+node_modules
+dist
+build
+.next
+coverage
+mikrotik-isp-platform-ai-build-plan.md
+pnpm-lock.yaml
