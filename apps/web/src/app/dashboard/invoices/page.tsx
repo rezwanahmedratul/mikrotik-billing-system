@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   Calendar,
   ExternalLink,
+  Globe,
 } from 'lucide-react';
 import { AppShell } from '@/components/layout/AppShell';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -24,6 +25,7 @@ import { InvoiceStatsCards } from '@/components/billing/InvoiceStatsCards';
 import { InvoiceFiltersBar } from '@/components/billing/InvoiceFiltersBar';
 import { RecordPaymentModal } from '@/components/billing/RecordPaymentModal';
 import { InvoiceReceiptModal } from '@/components/billing/InvoiceReceiptModal';
+import { OnlinePaymentModal } from '@/components/billing/OnlinePaymentModal';
 
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
@@ -38,6 +40,7 @@ export default function InvoicesPage() {
   // Modals
   const [selectedInvoiceForReceipt, setSelectedInvoiceForReceipt] = useState<InvoiceItem | null>(null);
   const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState<InvoiceItem | null>(null);
+  const [selectedInvoiceForOnlinePay, setSelectedInvoiceForOnlinePay] = useState<InvoiceItem | null>(null);
   const [invoiceToVoid, setInvoiceToVoid] = useState<InvoiceItem | null>(null);
   const [isVoiding, setIsVoiding] = useState(false);
 
@@ -339,14 +342,24 @@ export default function InvoicesPage() {
                 </button>
 
                 {inv.balanceMinor > 0 && inv.status !== 'VOID' && (
-                  <button
-                    onClick={() => setSelectedInvoiceForPayment(inv)}
-                    className="px-2.5 py-1 text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-lg transition-colors flex items-center gap-1 shadow-xs"
-                    title="Record payment"
-                  >
-                    <CreditCard className="w-3 h-3" />
-                    <span>Pay</span>
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setSelectedInvoiceForOnlinePay(inv)}
+                      className="px-2 py-1 text-xs font-medium text-neutral-800 hover:text-black bg-neutral-100 hover:bg-neutral-200 rounded-lg transition-colors flex items-center gap-1"
+                      title="Pay via Online Gateway (bKash/Nagad/Cards)"
+                    >
+                      <Globe className="w-3 h-3" />
+                      <span>Online</span>
+                    </button>
+                    <button
+                      onClick={() => setSelectedInvoiceForPayment(inv)}
+                      className="px-2.5 py-1 text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-lg transition-colors flex items-center gap-1 shadow-xs"
+                      title="Record payment"
+                    >
+                      <CreditCard className="w-3 h-3" />
+                      <span>Pay</span>
+                    </button>
+                  </>
                 )}
 
                 {inv.paidAmountMinor === 0 && inv.status !== 'VOID' && (
@@ -382,6 +395,18 @@ export default function InvoicesPage() {
         isOpen={!!selectedInvoiceForReceipt}
         onClose={() => setSelectedInvoiceForReceipt(null)}
         invoice={selectedInvoiceForReceipt}
+      />
+
+      {/* Online Gateway Payment Modal */}
+      <OnlinePaymentModal
+        isOpen={!!selectedInvoiceForOnlinePay}
+        onClose={() => setSelectedInvoiceForOnlinePay(null)}
+        invoice={selectedInvoiceForOnlinePay}
+        onPaymentSuccess={(msg) => {
+          setSuccessMessage(msg);
+          setTimeout(() => setSuccessMessage(''), 5000);
+          loadInvoices();
+        }}
       />
 
       {/* Void Invoice Confirmation */}

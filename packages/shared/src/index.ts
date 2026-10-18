@@ -234,4 +234,6 @@ export * from './router-adapter';
 export * from './mock-router-adapter';
 export * from './payment-gateway.interface';
 export * from './mock-payment-gateway-adapter';
+export * from './sms.interface';
+export * from './mock-sms-adapter';
 

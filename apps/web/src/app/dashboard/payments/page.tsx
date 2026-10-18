@@ -17,6 +17,7 @@ import { PaymentItem } from '@/components/billing/billing.types';
 import { PaymentStatsCards } from '@/components/billing/PaymentStatsCards';
 import { PaymentFiltersBar } from '@/components/billing/PaymentFiltersBar';
 import { ReconciliationReportModal } from '@/components/billing/ReconciliationReportModal';
+import { WebhookAuditModal } from '@/components/billing/WebhookAuditModal';
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<PaymentItem[]>([]);
@@ -29,6 +30,7 @@ export default function PaymentsPage() {
 
   // Modals
   const [isReconciliationOpen, setIsReconciliationOpen] = useState(false);
+  const [isWebhooksAuditOpen, setIsWebhooksAuditOpen] = useState(false);
   const [paymentToReverse, setPaymentToReverse] = useState<PaymentItem | null>(null);
   const [isReversing, setIsReversing] = useState(false);
 
@@ -151,6 +153,7 @@ export default function PaymentsPage() {
         isLoading={isLoading}
         onRefresh={loadPayments}
         onOpenReconciliation={() => setIsReconciliationOpen(true)}
+        onOpenWebhooksAudit={() => setIsWebhooksAuditOpen(true)}
       />
 
       {/* Payments Table */}
@@ -275,6 +278,12 @@ export default function PaymentsPage() {
       <ReconciliationReportModal
         isOpen={isReconciliationOpen}
         onClose={() => setIsReconciliationOpen(false)}
+      />
+
+      {/* Webhook Events Audit Modal */}
+      <WebhookAuditModal
+        isOpen={isWebhooksAuditOpen}
+        onClose={() => setIsWebhooksAuditOpen(false)}
       />
 
       {/* Reverse Payment Confirmation */}

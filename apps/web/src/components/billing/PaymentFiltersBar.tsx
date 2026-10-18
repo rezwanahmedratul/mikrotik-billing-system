@@ -13,6 +13,7 @@ interface PaymentFiltersBarProps {
   isLoading: boolean;
   onRefresh: () => void;
   onOpenReconciliation: () => void;
+  onOpenWebhooksAudit?: () => void;
 }
 
 export const PaymentFiltersBar: React.FC<PaymentFiltersBarProps> = ({
@@ -25,6 +26,7 @@ export const PaymentFiltersBar: React.FC<PaymentFiltersBarProps> = ({
   isLoading,
   onRefresh,
   onOpenReconciliation,
+  onOpenWebhooksAudit,
 }) => {
   return (
     <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
@@ -78,11 +80,20 @@ export const PaymentFiltersBar: React.FC<PaymentFiltersBarProps> = ({
 
         <button
           onClick={onOpenReconciliation}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-black text-white text-sm font-medium rounded-xl shadow-xs transition-colors"
+          className="inline-flex items-center gap-2 px-3.5 py-2 border border-neutral-200 hover:bg-neutral-50 text-neutral-800 text-sm font-medium rounded-xl transition-colors"
         >
-          <BarChart3 className="w-4 h-4" />
-          <span>Daily Reconciliation</span>
+          <BarChart3 className="w-4 h-4 text-neutral-500" />
+          <span>Reconciliation</span>
         </button>
+
+        {onOpenWebhooksAudit && (
+          <button
+            onClick={onOpenWebhooksAudit}
+            className="inline-flex items-center gap-2 px-3.5 py-2 bg-neutral-900 hover:bg-black text-white text-sm font-medium rounded-xl shadow-xs transition-colors"
+          >
+            <span>Gateway Webhooks</span>
+          </button>
+        )}
       </div>
     </div>
   );

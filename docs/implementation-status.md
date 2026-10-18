@@ -612,7 +612,69 @@
   - Cashier vs Admin role enforcement verified.
   - Reversal transaction restoring invoice balances and audit trails verified.
 - **Next Step:**
-  - Section 13: Payment Gateway Integration & Webhooks.
+  - Section 13: Payment Gateway Integration & Webhooks (COMPLETED).
+
+---
+
+### Milestone Log: Section 13 — Payment Gateway Integration & Webhooks
+
+- **Completed Work:**
+  - Defined provider-neutral payment interface:
+    - `packages/shared/src/payment-gateway.interface.ts`: `PaymentGatewayAdapter`, `PaymentInitiationRequest`, `PaymentInitiationResult`, `WebhookVerificationRequest`, `WebhookVerificationResult`, and supported providers (`BKASH`, `NAGAD`, `STRIPE`, `SSLCOMMERZ`, `SANDBOX_MOCK`).
+    - `packages/shared/src/mock-payment-gateway-adapter.ts`: Cryptographic HMAC-SHA256 signature generator & validator with sandbox checkout URL synthesis.
+  - Implemented backend payment gateway & webhook processing engine:
+    - `apps/api/src/payment-gateways/payment-gateways.dto.ts`: DTOs for checkout initiation, webhook responses, and event logging.
+    - `apps/api/src/payment-gateways/payment-gateways.service.ts`:
+      - Initiates gateway checkout sessions before client redirect.
+      - Authoritative server-to-server webhook verification enforcing secret keys and HMAC signatures.
+      - Strict idempotency protection via `PaymentProviderEvent` table ensuring replayed callbacks return `already_processed` without double-crediting invoices.
+      - Amount and currency validation preventing fraud and currency mismatch.
+      - Automatic settlement transaction allocating received funds to unpaid invoices and transitioning invoice state to `PAID`.
+    - `apps/api/src/payment-gateways/payment-gateways.controller.ts`:
+      - `POST /payment-gateways/initiate`: Authenticated endpoint for initiating payment sessions.
+      - `POST /webhooks/payments/:provider`: Public server-to-server webhook callback receiver.
+      - `GET /payment-gateways/events`: Role-guarded endpoint for viewing incoming webhook logs and audit trail.
+    - `apps/api/src/payment-gateways/payment-gateways.module.ts`: Modular NestJS provider module registered in `AppModule`.
+  - Implemented modular frontend components with monochrome rounded-2xl design:
+    - `apps/web/src/components/billing/OnlinePaymentModal.tsx`: Gateway selector (bKash, Nagad, Stripe, Sandbox Simulator), session initiation link, and instant sandbox settlement simulator.
+    - `apps/web/src/components/billing/WebhookAuditModal.tsx`: Audited server-to-server callbacks modal displaying verified signatures, event IDs, status badges, and receipt timestamps.
+    - Updated `apps/web/src/app/dashboard/invoices/page.tsx`: Added "Online" payment gateway launch button and modal integration.
+    - Updated `apps/web/src/app/dashboard/payments/page.tsx`: Added "Gateway Webhooks" audit trigger button and modal integration.
+  - Integration testing:
+    - `packages/shared/src/payment-gateway.test.ts` (5/5 tests passed).
+    - `apps/api/src/payment-gateways/payment-gateways.test.ts` (6/6 tests passed).
+- **Files Changed:**
+  - `packages/shared/src/payment-gateway.interface.ts`
+  - `packages/shared/src/mock-payment-gateway-adapter.ts`
+  - `packages/shared/src/payment-gateway.test.ts`
+  - `packages/shared/src/index.ts`
+  - `apps/api/src/payment-gateways/payment-gateways.dto.ts`
+  - `apps/api/src/payment-gateways/payment-gateways.service.ts`
+  - `apps/api/src/payment-gateways/payment-gateways.controller.ts`
+  - `apps/api/src/payment-gateways/payment-gateways.module.ts`
+  - `apps/api/src/payment-gateways/payment-gateways.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/billing/OnlinePaymentModal.tsx`
+  - `apps/web/src/components/billing/WebhookAuditModal.tsx`
+  - `apps/web/src/components/billing/PaymentFiltersBar.tsx`
+  - `apps/web/src/app/dashboard/invoices/page.tsx`
+  - `apps/web/src/app/dashboard/payments/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/shared test` (22/22 tests passed)
+  - `pnpm --filter @mikrotik-billing/api test -- apps/api/src/payment-gateways/payment-gateways.test.ts` (6/6 tests passed)
+  - `pnpm test` (All 89 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web build` (All 16 static routes compiled with code 0)
+  - `curl -I http://localhost:3000/dashboard/invoices` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Gateway checkout session generation before redirect verified.
+  - Authoritative HMAC-SHA256 signature verification verified.
+  - Duplicate/replayed webhook idempotency verified (zero duplicate financial mutations).
+  - Currency mismatch and non-positive amount rejection verified.
+  - Automatic invoice settlement and `PaymentProviderEvent` persistence verified.
+- **Next Step:**
+  - Section 14: SMS and Notification System.
+
 
 
 
