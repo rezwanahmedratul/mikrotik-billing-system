@@ -294,4 +294,51 @@
 - **Next Step:**
   - Section 7: PPPoE Setup and Router Configuration.
 
+---
+
+### Milestone Log: Section 7 — PPPoE Setup and Router Configuration
+
+- **Completed Work:**
+  - Authored comprehensive RouterOS operations and safety specifications in `docs/router-operations.md`.
+  - Extended `RouterAdapter`, `MockRouterAdapter`, and `RouterOsAdapter` with IP Pool (`/ip/pool`) and PPPoE Server (`/interface/pppoe-server/server`) manipulation methods.
+  - Implemented `PppoeSetupService`:
+    - Read-only inspection step checking available LAN interfaces, existing pools, and readiness warnings (`POST /routers/:id/pppoe/inspect`).
+    - Dry-run configuration planning generating step-by-step diffs and safety validation seals (`POST /routers/:id/pppoe/plan`).
+    - Explicit confirmation requirement blocking unconfirmed changes.
+    - Transactional execution creating a tracked `RouterJob` (`APPLY_PPP_PROFILE`) in PostgreSQL.
+    - Post-change hardware verification immediately querying the router to verify that the IP pool, PPP profile, and PPPoE server now exist and match desired parameters.
+    - Attempt logging in `RouterJobAttempt` with execution status, timestamps, and error recovery details.
+    - Guaranteed idempotent reapplication allowing repeat runs without side effects.
+  - Added PPPoE setup endpoints to `RoutersController` (`/pppoe/inspect`, `/pppoe/plan`, `/pppoe/apply`, and `/jobs`).
+  - Implemented frontend 4-step guided setup wizard in `apps/web/src/app/dashboard/routers/[id]/pppoe-setup/page.tsx` with safety bounds verification, interactive parameter forms, dry-run diff review, and post-verification receipt.
+  - Added "Setup PPPoE" direct action button on the Router Gateways inventory table.
+- **Files Changed:**
+  - `docs/router-operations.md`
+  - `packages/shared/src/router-adapter.ts`
+  - `packages/shared/src/mock-router-adapter.ts`
+  - `apps/api/src/routers/routeros-adapter.ts`
+  - `apps/api/src/routers/pppoe-setup.dto.ts`
+  - `apps/api/src/routers/pppoe-setup.service.ts`
+  - `apps/api/src/routers/routers.controller.ts`
+  - `apps/api/src/routers/routers.module.ts`
+  - `apps/api/src/routers/pppoe-setup.test.ts`
+  - `apps/web/src/app/dashboard/routers/[id]/pppoe-setup/page.tsx`
+  - `apps/web/src/app/dashboard/routers/page.tsx`
+  - `apps/web/src/app/auth.pages.test.ts`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm -r run typecheck` (Exited 0, strict TypeScript compiler verified)
+  - `pnpm -r run test` (All 61 tests passed across the entire monorepo)
+  - `pnpm run build` (All 5 workspace packages and Next.js static pages built successfully)
+  - Verified `http://localhost:3000/dashboard/routers/rtr-1/pppoe-setup` returning HTTP 200 OK.
+- **Tests & Verification:**
+  - Inspection and prerequisite evaluation unit test passed.
+  - Dry-run plan generation and automated safety check test passed.
+  - Explicit confirmation requirement test passed.
+  - Full execution, post-change hardware verification, and `RouterJob` logging test passed.
+  - Idempotent reapplication test passed.
+- **Next Step:**
+  - Section 8: Internet Packages.
+
+
 

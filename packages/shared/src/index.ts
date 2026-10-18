@@ -187,6 +187,27 @@ export const SpeedLimitSchema = z
     'Speed limit must be formatted as download/upload rate (e.g., 20M/20M or 10240k/10240k)'
   );
 
+export function parseSpeedStringToKbps(speedStr: string): number {
+  const match = speedStr.trim().match(/^(\d+)([kKMmGg])?$/);
+  if (!match) return 0;
+  const value = parseInt(match[1], 10);
+  const unit = (match[2] || 'k').toUpperCase();
+
+  if (unit === 'G') return value * 1024 * 1024;
+  if (unit === 'M') return value * 1024;
+  return value;
+}
+
+export function formatSpeedKbps(kbps: number): string {
+  if (kbps >= 1024 * 1024) {
+    return `${(kbps / (1024 * 1024)).toFixed(0)}G`;
+  }
+  if (kbps >= 1024) {
+    return `${(kbps / 1024).toFixed(0)}M`;
+  }
+  return `${kbps}k`;
+}
+
 // Currency minor unit formatting utility (integers to formatted display)
 export function formatCurrency(minorUnits: number, currency = 'BDT'): string {
   const amount = (minorUnits / 100).toFixed(2);
