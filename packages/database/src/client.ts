@@ -1,21 +1,22 @@
-// Prisma Client instance management
-export interface DbClientConfig {
-  databaseUrl?: string;
-  logQueries?: boolean;
+import { PrismaClient } from '@prisma/client';
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __prismaInstance: PrismaClient | undefined;
 }
 
-export class DatabaseService {
-  private static instance: DatabaseService;
-  public isConnected = false;
-
-  private constructor() {}
-
-  public static getInstance(): DatabaseService {
-    if (!DatabaseService.instance) {
-      DatabaseService.instance = new DatabaseService();
-    }
-    return DatabaseService.instance;
-  }
+export function createPrismaClient(): PrismaClient {
+  return new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
+  });
 }
 
-export const dbService = DatabaseService.getInstance();
+// Global singleton to prevent connection pool exhaustion during hot reload
+export const prisma: PrismaClient = globalThis.__prismaInstance ?? createPrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalThis.__prismaInstance = prisma;
+}
+
+export { PrismaClient };
+export default prisma;

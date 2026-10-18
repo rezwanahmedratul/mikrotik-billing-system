@@ -1,2 +1,3 @@
-// Placeholder client export until prisma generate runs in Section 3
+export * from '@prisma/client';
 export * from './client.js';
+export { default } from './client.js';

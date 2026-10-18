@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { dbService, DatabaseService } from './client.js';
+import { prisma } from './client.js';
 
 describe('Database client singleton', () => {
-  it('instantiates correctly and returns same instance', () => {
-    expect(dbService).toBeDefined();
-    expect(DatabaseService.getInstance()).toBe(dbService);
+  it('instantiates PrismaClient singleton correctly', () => {
+    expect(prisma).toBeDefined();
+    expect(typeof prisma.$connect).toBe('function');
+    expect(typeof prisma.tenant.findMany).toBe('function');
+    expect(typeof prisma.user.findMany).toBe('function');
+    expect(typeof prisma.router.findMany).toBe('function');
   });
 });

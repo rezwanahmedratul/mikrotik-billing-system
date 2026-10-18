@@ -1,0 +1,638 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==========================================
+// Domain Enums
+// ==========================================
+enum UserRole {
+  PLATFORM_ADMIN
+  ISP_ADMIN
+  ISP_OPERATOR
+  CASHIER
+  AUDITOR
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum RouterProtocol {
+  REST_HTTPS
+  REST_HTTP
+  API_SSL
+  API_PLAIN
+}
+
+enum RouterConnectionStatus {
+  ONLINE
+  OFFLINE
+  UNREACHABLE
+  AUTH_FAILED
+  DEGRADED
+  UNKNOWN
+}
+
+enum RouterJobType {
+  CREATE_PPP_SECRET
+  UPDATE_PPP_SECRET
+  DELETE_PPP_SECRET
+  APPLY_PPP_PROFILE
+  SUSPEND_SERVICE
+  RESTORE_SERVICE
+  DISCONNECT_ACTIVE_SESSION
+  SYNC_ROUTER_STATE
+}
+
+enum RouterJobStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  GRACE_PERIOD
+  SUSPENDED
+  EXPIRED
+  TERMINATED
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  SEMI_ANNUALLY
+  ANNUALLY
+  CUSTOM_DAYS
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PARTIALLY_PAID
+  PAID
+  VOID
+  OVERDUE
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  REVERSED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  BKASH
+  NAGAD
+  ROCKET
+  CARD
+  ONLINE_GATEWAY
+  OTHER
+}
+
+enum SmsStatus {
+  QUEUED
+  SUBMITTED
+  DELIVERED
+  FAILED
+}
+
+enum SmsTemplateType {
+  INVOICE_ISSUED
+  PAYMENT_RECEIVED
+  DUE_REMINDER
+  SUSPENSION_WARNING
+  SERVICE_SUSPENDED
+  SERVICE_RESTORED
+}
+
+enum AuditAction {
+  USER_LOGIN
+  USER_LOGOUT
+  ROUTER_CREATED
+  ROUTER_UPDATED
+  ROUTER_DELETED
+  PACKAGE_CREATED
+  PACKAGE_UPDATED
+  SUBSCRIBER_CREATED
+  SUBSCRIBER_UPDATED
+  PPPOE_PROVISIONED
+  SERVICE_SUSPENDED
+  SERVICE_RESTORED
+  INVOICE_GENERATED
+  PAYMENT_RECORDED
+  PAYMENT_REVERSED
+  CONFIG_CHANGED
+}
+
+// ==========================================
+// Tenancy & Identity Models
+// ==========================================
+model Tenant {
+  id             String       @id @default(uuid())
+  name           String
+  code           String       @unique
+  contactEmail   String
+  contactPhone   String?
+  status         TenantStatus @default(ACTIVE)
+  currency       String       @default("BDT")
+  timezone       String       @default("Asia/Dhaka")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  memberships           TenantMembership[]
+  routers               Router[]
+  packages              Package[]
+  subscribers           Subscriber[]
+  subscriptions         Subscription[]
+  pppoeAccounts         PppoeAccount[]
+  invoices              Invoice[]
+  payments              Payment[]
+  billingRuns           BillingRun[]
+  notificationTemplates NotificationTemplate[]
+  notificationJobs      NotificationJob[]
+  auditLogs             AuditLog[]
+  systemSettings        SystemSetting[]
+  paymentProviderEvents PaymentProviderEvent[]
+  routerJobs            RouterJob[]
+  routerEvents          RouterEvent[]
+
+  @@index([status])
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  phone        String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships TenantMembership[]
+  sessions    Session[]
+  auditLogs   AuditLog[]
+
+  @@index([email])
+}
+
+model TenantMembership {
+  id        String   @id @default(uuid())
+  tenantId  String
+  userId    String
+  role      UserRole @default(ISP_OPERATOR)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId])
+  @@index([tenantId, role])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  userAgent    String?
+  ipAddress    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+// ==========================================
+// Network & MikroTik Models
+// ==========================================
+model Router {
+  id                String                 @id @default(uuid())
+  tenantId          String
+  name              String
+  host              String
+  port              Int                    @default(8728)
+  protocol          RouterProtocol         @default(REST_HTTPS)
+  username          String
+  encryptedPassword String                 // AES-256-GCM encrypted
+  connectionStatus  RouterConnectionStatus @default(UNKNOWN)
+  lastSeenAt        DateTime?
+  rosVersion        String?
+  uptime            String?
+  cpuLoad           Int?
+  memoryFree        BigInt?
+  isArchived        Boolean                @default(false)
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+
+  tenant           Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  jobs             RouterJob[]
+  events           RouterEvent[]
+  subscriptions    Subscription[]
+  pppoeAccounts    PppoeAccount[]
+  sessionSnapshots ActiveSessionSnapshot[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, connectionStatus])
+  @@index([tenantId, isArchived])
+}
+
+model RouterJob {
+  id           String          @id @default(uuid())
+  tenantId     String
+  routerId     String
+  type         RouterJobType
+  status       RouterJobStatus @default(PENDING)
+  payload      Json?
+  result       Json?
+  error        String?
+  attempts     Int             @default(0)
+  maxAttempts  Int             @default(3)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  tenant   Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  router   Router             @relation(fields: [routerId], references: [id], onDelete: Cascade)
+  attemptsList RouterJobAttempt[]
+
+  @@index([tenantId, status])
+  @@index([routerId, status])
+}
+
+model RouterJobAttempt {
+  id            String   @id @default(uuid())
+  jobId         String
+  attemptNumber Int
+  status        String
+  error         String?
+  durationMs    Int?
+  createdAt     DateTime @default(now())
+
+  job RouterJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+}
+
+model RouterEvent {
+  id        String   @id @default(uuid())
+  tenantId  String
+  routerId  String
+  severity  String   @default("INFO") // INFO, WARN, ERROR
+  message   String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  router Router @relation(fields: [routerId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, routerId, createdAt])
+}
+
+model ActiveSessionSnapshot {
+  id         String   @id @default(uuid())
+  routerId   String
+  username   String
+  callerId   String?
+  ipAddress  String?
+  uptime     String?
+  rxBytes    BigInt?
+  txBytes    BigInt?
+  observedAt DateTime @default(now())
+
+  router Router @relation(fields: [routerId], references: [id], onDelete: Cascade)
+
+  @@index([routerId, username])
+  @@index([observedAt])
+}
+
+// ==========================================
+// Subscribers, Packages & Service Models
+// ==========================================
+model Subscriber {
+  id             String   @id @default(uuid())
+  tenantId       String
+  accountNumber  String
+  fullName       String
+  email          String?
+  phone          String
+  nidOrPassport  String?
+  address        String?
+  billingAddress String?
+  isArchived     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+  pppoeAccounts PppoeAccount[]
+  invoices      Invoice[]
+  payments      Payment[]
+  serviceEvents ServiceEvent[]
+
+  @@unique([tenantId, accountNumber])
+  @@index([tenantId, phone])
+  @@index([tenantId, isArchived])
+}
+
+model Package {
+  id                 String       @id @default(uuid())
+  tenantId           String
+  name               String
+  code               String
+  downloadSpeedKbps  Int
+  uploadSpeedKbps    Int
+  speedLimitRaw      String       // e.g. "20M/20M"
+  priceMinor         Int          // Integer cents / poisha
+  billingCycle       BillingCycle @default(MONTHLY)
+  validityDays       Int          @default(30)
+  pppProfileName     String
+  description        String?
+  isArchived         Boolean      @default(false)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId, isArchived])
+}
+
+model Subscription {
+  id            String             @id @default(uuid())
+  tenantId      String
+  subscriberId  String
+  packageId     String
+  routerId      String
+  status        SubscriptionStatus @default(PENDING)
+  startDate     DateTime           @default(now())
+  expiryDate    DateTime
+  lastBilledAt  DateTime?
+  isAutoRenew   Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscriber Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  package    Package    @relation(fields: [packageId], references: [id], onDelete: Restrict)
+  router     Router     @relation(fields: [routerId], references: [id], onDelete: Restrict)
+  invoices   Invoice[]
+
+  @@index([tenantId, status])
+  @@index([subscriberId])
+  @@index([expiryDate])
+}
+
+model PppoeAccount {
+  id                String   @id @default(uuid())
+  tenantId          String
+  subscriberId      String
+  routerId          String
+  username          String
+  encryptedPassword String   // AES-256-GCM encrypted
+  pppProfile        String
+  staticIp          String?
+  callerId          String?
+  isSuspended       Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscriber Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  router     Router     @relation(fields: [routerId], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, username])
+  @@index([subscriberId])
+  @@index([routerId])
+}
+
+model ServiceEvent {
+  id           String   @id @default(uuid())
+  tenantId     String
+  subscriberId String
+  type         String   // SUSPENDED, RESTORED, PACKAGE_CHANGED
+  reason       String?
+  initiatedBy  String?
+  createdAt    DateTime @default(now())
+
+  subscriber Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, subscriberId, createdAt])
+}
+
+// ==========================================
+// Invoicing, Billing & Payment Models
+// ==========================================
+model Invoice {
+  id                 String        @id @default(uuid())
+  tenantId           String
+  subscriberId       String
+  subscriptionId     String
+  invoiceNumber      String
+  billingPeriodStart DateTime
+  billingPeriodEnd   DateTime
+  dueDate            DateTime
+  subtotalMinor      Int           // Integer minor units
+  discountMinor      Int           @default(0)
+  taxMinor           Int           @default(0)
+  totalMinor         Int           // subtotal - discount + tax
+  paidAmountMinor    Int           @default(0)
+  balanceMinor       Int           // total - paidAmount
+  status             InvoiceStatus @default(ISSUED)
+  issuedAt           DateTime      @default(now())
+  paidAt             DateTime?
+  voidedAt           DateTime?
+  notes              String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscriber   Subscriber          @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  subscription Subscription        @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  lines        InvoiceLine[]
+  allocations  PaymentAllocation[]
+
+  @@unique([tenantId, invoiceNumber])
+  @@unique([subscriptionId, billingPeriodStart]) // Prevents duplicate period billing
+  @@index([tenantId, status])
+  @@index([subscriberId])
+  @@index([dueDate])
+}
+
+model InvoiceLine {
+  id             String   @id @default(uuid())
+  invoiceId      String
+  description    String
+  quantity       Int      @default(1)
+  unitPriceMinor Int
+  totalMinor     Int
+  createdAt      DateTime @default(now())
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+  tenantId          String
+  subscriberId      String
+  paymentNumber     String
+  amountMinor       Int
+  currency          String        @default("BDT")
+  method            PaymentMethod @default(CASH)
+  status            PaymentStatus @default(CONFIRMED)
+  externalReference String?
+  collectedBy       String?
+  notes             String?
+  paidAt            DateTime      @default(now())
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  tenant      Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  subscriber  Subscriber          @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  allocations PaymentAllocation[]
+
+  @@unique([tenantId, paymentNumber])
+  @@index([tenantId, status])
+  @@index([subscriberId])
+  @@index([paidAt])
+}
+
+model PaymentAllocation {
+  id          String   @id @default(uuid())
+  paymentId   String
+  invoiceId   String
+  amountMinor Int
+  createdAt   DateTime @default(now())
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@unique([paymentId, invoiceId])
+  @@index([invoiceId])
+}
+
+model PaymentProviderEvent {
+  id          String    @id @default(uuid())
+  tenantId    String
+  provider    String    // BKASH, NAGAD, STRIPE, SSLCOMMERZ
+  eventId     String
+  eventType   String
+  signature   String?
+  payload     Json
+  isProcessed Boolean   @default(false)
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, eventId])
+  @@index([tenantId, isProcessed])
+}
+
+model BillingRun {
+  id                String   @id @default(uuid())
+  tenantId          String
+  executionDate     DateTime @default(now())
+  cycleStart        DateTime
+  cycleEnd          DateTime
+  invoicesGenerated Int      @default(0)
+  totalBilledMinor  BigInt   @default(0)
+  status            String   @default("COMPLETED")
+  isDryRun          Boolean  @default(false)
+  triggeredBy       String?
+  createdAt         DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, executionDate])
+}
+
+// ==========================================
+// Notifications & System Auditing
+// ==========================================
+model NotificationTemplate {
+  id           String          @id @default(uuid())
+  tenantId     String
+  type         SmsTemplateType
+  name         String
+  templateText String
+  isEnabled    Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, type])
+}
+
+model NotificationJob {
+  id               String    @id @default(uuid())
+  tenantId         String
+  recipientPhone   String
+  recipientEmail   String?
+  message          String
+  status           SmsStatus @default(QUEUED)
+  attempts         Int       @default(0)
+  error            String?
+  providerResponse Json?
+  sentAt           DateTime?
+  createdAt        DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  tenantId   String
+  userId     String?
+  action     AuditAction
+  entityType String
+  entityId   String
+  details    Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, action])
+  @@index([tenantId, createdAt])
+  @@index([entityType, entityId])
+}
+
+model SystemSetting {
+  id          String   @id @default(uuid())
+  tenantId    String
+  key         String
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, key])
+}
