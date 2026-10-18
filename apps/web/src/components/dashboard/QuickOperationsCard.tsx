@@ -33,10 +33,10 @@ export function QuickOperationsCard() {
   ];
 
   return (
-    <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs">
+    <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition-colors">
       <div className="mb-4">
-        <h2 className="text-sm font-semibold text-neutral-900">Quick Operations</h2>
-        <p className="mt-0.5 text-xs text-neutral-500">Frequently executed ISP actions</p>
+        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Quick Operations</h2>
+        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">Frequently executed ISP actions</p>
       </div>
 
       <div className="space-y-2">
@@ -46,18 +46,18 @@ export function QuickOperationsCard() {
             <Link
               key={op.title}
               href={op.href}
-              className="group flex items-center justify-between rounded-xl border border-neutral-200/80 p-3 transition hover:border-neutral-300 hover:bg-neutral-50/70"
+              className="group flex items-center justify-between rounded-xl border border-neutral-200/80 p-3 transition hover:border-neutral-300 hover:bg-neutral-50/70 dark:border-neutral-800 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/60"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700 transition group-hover:bg-neutral-900 group-hover:text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700 transition group-hover:bg-neutral-900 group-hover:text-white dark:bg-neutral-800 dark:text-neutral-300 dark:group-hover:bg-white dark:group-hover:text-neutral-900">
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-medium text-neutral-900">{op.title}</div>
-                  <div className="text-[11px] text-neutral-500">{op.description}</div>
+                  <div className="text-xs font-medium text-neutral-900 dark:text-white">{op.title}</div>
+                  <div className="text-[11px] text-neutral-500 dark:text-neutral-400">{op.description}</div>
                 </div>
               </div>
-              <ArrowUpRight className="h-4 w-4 text-neutral-400 transition group-hover:text-neutral-900" />
+              <ArrowUpRight className="h-4 w-4 text-neutral-400 transition group-hover:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-white" />
             </Link>
           );
         })}

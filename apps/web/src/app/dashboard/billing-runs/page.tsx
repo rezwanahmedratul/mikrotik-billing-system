@@ -18,6 +18,8 @@ import { DataTable } from '@/components/ui/DataTable';
 import { Modal } from '@/components/ui/Modal';
 import { fetchApi } from '@/lib/api';
 import { BillingRunItem } from '@/components/billing/billing.types';
+import { BillingRunStatsCards } from '@/components/billing/BillingRunStatsCards';
+import { BillingRunDistributionCharts } from '@/components/billing/BillingRunDistributionCharts';
 
 export default function BillingRunsPage() {
   const [runs, setRuns] = useState<BillingRunItem[]>([]);
@@ -145,6 +147,12 @@ export default function BillingRunsPage() {
           </button>
         </div>
       )}
+
+      {/* KPI Stats Cards */}
+      <BillingRunStatsCards runs={runs} />
+
+      {/* Monthly Cycle Progression & Execution Mode Charts */}
+      <BillingRunDistributionCharts runs={runs} />
 
       {/* History Table */}
       <DataTable<BillingRunItem>

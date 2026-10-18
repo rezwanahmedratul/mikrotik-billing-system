@@ -21,6 +21,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { fetchApi } from '@/lib/api';
 import { PackageItem, PackageFormData } from '@/components/packages/packages.types';
 import { PackageStatsCards } from '@/components/packages/PackageStatsCards';
+import { PackageDistributionCharts } from '@/components/packages/PackageDistributionCharts';
 import { PackageFiltersBar } from '@/components/packages/PackageFiltersBar';
 import { PackageFormModal } from '@/components/packages/PackageFormModal';
 
@@ -253,6 +254,9 @@ export default function PackagesPage() {
 
       {/* Modular KPI Summary Cards */}
       <PackageStatsCards packages={packages} />
+
+      {/* Modular Subscribers Count & Bandwidth Pool Allocation Charts */}
+      <PackageDistributionCharts packages={packages} />
 
       {/* Modular Filters & Search Toolbar */}
       <PackageFiltersBar

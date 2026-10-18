@@ -25,6 +25,7 @@ import {
   SessionsResponseData,
 } from '@/components/sessions/sessions.types';
 import { SessionStatsCards } from '@/components/sessions/SessionStatsCards';
+import { SessionTrafficCharts } from '@/components/sessions/SessionTrafficCharts';
 import { SessionFiltersBar } from '@/components/sessions/SessionFiltersBar';
 import { DisconnectDialog } from '@/components/sessions/DisconnectDialog';
 
@@ -211,24 +212,24 @@ export default function SessionsPage() {
     >
       {/* Alert Notifications */}
       {successMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-emerald-950/20 bg-emerald-50 text-emerald-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-200 bg-neutral-900 text-white flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-            <p className="text-sm font-medium">{successMessage}</p>
+            <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0" />
+            <p className="text-xs font-medium">{successMessage}</p>
           </div>
-          <button onClick={() => setSuccessMessage('')} className="text-xs text-emerald-700 hover:underline">
+          <button onClick={() => setSuccessMessage('')} className="text-xs text-neutral-300 hover:text-white underline">
             Dismiss
           </button>
         </div>
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-red-950/20 bg-red-50 text-red-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-sm font-medium">{errorMessage}</p>
+            <AlertCircle className="w-5 h-5 text-neutral-900 flex-shrink-0" />
+            <p className="text-xs font-medium">{errorMessage}</p>
           </div>
-          <button onClick={() => setErrorMessage('')} className="text-xs text-red-700 hover:underline">
+          <button onClick={() => setErrorMessage('')} className="text-xs text-neutral-600 hover:underline">
             Dismiss
           </button>
         </div>
@@ -241,6 +242,9 @@ export default function SessionsPage() {
         formattedTotalRx={meta.formattedTotalRx}
         formattedTotalTx={meta.formattedTotalTx}
       />
+
+      {/* Modular Live Throughput and Duration Graphs */}
+      <SessionTrafficCharts sessions={sessions} />
 
       {/* Modular Filter and Toolbar */}
       <SessionFiltersBar

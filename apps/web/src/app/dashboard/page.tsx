@@ -10,6 +10,7 @@ import {
   DashboardMetrics,
 } from '@/components/dashboard/dashboard.types';
 import { DashboardStatsCards } from '@/components/dashboard/DashboardStatsCards';
+import { DashboardChartsSection } from '@/components/dashboard/DashboardChartsSection';
 import { RouterGatewayTelemetryTable } from '@/components/dashboard/RouterGatewayTelemetryTable';
 import { QuickOperationsCard } from '@/components/dashboard/QuickOperationsCard';
 import { RecentOperationsLogCard } from '@/components/dashboard/RecentOperationsLogCard';
@@ -117,8 +118,11 @@ export default function DashboardOverviewPage() {
       }
     >
       <div className="space-y-6">
-        {/* Modular KPI Summary Cards */}
+        {/* Modular KPI Summary Cards with Sparklines & Gauges */}
         <DashboardStatsCards metrics={metrics} />
+
+        {/* Modular Network & Financial Telemetry Graphs */}
+        <DashboardChartsSection />
 
         {/* Modular Routers Inventory & Health Status */}
         <RouterGatewayTelemetryTable routers={routers} />

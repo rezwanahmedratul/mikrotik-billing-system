@@ -25,6 +25,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { getAuthToken, clearAuthToken } from '@/lib/api';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 interface NavItem {
   name: string;
@@ -84,7 +85,6 @@ export function AppShell({ children, title, description, action }: AppShellProps
   const [tenantName, setTenantName] = useState<string>('FastNet Broadband');
 
   useEffect(() => {
-    // Read cached user or token details if stored
     const cachedUser = typeof window !== 'undefined' ? localStorage.getItem('auth_user') : null;
     if (cachedUser) {
       try {
@@ -106,29 +106,31 @@ export function AppShell({ children, title, description, action }: AppShellProps
   };
 
   const navContent = (
-    <div className="flex h-full flex-col justify-between bg-white">
-      <div className="flex flex-col space-y-6 p-4">
+    <div className="flex h-full flex-col justify-between bg-white dark:bg-neutral-900 transition-colors">
+      <div className="flex flex-col space-y-5 p-4">
         {/* Brand */}
-        <div className="flex items-center gap-3 border-b border-neutral-100 pb-4">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white shadow-xs">
-            <Layers className="h-4.5 w-4.5" />
-          </div>
-          <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-              {tenantName}
+        <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-900 text-white shadow-xs dark:bg-white dark:text-neutral-900">
+              <Layers className="h-4.5 w-4.5" />
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] text-neutral-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>MikroTik Sync Active</span>
+            <div>
+              <div className="text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-neutral-100">
+                {tenantName}
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>MikroTik Sync Active</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Navigation Sections */}
-        <nav className="space-y-5" aria-label="Sidebar Navigation">
+        <nav className="space-y-4" aria-label="Sidebar Navigation">
           {NAVIGATION.map((section) => (
             <div key={section.title}>
-              <div className="px-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+              <div className="px-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                 {section.title}
               </div>
               <ul className="mt-1.5 space-y-1">
@@ -144,20 +146,26 @@ export function AppShell({ children, title, description, action }: AppShellProps
                         onClick={() => setMobileMenuOpen(false)}
                         className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 ${
                           isActive
-                            ? 'bg-neutral-900 text-white shadow-xs'
-                            : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
+                            ? 'bg-neutral-900 text-white shadow-xs dark:bg-white dark:text-neutral-900'
+                            : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100'
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <Icon className={`h-4 w-4 transition-colors ${isActive ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-900'}`} />
+                          <Icon
+                            className={`h-4 w-4 transition-colors ${
+                              isActive
+                                ? 'text-white dark:text-neutral-900'
+                                : 'text-neutral-500 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-white'
+                            }`}
+                          />
                           <span>{item.name}</span>
                         </div>
                         {item.badge && (
                           <span
                             className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
                               isActive
-                                ? 'bg-neutral-800 text-neutral-200'
-                                : 'bg-neutral-100 text-neutral-600'
+                                ? 'bg-neutral-800 text-neutral-200 dark:bg-neutral-200 dark:text-neutral-800'
+                                : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
                             }`}
                           >
                             {item.badge}
@@ -173,42 +181,47 @@ export function AppShell({ children, title, description, action }: AppShellProps
         </nav>
       </div>
 
-      {/* User Footer */}
-      <div className="border-t border-neutral-100 p-3">
-        <div className="flex items-center justify-between rounded-xl border border-neutral-200/80 bg-neutral-50/70 p-2.5">
+      {/* User Footer & Theme Switcher */}
+      <div className="border-t border-neutral-100 dark:border-neutral-800 p-3">
+        <div className="flex items-center justify-between rounded-xl border border-neutral-200/80 bg-neutral-50/70 p-2.5 dark:border-neutral-800 dark:bg-neutral-800/60">
           <div className="min-w-0 pr-2">
-            <div className="truncate text-xs font-medium text-neutral-800">{userEmail}</div>
-            <div className="text-[10px] text-neutral-500">Administrator</div>
+            <div className="truncate text-xs font-medium text-neutral-800 dark:text-neutral-200">
+              {userEmail}
+            </div>
+            <div className="text-[10px] text-neutral-500 dark:text-neutral-400">Administrator</div>
           </div>
-          <button
-            id="signout-button"
-            onClick={handleLogout}
-            title="Sign Out"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-200/80 hover:text-neutral-900"
-            aria-label="Sign out"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle variant="compact" />
+            <button
+              id="signout-button"
+              onClick={handleLogout}
+              title="Sign Out"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-neutral-500 transition-colors hover:bg-neutral-200/80 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white"
+              aria-label="Sign out"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50/50">
+    <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 transition-colors">
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white shadow-2xl">
+          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white dark:bg-neutral-900 shadow-2xl">
             <div className="absolute right-3 top-3">
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-neutral-500 hover:bg-neutral-100"
+                className="flex h-8 w-8 items-center justify-center rounded-xl text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
                 aria-label="Close menu"
               >
                 <X className="h-4 w-4" />
@@ -220,37 +233,42 @@ export function AppShell({ children, title, description, action }: AppShellProps
       )}
 
       {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-neutral-200/80 bg-white lg:block">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-neutral-200/80 bg-white dark:border-neutral-800 dark:bg-neutral-900 lg:block transition-colors">
         {navContent}
       </aside>
 
       {/* Main Container */}
       <div className="flex flex-col lg:pl-64">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-neutral-200/80 bg-white/95 px-4 backdrop-blur-md sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-neutral-200/80 bg-white/95 px-4 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/90 sm:px-6 transition-colors">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-100 lg:hidden"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800 lg:hidden"
               aria-label="Open sidebar"
             >
               <Menu className="h-4 w-4" />
             </button>
-            <div className="flex items-center gap-2 text-xs text-neutral-500">
-              <span className="hidden font-medium text-neutral-900 sm:inline">ISP Core</span>
-              <ChevronRight className="hidden h-3 w-3 sm:inline text-neutral-400" />
-              <span className="font-semibold text-neutral-800">{title || 'Dashboard'}</span>
+            <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+              <span className="hidden font-medium text-neutral-900 dark:text-neutral-100 sm:inline">
+                ISP Core
+              </span>
+              <ChevronRight className="hidden h-3 w-3 sm:inline text-neutral-400 dark:text-neutral-600" />
+              <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+                {title || 'Dashboard'}
+              </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-1.5 rounded-full border border-neutral-200/80 bg-neutral-50 px-3 py-1 text-[11px] text-neutral-600 sm:flex">
-              <Activity className="h-3 w-3 text-emerald-600" />
+            <div className="hidden items-center gap-1.5 rounded-full border border-neutral-200/80 bg-neutral-50 px-3 py-1 text-[11px] text-neutral-600 dark:border-neutral-800 dark:bg-neutral-800/80 dark:text-neutral-300 sm:flex">
+              <Activity className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
               <span>API & Worker Online</span>
             </div>
+            <ThemeToggle />
             <Link
               href="/dashboard/routers"
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-1 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50"
+              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
             >
               Routers
             </Link>
@@ -262,8 +280,16 @@ export function AppShell({ children, title, description, action }: AppShellProps
           {(title || action) && (
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
               <div>
-                {title && <h1 className="text-xl font-bold tracking-tight text-neutral-900">{title}</h1>}
-                {description && <p className="mt-1 text-xs text-neutral-500">{description}</p>}
+                {title && (
+                  <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
+                    {title}
+                  </h1>
+                )}
+                {description && (
+                  <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                    {description}
+                  </p>
+                )}
               </div>
               {action && <div className="flex items-center gap-2">{action}</div>}
             </div>

@@ -22,6 +22,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { fetchApi } from '@/lib/api';
 import { InvoiceItem } from '@/components/billing/billing.types';
 import { InvoiceStatsCards } from '@/components/billing/InvoiceStatsCards';
+import { InvoiceDistributionCharts } from '@/components/billing/InvoiceDistributionCharts';
 import { InvoiceFiltersBar } from '@/components/billing/InvoiceFiltersBar';
 import { RecordPaymentModal } from '@/components/billing/RecordPaymentModal';
 import { InvoiceReceiptModal } from '@/components/billing/InvoiceReceiptModal';
@@ -215,6 +216,9 @@ export default function InvoicesPage() {
 
       {/* Modular KPI Summary Cards */}
       <InvoiceStatsCards invoices={invoices} />
+
+      {/* Modular Status & Realization Velocity Charts */}
+      <InvoiceDistributionCharts invoices={invoices} />
 
       {/* Modular Toolbar & Filter */}
       <InvoiceFiltersBar

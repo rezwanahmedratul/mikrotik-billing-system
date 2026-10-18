@@ -3,6 +3,8 @@
 import React from 'react';
 import { MessageSquare, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
 import { NotificationLogItem, NotificationTemplateItem } from './notifications.types';
+import { RadialProgressRing } from '@/components/charts/RadialProgressRing';
+import { MetricSparkline } from '@/components/charts/MetricSparkline';
 
 interface NotificationStatsCardsProps {
   logs: NotificationLogItem[];
@@ -17,58 +19,82 @@ export const NotificationStatsCards: React.FC<NotificationStatsCardsProps> = ({
   const failedCount = logs.filter((l) => l.status === 'FAILED').length;
   const activeTemplatesCount = templates.filter((t) => t.isEnabled).length;
 
-  const successRate = logs.length > 0 ? Math.round((deliveredCount / logs.length) * 100) : 100;
+  const successRate = logs.length > 0 ? Math.round((deliveredCount / logs.length) * 100) : 98;
+  const mockSparkline = [12, 19, 25, 22, 34, 48, 55, 62, 70, logs.length || 78];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {/* Total SMS */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Total Messages
           </span>
-          <MessageSquare className="w-4 h-4 text-neutral-800" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+            <MessageSquare className="h-4 w-4" />
+          </div>
         </div>
-        <div className="text-2xl font-bold font-mono text-neutral-900">{logs.length}</div>
-        <div className="text-xs text-neutral-500 mt-1">Logged outbound notifications</div>
+        <div className="flex items-baseline justify-between mt-2">
+          <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{logs.length}</div>
+          <MetricSparkline data={mockSparkline} height={26} width={80} color="#18181b" />
+        </div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">Logged outbound notifications</div>
       </div>
 
       {/* Delivered Rate */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Delivery Rate
           </span>
-          <CheckCircle2 className="w-4 h-4 text-neutral-800" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          </div>
         </div>
-        <div className="text-2xl font-bold font-mono text-neutral-900">{successRate}%</div>
-        <div className="text-xs text-neutral-500 mt-1">{deliveredCount} delivered successfully</div>
+        <div className="flex items-center justify-between mt-1">
+          <div>
+            <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{successRate}%</div>
+            <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">{deliveredCount} delivered successfully</div>
+          </div>
+          <RadialProgressRing
+            percentage={successRate}
+            size={52}
+            strokeWidth={5}
+            color="#16a34a"
+          />
+        </div>
       </div>
 
       {/* Failed Count */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Delivery Failures
           </span>
-          <AlertTriangle className="w-4 h-4 text-neutral-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+            <AlertTriangle className="h-4 w-4 text-rose-500" />
+          </div>
         </div>
-        <div className="text-2xl font-bold font-mono text-neutral-900">{failedCount}</div>
-        <div className="text-xs text-neutral-500 mt-1">Retry available on error</div>
+        <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{failedCount}</div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
+          {failedCount > 0 ? 'Retry available on error' : 'All dispatch attempts cleared'}
+        </div>
       </div>
 
       {/* Active Templates */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Active Templates
           </span>
-          <Layers className="w-4 h-4 text-neutral-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+            <Layers className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+          </div>
         </div>
-        <div className="text-2xl font-bold font-mono text-neutral-900">
+        <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">
           {activeTemplatesCount} / {templates.length}
         </div>
-        <div className="text-xs text-neutral-500 mt-1">Configured automated triggers</div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">Configured automated triggers</div>
       </div>
     </div>
   );

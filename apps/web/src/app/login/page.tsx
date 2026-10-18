@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, AlertCircle, Loader2, ShieldCheck, KeyRound } from 'lucide-react';
 import { fetchApi } from '@/lib/api';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,36 +52,41 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50/50 px-4 py-12 text-neutral-900 selection:bg-neutral-900 selection:text-white">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-neutral-50/50 px-4 py-12 text-neutral-900 selection:bg-neutral-900 selection:text-white dark:bg-neutral-950 dark:text-neutral-100 dark:selection:bg-white dark:selection:text-neutral-950 transition-colors">
+      {/* Theme Toggle in top-right */}
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-900 font-mono text-lg font-bold text-white shadow-xs">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-900 font-mono text-lg font-bold text-white shadow-xs dark:bg-white dark:text-neutral-950">
             MT
           </div>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight text-neutral-900">
+          <h1 className="mt-4 text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
             Sign In to Console
           </h1>
-          <p className="mt-1.5 text-xs text-neutral-500">
+          <p className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400">
             Enter your credentials to access your isolated ISP operations dashboard
           </p>
         </div>
 
         {/* Card */}
-        <div className="mt-6 rounded-2xl border border-neutral-200/80 bg-white p-7 shadow-xs">
+        <div className="mt-6 rounded-2xl border border-neutral-200/80 bg-white p-7 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
           {errorMessage && (
             <div
               id="login-error-alert"
-              className="mb-5 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800"
+              className="mb-5 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400"
             >
-              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold text-neutral-700">
+              <label htmlFor="email" className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                 Email Address
               </label>
               <input
@@ -90,12 +96,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="operator@fastnet.com"
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 transition"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:bg-neutral-800 dark:focus:ring-white transition"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-semibold text-neutral-700">
+              <label htmlFor="password" className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                 Password
               </label>
               <input
@@ -105,13 +111,13 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 transition"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:bg-neutral-800 dark:focus:ring-white transition"
               />
             </div>
 
             <div>
-              <label htmlFor="tenantCode" className="block text-xs font-semibold text-neutral-700">
-                Organization Code <span className="text-neutral-400 font-normal">(Optional for direct logins)</span>
+              <label htmlFor="tenantCode" className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                Organization Code <span className="text-neutral-400 font-normal dark:text-neutral-500">(Optional for direct logins)</span>
               </label>
               <input
                 id="tenantCode"
@@ -119,7 +125,7 @@ export default function LoginPage() {
                 value={tenantCode}
                 onChange={(e) => setTenantCode(e.target.value)}
                 placeholder="e.g. FASTNET"
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-mono text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 transition"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-mono text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:bg-neutral-800 dark:focus:ring-white transition"
               />
             </div>
 
@@ -127,7 +133,7 @@ export default function LoginPage() {
               id="login-submit-btn"
               type="submit"
               disabled={isLoading}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 disabled:opacity-50"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 dark:focus:ring-white disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -143,41 +149,41 @@ export default function LoginPage() {
           </form>
 
           {/* Quick Credential Switcher for Development / Demo */}
-          <div className="mt-6 border-t border-neutral-100 pt-5">
-            <span className="block text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">
+          <div className="mt-6 border-t border-neutral-100 pt-5 dark:border-neutral-800">
+            <span className="block text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
               Quick Fill Demo Accounts:
             </span>
             <div className="mt-2.5 grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => setPreset('admin@fastnet.com', 'FASTNET')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 transition"
+                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
               >
-                <span className="font-semibold block text-neutral-900">FastNet Admin</span>
+                <span className="font-semibold block text-neutral-900 dark:text-white">FastNet Admin</span>
                 Owner (Full Access)
               </button>
               <button
                 type="button"
                 onClick={() => setPreset('cashier@fastnet.com', 'FASTNET')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 transition"
+                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
               >
-                <span className="font-semibold block text-neutral-900">FastNet Cashier</span>
+                <span className="font-semibold block text-neutral-900 dark:text-white">FastNet Cashier</span>
                 Billing Only
               </button>
               <button
                 type="button"
                 onClick={() => setPreset('operator@fastnet.com', 'FASTNET')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 transition"
+                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
               >
-                <span className="font-semibold block text-neutral-900">FastNet NOC</span>
+                <span className="font-semibold block text-neutral-900 dark:text-white">FastNet NOC</span>
                 Router Operator
               </button>
               <button
                 type="button"
                 onClick={() => setPreset('admin@skylink.com', 'SKYLINK')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 transition"
+                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
               >
-                <span className="font-semibold block text-neutral-900">SkyLink Admin</span>
+                <span className="font-semibold block text-neutral-900 dark:text-white">SkyLink Admin</span>
                 Tenant B Isolation
               </button>
             </div>
@@ -185,11 +191,11 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="mt-5 text-center text-xs text-neutral-500">
+        <p className="mt-5 text-center text-xs text-neutral-500 dark:text-neutral-400">
           Need to register a new ISP company?{' '}
           <Link
             href="/onboarding"
-            className="font-semibold text-neutral-900 underline underline-offset-4 hover:text-neutral-700"
+            className="font-semibold text-neutral-900 dark:text-white underline underline-offset-4 hover:text-neutral-700 dark:hover:text-neutral-300"
           >
             Create Organization
           </Link>

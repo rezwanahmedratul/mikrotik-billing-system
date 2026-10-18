@@ -15,6 +15,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { fetchApi } from '@/lib/api';
 import { PaymentItem } from '@/components/billing/billing.types';
 import { PaymentStatsCards } from '@/components/billing/PaymentStatsCards';
+import { PaymentDistributionCharts } from '@/components/billing/PaymentDistributionCharts';
 import { PaymentFiltersBar } from '@/components/billing/PaymentFiltersBar';
 import { ReconciliationReportModal } from '@/components/billing/ReconciliationReportModal';
 import { WebhookAuditModal } from '@/components/billing/WebhookAuditModal';
@@ -142,6 +143,9 @@ export default function PaymentsPage() {
       {/* KPI Stats Cards */}
       <PaymentStatsCards payments={payments} />
 
+      {/* Payment Revenue Mix & Velocity Charts */}
+      <PaymentDistributionCharts payments={payments} />
+
       {/* Filters & Actions Bar */}
       <PaymentFiltersBar
         searchQuery={searchQuery}
@@ -157,7 +161,7 @@ export default function PaymentsPage() {
       />
 
       {/* Payments Table */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl shadow-xs overflow-hidden dark:border-neutral-800 dark:bg-neutral-900">
         <DataTable<PaymentItem>
           columns={[
             {

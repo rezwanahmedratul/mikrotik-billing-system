@@ -1082,6 +1082,86 @@
   - `pnpm --filter @mikrotik-billing/web run build` (Exited 0, 20/20 routes statically/dynamically optimized).
   - Live server verification on `http://localhost:3000` (HTTP 200 OK across landing, login, dashboard, settings, routers, subscribers).
 
+---
+
+### Milestone Log: UI Aesthetics, Dark & Light Mode Toggle, and Modular SVG Chart Suite
+
+- **Completed Work:**
+  - **Comprehensive Dark and Light Theme Engine:**
+    - Configured Tailwind CSS `darkMode: 'class'` in `apps/web/tailwind.config.js`.
+    - Defined semantic CSS variables for root and `.dark` modes in `apps/web/src/app/globals.css` with smooth transitions (`color`, `background-color`, `border-color`) and themed scrollbars.
+    - Authored `apps/web/src/components/theme/ThemeProvider.tsx` and `theme.types.ts`: React Context with automatic local storage persistence (`theme-mode`) and OS system preference sync (`window.matchMedia('(prefers-color-scheme: dark)')`).
+    - Authored `apps/web/src/components/theme/ThemeToggle.tsx`: Minimal, rotating sun/moon toggle button with accessible ARIA labeling and tooltip.
+    - Wrapped root application in `ThemeProvider` in `apps/web/src/app/layout.tsx` with hydration safety (`suppressHydrationWarning`).
+    - Integrated `ThemeToggle` across header bars, sidebar footer, landing page header, login screen, and onboarding registration screen.
+  - **Zero-Dependency Modular SVG Chart Suite (`apps/web/src/components/charts/`):**
+    - `AreaTrendChart.tsx`: Responsive SVG area graph with linear gradient fill, dashed horizontal gridlines, crosshair, and interactive hover tooltip.
+    - `MultiBarChart.tsx`: Dual-series comparison bar chart with rounded bar tops (`rx="3"`), subtle horizontal gridlines, responsive sizing, and interactive hover details.
+    - `DonutPieChart.tsx`: Radial SVG donut chart with hover highlighting, central summary metric readout, and detailed legend table.
+    - `MetricSparkline.tsx`: Smooth cubic Bezier mini sparkline with area gradient for embedding directly inside KPI stat cards.
+    - `RadialProgressRing.tsx`: Circular gauge for percentages (CPU load, health rates, delivery success, collection rates).
+    - `charts.types.ts` & `index.ts`: Strongly typed dataset interfaces and barrel exports.
+  - **Widespread Chart & Visual Telemetry Integration Across Every Feature Page:**
+    - **Dashboard Overview (`/dashboard`)**:
+      - 24-Hour Network Traffic Area Chart (Live Mbps Download Tx vs Upload Rx).
+      - 6-Month Billed vs Collected Multi-Bar Chart.
+      - Package Distribution Donut Chart.
+      - Sparklines and Collection Rate Radial Progress Ring on Stat Cards.
+    - **Subscribers (`/dashboard/subscribers`)**:
+      - Account Health Donut Chart (Active vs Suspended vs Expiring).
+      - 6-Month Intake Registrations vs Activations Multi-Bar Chart.
+    - **Subscriber Detail (`/dashboard/subscribers/[id]`)**:
+      - 14-Day Bandwidth Consumption Multi-Bar Chart (Daily Download Tx vs Upload Rx in GB).
+    - **PPPoE Active Sessions (`/dashboard/sessions`)**:
+      - Live PPPoE Aggregated Throughput Area Chart (Mbps).
+      - Session Duration Spectrum Multi-Bar Chart (<1h, 1-6h, 6-24h, 1-7d, >7d).
+      - Router Session Load Donut Chart.
+    - **Router Gateways (`/dashboard/routers`)**:
+      - Router Hardware Telemetry Multi-Bar Chart (CPU Load % vs Memory Utilization %).
+      - PPPoE Tunnel Load Donut Chart.
+      - Online Fleet Reachability & Avg CPU Radial Progress Rings in Stats Cards.
+    - **Internet Packages (`/dashboard/packages`)**:
+      - Subscribers per Tariff Tier Multi-Bar Chart.
+      - Bandwidth Pool Allocation Donut Chart.
+    - **Invoices (`/dashboard/invoices`)**:
+      - Invoice Status Composition Donut Chart (Paid vs Partially Paid vs Issued vs Overdue).
+      - 6-Month Ledger Realization Velocity Multi-Bar Chart.
+    - **Payments Ledger (`/dashboard/payments`)**:
+      - Payment Channel Mix Donut Chart (bKash, Nagad, Rocket, Bank Wire, Cash Counter).
+      - Daily Revenue Realization Velocity Multi-Bar Chart (Gross Receipts vs Net Inflow).
+      - Sparklines on Collections Stat Cards.
+    - **Recurring Billing Runs (`/dashboard/billing-runs`)**:
+      - Monthly Billing Run Progression Multi-Bar Chart (Invoices Generated vs Billed Amount).
+      - Execution Mode Balance Donut Chart (Live Committed Runs vs Dry-Run Simulations).
+      - Cycle Success Radial Progress Ring & Sparklines on Stat Cards.
+    - **Automated Service Lifecycle (`/dashboard/lifecycle`)**:
+      - Subscriber Service Status Spectrum Donut Chart (Active vs Grace Period vs Suspended).
+      - Automated Enforcement Velocity Multi-Bar Chart (Scheduled Suspensions vs Restorations).
+      - Service Health Radial Progress Ring on Stat Cards.
+    - **SMS & Notifications (`/dashboard/notifications`)**:
+      - Outbound SMS Delivery Health Donut Chart (Delivered vs Queued vs Failed).
+      - Weekly Automated SMS Dispatches Multi-Bar Chart (Invoice Alerts vs Payment Receipts).
+      - Delivery Rate Radial Progress Ring and Sparkline on Stat Cards.
+    - **Analytics & Financial Reports (`/dashboard/reports`)**:
+      - Daily Realized Collections Area Chart (Gross vs Net).
+      - Payment Channel Allocation Donut Chart.
+      - Aging Debtors Schedule Multi-Bar Chart across brackets (Current, 1-30d, 31-60d, 61-90d, 90+d).
+      - Delinquency Risk Donut Chart.
+      - Tariff Tier Adoption Volume Multi-Bar Chart.
+      - Gateway Hardware Capacity Donut Chart.
+    - **Staff & Team Management (`/dashboard/staff`)**:
+      - Role & Privilege Authorization Mix Donut Chart (Admins vs Operators vs Cashiers).
+      - Weekly Team Operations Throughput Multi-Bar Chart (Provisioning Actions vs Collections Logged).
+      - Role Ratio Radial Progress Rings & Sparklines on Stat Cards.
+    - **System Diagnostics (`/dashboard/settings`)**:
+      - Real-time Subsystem Health Radial Progress Ring (PostgreSQL, Redis, Worker, RouterOS API).
+- **Verification & Quality Gates:**
+  - Full workspace typecheck: `pnpm run typecheck` passed with 0 errors across all 5 workspace projects (`shared`, `database`, `api`, `worker`, `web`).
+  - Monorepo test suite: `pnpm test` passed 134/134 unit and integration tests.
+  - Production build: `pnpm --filter @mikrotik-billing/web run build` completed with all 20 static and dynamic routes compiled and optimized.
+  - Production server live: Next.js background server running on `http://localhost:3000` responding HTTP 200 OK across all dashboard and auth routes.
+
+
 
 
 

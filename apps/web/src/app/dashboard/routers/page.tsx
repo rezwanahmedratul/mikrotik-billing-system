@@ -20,6 +20,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { fetchApi } from '@/lib/api';
 import { RouterItem, TestResult } from '@/components/routers/routers.types';
 import { RouterStatsCards } from '@/components/routers/RouterStatsCards';
+import { RouterTelemetryCharts } from '@/components/routers/RouterTelemetryCharts';
 import { RouterFormModal } from '@/components/routers/RouterFormModal';
 import { RouterTestResultModal } from '@/components/routers/RouterTestResultModal';
 
@@ -428,6 +429,9 @@ export default function RoutersPage() {
 
         {/* Modular Fleet KPI Cards */}
         <RouterStatsCards routers={routers} />
+
+        {/* Fleet Telemetry & Load Distribution Charts */}
+        <RouterTelemetryCharts routers={routers} />
 
         {/* Data Table */}
         <DataTable<RouterItem>

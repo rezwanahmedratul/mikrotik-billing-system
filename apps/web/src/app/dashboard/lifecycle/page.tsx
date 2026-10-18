@@ -18,6 +18,7 @@ import {
   LifecycleCycleResult,
 } from '@/components/lifecycle/lifecycle.types';
 import { LifecycleStatsCards } from '@/components/lifecycle/LifecycleStatsCards';
+import { LifecycleDistributionCharts } from '@/components/lifecycle/LifecycleDistributionCharts';
 import { LifecycleRunModal } from '@/components/lifecycle/LifecycleRunModal';
 import { ManualOverrideModal } from '@/components/lifecycle/ManualOverrideModal';
 
@@ -112,11 +113,14 @@ export default function LifecyclePage() {
         }
       />
 
+      {/* Service Health & Action Velocity Charts */}
+      <LifecycleDistributionCharts report={report} />
+
       {/* Action Toolbar */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-neutral-900">Automation Controls:</span>
-          <span className="text-xs text-neutral-500">
+          <span className="text-xs font-semibold text-neutral-900 dark:text-white">Automation Controls:</span>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
             Reconciles billing ledger and MikroTik router state
           </span>
         </div>
@@ -125,7 +129,7 @@ export default function LifecyclePage() {
           <button
             onClick={loadReconciliation}
             disabled={isLoading}
-            className="p-2 border border-neutral-200 text-neutral-600 hover:text-neutral-900 rounded-xl hover:bg-neutral-50 transition-colors"
+            className="p-2 border border-neutral-200 text-neutral-600 hover:text-neutral-900 rounded-xl hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 transition-colors"
             title="Refresh reconciliation report"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />

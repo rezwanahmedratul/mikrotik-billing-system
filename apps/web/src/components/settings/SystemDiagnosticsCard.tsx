@@ -3,6 +3,7 @@
 import React from 'react';
 import { Database, Server, Cpu, Router as RouterIcon, CheckCircle2, ShieldCheck, Activity } from 'lucide-react';
 import { SystemStatusData } from './settings.types';
+import { RadialProgressRing } from '@/components/charts/RadialProgressRing';
 
 interface SystemDiagnosticsCardProps {
   system: SystemStatusData;
@@ -40,17 +41,26 @@ export function SystemDiagnosticsCard({ system }: SystemDiagnosticsCardProps) {
     },
   ];
 
+  const okCount = subsystems.filter((s) => s.isOk).length;
+  const healthPct = Math.round((okCount / subsystems.length) * 100);
+
   return (
-    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs">
-      <div className="mb-5 flex items-center justify-between border-b border-neutral-100 pb-4">
+    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="mb-5 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4">
         <div>
-          <h2 className="text-sm font-semibold text-neutral-900">System Diagnostics & Core Daemons</h2>
-          <p className="mt-0.5 text-xs text-neutral-500">
+          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">System Diagnostics & Core Daemons</h2>
+          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
             Real-time infrastructure health and runtime dependencies
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-0.5 font-mono text-[11px] text-neutral-600">
+        <div className="flex items-center gap-3">
+          <RadialProgressRing
+            percentage={healthPct}
+            size={36}
+            strokeWidth={4}
+            color="#16a34a"
+          />
+          <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-0.5 font-mono text-[11px] text-neutral-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
             {system.platformVersion}
           </span>
         </div>
@@ -62,19 +72,19 @@ export function SystemDiagnosticsCard({ system }: SystemDiagnosticsCardProps) {
           return (
             <div
               key={sub.name}
-              className="flex items-start gap-3 rounded-xl border border-neutral-200/80 bg-neutral-50/40 p-3.5 transition hover:bg-neutral-50"
+              className="flex items-start gap-3 rounded-xl border border-neutral-200/80 bg-neutral-50/40 p-3.5 dark:border-neutral-800 dark:bg-neutral-800/40 transition hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-neutral-800 shadow-2xs">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-neutral-800 shadow-2xs dark:bg-neutral-800 dark:text-neutral-200">
                 <Icon className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between">
-                  <div className="truncate text-xs font-semibold text-neutral-900">{sub.name}</div>
+                  <div className="truncate text-xs font-semibold text-neutral-900 dark:text-white">{sub.name}</div>
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold ${
                       sub.isOk
-                        ? 'bg-emerald-50 text-emerald-700'
-                        : 'bg-red-50 text-red-700'
+                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
+                        : 'bg-red-50 text-red-700 dark:bg-rose-950/40 dark:text-rose-400'
                     }`}
                   >
                     <span
@@ -85,7 +95,7 @@ export function SystemDiagnosticsCard({ system }: SystemDiagnosticsCardProps) {
                     <span>{sub.status}</span>
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-neutral-500">{sub.detail}</p>
+                <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-400">{sub.detail}</p>
               </div>
             </div>
           );

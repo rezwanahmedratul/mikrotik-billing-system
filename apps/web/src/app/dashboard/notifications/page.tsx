@@ -17,6 +17,7 @@ import {
   NotificationTemplateItem,
 } from '@/components/notifications/notifications.types';
 import { NotificationStatsCards } from '@/components/notifications/NotificationStatsCards';
+import { NotificationDistributionCharts } from '@/components/notifications/NotificationDistributionCharts';
 import { NotificationLogsTable } from '@/components/notifications/NotificationLogsTable';
 import { NotificationTemplatesList } from '@/components/notifications/NotificationTemplatesList';
 import { TemplateEditorModal } from '@/components/notifications/TemplateEditorModal';
@@ -124,14 +125,14 @@ export default function NotificationsPage() {
     >
       {/* Alert Notifications */}
       {successMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-neutral-200 bg-neutral-900 text-white flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-200 bg-neutral-900 text-white dark:border-neutral-700 dark:bg-white dark:text-neutral-950 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0" />
+            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
             <p className="text-sm font-medium">{successMessage}</p>
           </div>
           <button
             onClick={() => setSuccessMessage('')}
-            className="text-xs text-neutral-300 hover:text-white underline"
+            className="text-xs text-neutral-300 dark:text-neutral-600 hover:underline"
           >
             Dismiss
           </button>
@@ -139,12 +140,12 @@ export default function NotificationsPage() {
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-neutral-900 flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <p className="text-sm font-medium">{errorMessage}</p>
           </div>
-          <button onClick={() => setErrorMessage('')} className="text-xs text-neutral-600 hover:underline">
+          <button onClick={() => setErrorMessage('')} className="text-xs hover:underline">
             Dismiss
           </button>
         </div>
@@ -153,16 +154,19 @@ export default function NotificationsPage() {
       {/* KPI Stats Cards */}
       <NotificationStatsCards logs={logs} templates={templates} />
 
+      {/* Outbound SMS Distribution Charts */}
+      <NotificationDistributionCharts logs={logs} />
+
       {/* Top Toolbar: Tabs and Actions */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Tab Switcher */}
-        <div className="flex items-center gap-2 p-1 bg-neutral-100 rounded-xl">
+        <div className="flex items-center gap-2 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-xl">
           <button
             onClick={() => setActiveTab('logs')}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'logs'
-                ? 'bg-white text-neutral-900 shadow-xs'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white text-neutral-900 shadow-xs dark:bg-neutral-700 dark:text-white'
+                : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -173,8 +177,8 @@ export default function NotificationsPage() {
             onClick={() => setActiveTab('templates')}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'templates'
-                ? 'bg-white text-neutral-900 shadow-xs'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white text-neutral-900 shadow-xs dark:bg-neutral-700 dark:text-white'
+                : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
@@ -193,14 +197,14 @@ export default function NotificationsPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Filter phone or message..."
-                  className="w-full pl-9 pr-3 py-1.5 bg-neutral-50/70 border border-neutral-200 rounded-xl text-xs text-neutral-900 placeholder-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+                  className="w-full pl-9 pr-3 py-1.5 bg-neutral-50/70 border border-neutral-200 rounded-xl text-xs text-neutral-900 placeholder-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-500 transition-colors"
                 />
               </div>
 
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-1.5 bg-neutral-50/70 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+                className="px-3 py-1.5 bg-neutral-50/70 border border-neutral-200 rounded-xl text-xs text-neutral-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white transition-colors"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="DELIVERED">Delivered</option>

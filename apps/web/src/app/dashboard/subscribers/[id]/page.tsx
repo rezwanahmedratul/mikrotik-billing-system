@@ -13,6 +13,7 @@ import {
 import { ServiceStatusDialog } from '@/components/subscribers/ServiceStatusDialog';
 import { SubscriberProfileHeader } from '@/components/subscribers/SubscriberProfileHeader';
 import { SubscriberNetworkCard } from '@/components/subscribers/SubscriberNetworkCard';
+import { SubscriberTrafficChart } from '@/components/subscribers/SubscriberTrafficChart';
 import { SubscriberSubscriptionsTable } from '@/components/subscribers/SubscriberSubscriptionsTable';
 import { SubscriberInvoicesTable } from '@/components/subscribers/SubscriberInvoicesTable';
 import { SubscriberPaymentsTable } from '@/components/subscribers/SubscriberPaymentsTable';
@@ -310,6 +311,9 @@ export default function SubscriberDetailPage() {
           onReprovision={handleReprovision}
           isReprovisioning={isReprovisioning}
         />
+
+        {/* Modular Bandwidth Consumption MultiBarChart */}
+        <SubscriberTrafficChart username={subscriber.pppoeAccount?.username} />
 
         {/* Modular Subscriptions Table */}
         <SubscriberSubscriptionsTable subscriber={subscriber} />

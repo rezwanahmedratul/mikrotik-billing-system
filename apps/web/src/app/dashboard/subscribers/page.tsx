@@ -24,6 +24,7 @@ import {
   CreateSubscriberFormData,
 } from '@/components/subscribers/subscribers.types';
 import { SubscriberStatsCards } from '@/components/subscribers/SubscriberStatsCards';
+import { SubscriberDistributionCharts } from '@/components/subscribers/SubscriberDistributionCharts';
 import { SubscriberFiltersBar } from '@/components/subscribers/SubscriberFiltersBar';
 import { SubscriberFormModal } from '@/components/subscribers/SubscriberFormModal';
 import { ServiceStatusDialog } from '@/components/subscribers/ServiceStatusDialog';
@@ -297,6 +298,9 @@ export default function SubscribersPage() {
 
       {/* Modular KPI Summary Cards */}
       <SubscriberStatsCards subscribers={subscribers} totalCount={totalCount} />
+
+      {/* Modular Status Breakdown & Growth Charts */}
+      <SubscriberDistributionCharts subscribers={subscribers} totalCount={totalCount} />
 
       {/* Modular Filters & Search Toolbar */}
       <SubscriberFiltersBar

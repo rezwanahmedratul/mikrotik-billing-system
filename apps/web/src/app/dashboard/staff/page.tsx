@@ -17,6 +17,7 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { fetchApi } from '@/lib/api';
 import { StaffMember } from '@/components/staff/staff.types';
 import { StaffStatsCards } from '@/components/staff/StaffStatsCards';
+import { StaffDistributionCharts } from '@/components/staff/StaffDistributionCharts';
 import { StaffFormModal } from '@/components/staff/StaffFormModal';
 
 export default function StaffManagementPage() {
@@ -228,6 +229,9 @@ export default function StaffManagementPage() {
 
         {/* Modular Team KPI Cards */}
         <StaffStatsCards staff={staff} />
+
+        {/* Team Role & Activity Distribution Charts */}
+        <StaffDistributionCharts staff={staff} />
 
         {/* Data Table */}
         <DataTable<StaffMember>
