@@ -398,6 +398,7 @@ model Subscription {
   invoices   Invoice[]
 
   @@index([tenantId, status])
+  @@index([routerId, status])
   @@index([subscriberId])
   @@index([expiryDate])
 }

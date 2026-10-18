@@ -3,54 +3,25 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  Router as RouterIcon,
   Plus,
   RefreshCw,
-  Activity,
-  CheckCircle2,
-  AlertCircle,
-  AlertTriangle,
   Clock,
   Trash2,
+  AlertTriangle,
+  CheckCircle2,
+  AlertCircle,
   Cpu,
-  HardDrive,
   Radio,
-  Server,
-  Zap,
 } from 'lucide-react';
 import { AppShell } from '@/components/layout/AppShell';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DataTable } from '@/components/ui/DataTable';
-import { Modal } from '@/components/ui/Modal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { fetchApi } from '@/lib/api';
-
-interface RouterItem {
-  id: string;
-  name: string;
-  host: string;
-  port: number;
-  protocol: string;
-  username: string;
-  connectionStatus: string;
-  lastSeenAt: string | null;
-  rosVersion: string | null;
-  uptime: string | null;
-  cpuLoad: number | null;
-  memoryFree: number | null;
-  isArchived: boolean;
-  activeSessionsCount?: number;
-}
-
-interface TestResult {
-  success: boolean;
-  latencyMs: number;
-  identity?: string;
-  rosVersion?: string;
-  boardName?: string;
-  uptime?: string;
-  error?: string;
-}
+import { RouterItem, TestResult } from '@/components/routers/routers.types';
+import { RouterStatsCards } from '@/components/routers/RouterStatsCards';
+import { RouterFormModal } from '@/components/routers/RouterFormModal';
+import { RouterTestResultModal } from '@/components/routers/RouterTestResultModal';
 
 export default function RoutersPage() {
   const [routers, setRouters] = useState<RouterItem[]>([]);
@@ -60,21 +31,10 @@ export default function RoutersPage() {
 
   // Add Router Modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [routerName, setRouterName] = useState('');
-  const [host, setHost] = useState('');
-  const [port, setPort] = useState(8728);
-  const [protocol, setProtocol] = useState('REST_HTTPS');
-  const [username, setUsername] = useState('api-billing');
-  const [password, setPassword] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [modalError, setModalError] = useState('');
 
-  // Inline Test Connection state inside Add Modal
-  const [isTestingModalConnection, setIsTestingModalConnection] = useState(false);
-  const [modalTestResult, setModalTestResult] = useState<TestResult | null>(null);
-
-  // Row Test Connection Result Dialog
-  const [isTestResultModalOpen, setIsTestResultModalOpen] = useState(false);
+  // Diagnostic Test Modal
   const [activeTestResult, setActiveTestResult] = useState<TestResult | null>(null);
   const [testingRouterId, setTestingRouterId] = useState<string | null>(null);
   const [syncingRouterId, setSyncingRouterId] = useState<string | null>(null);
@@ -90,55 +50,55 @@ export default function RoutersPage() {
     setIsLoading(false);
 
     if (res.error) {
-      // Fallback demo data for static preview or dev mode when API token is fresh
+      // Mock fallback data for demo / static previews
       setRouters([
         {
-          id: 'rtr-1',
-          name: 'Gulshan-Core-CCR2004',
-          host: '192.168.88.1',
-          port: 8728,
+          id: 'r-1',
+          name: 'Core-CCR2004-Dhanmondi',
+          host: '10.200.0.1',
+          port: 443,
           protocol: 'REST_HTTPS',
-          username: 'admin',
+          username: 'billing_api',
           connectionStatus: 'ONLINE',
-          lastSeenAt: new Date(Date.now() - 45000).toISOString(),
+          lastSeenAt: new Date().toISOString(),
           rosVersion: '7.14.3',
-          uptime: '14d 06:12:00',
-          cpuLoad: 18,
-          memoryFree: 1300234240,
-          isArchived: false,
-          activeSessionsCount: 184,
-        },
-        {
-          id: 'rtr-2',
-          name: 'Dhanmondi-POP-RB4011',
-          host: '192.168.89.1',
-          port: 8728,
-          protocol: 'REST_HTTPS',
-          username: 'admin',
-          connectionStatus: 'ONLINE',
-          lastSeenAt: new Date(Date.now() - 120000).toISOString(),
-          rosVersion: '7.14.3',
-          uptime: '22d 18:45:00',
+          uptime: '42d 18:22:10',
           cpuLoad: 24,
-          memoryFree: 820120000,
+          memoryFree: 3824000,
           isArchived: false,
-          activeSessionsCount: 142,
+          activeSessionsCount: 418,
         },
         {
-          id: 'rtr-3',
-          name: 'Uttara-Edge-hEX',
-          host: '192.168.90.1',
-          port: 8728,
-          protocol: 'REST_HTTPS',
+          id: 'r-2',
+          name: 'Edge-CCR1036-Gulshan',
+          host: '10.200.1.1',
+          port: 8729,
+          protocol: 'API_SSL',
           username: 'admin',
-          connectionStatus: 'OFFLINE',
-          lastSeenAt: new Date(Date.now() - 4500000).toISOString(), // > 1h ago
+          connectionStatus: 'ONLINE',
+          lastSeenAt: new Date().toISOString(),
           rosVersion: '7.12.1',
-          uptime: '1d 02:10:00',
-          cpuLoad: 4,
-          memoryFree: 45000000,
+          uptime: '115d 04:12:00',
+          cpuLoad: 48,
+          memoryFree: 7820000,
           isArchived: false,
-          activeSessionsCount: 0,
+          activeSessionsCount: 890,
+        },
+        {
+          id: 'r-3',
+          name: 'Backup-CHR-Cloud',
+          host: '10.200.2.1',
+          port: 8728,
+          protocol: 'API_PLAINTEXT',
+          username: 'admin',
+          connectionStatus: 'DEGRADED',
+          lastSeenAt: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
+          rosVersion: '7.13.0',
+          uptime: '12d 01:10:00',
+          cpuLoad: 8,
+          memoryFree: 1980000,
+          isArchived: false,
+          activeSessionsCount: 35,
         },
       ]);
       return;
@@ -153,65 +113,20 @@ export default function RoutersPage() {
     loadRouters();
   }, []);
 
-  const handleTestModalCredentials = async () => {
-    if (!host || !username || !password) {
-      setModalError('Please specify Host, Username, and Password to test connection.');
-      return;
-    }
-
-    setIsTestingModalConnection(true);
-    setModalError('');
-    setModalTestResult(null);
-
-    // Call test API on any router or mock test
-    const res = await fetchApi<TestResult>('/routers/test-temp', {
-      method: 'POST',
-      body: JSON.stringify({ host, port: Number(port), protocol, username, password }),
-    });
-
-    setIsTestingModalConnection(false);
-
-    if (res.error) {
-      // Simulate mock test response if standalone
-      if (password === 'badpass') {
-        setModalTestResult({
-          success: false,
-          latencyMs: 0,
-          error: 'Authentication failed: Invalid credentials.',
-        });
-      } else {
-        setModalTestResult({
-          success: true,
-          latencyMs: 14,
-          identity: 'MikroTik-Test-Gateway',
-          rosVersion: '7.14.3',
-          boardName: 'CCR2004-16G-2S+',
-          uptime: '14d 06:12:00',
-        });
-      }
-      return;
-    }
-
-    if (res.data) {
-      setModalTestResult(res.data);
-    }
-  };
-
-  const handleCreateRouter = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateRouter = async (data: {
+    name: string;
+    host: string;
+    port: number;
+    protocol: string;
+    username: string;
+    password: string;
+  }) => {
     setIsSaving(true);
     setModalError('');
 
     const res = await fetchApi('/routers', {
       method: 'POST',
-      body: JSON.stringify({
-        name: routerName,
-        host,
-        port: Number(port),
-        protocol,
-        username,
-        password,
-      }),
+      body: JSON.stringify(data),
     });
 
     setIsSaving(false);
@@ -222,13 +137,36 @@ export default function RoutersPage() {
     }
 
     setIsAddModalOpen(false);
-    setRouterName('');
-    setHost('');
-    setPassword('');
-    setModalTestResult(null);
     setSuccessMessage('Router gateway registered successfully.');
     setTimeout(() => setSuccessMessage(''), 4000);
     loadRouters();
+  };
+
+  const handleTestCredentials = async (data: {
+    host: string;
+    port: number;
+    protocol: string;
+    username: string;
+    password: string;
+  }): Promise<TestResult | null> => {
+    const res = await fetchApi<TestResult>('/routers/test-temp', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+
+    if (res.error) {
+      return {
+        success: data.password !== 'badpass',
+        latencyMs: 14,
+        identity: 'MikroTik-Test-Gateway',
+        rosVersion: '7.14.3',
+        boardName: 'CCR2004-16G-2S+',
+        uptime: '14d 06:12:00',
+        error: data.password === 'badpass' ? 'Authentication failed: Invalid credentials.' : undefined,
+      };
+    }
+
+    return res.data || null;
   };
 
   const handleTestRowConnection = async (router: RouterItem) => {
@@ -239,7 +177,6 @@ export default function RoutersPage() {
     setTestingRouterId(null);
 
     if (res.error) {
-      // Mock fallback
       setActiveTestResult({
         success: router.connectionStatus !== 'OFFLINE',
         latencyMs: 12,
@@ -248,23 +185,40 @@ export default function RoutersPage() {
         boardName: 'CCR2004',
         uptime: router.uptime || '14d 06:12:00',
       });
-      setIsTestResultModalOpen(true);
       return;
     }
 
     if (res.data) {
       setActiveTestResult(res.data);
-      setIsTestResultModalOpen(true);
-      loadRouters();
     }
   };
 
   const handleSyncHealth = async (router: RouterItem) => {
     setSyncingRouterId(router.id);
-    const res = await fetchApi(`/routers/${router.id}/sync`, {
+    const res = await fetchApi(`/routers/${router.id}/sync-health`, {
       method: 'POST',
     });
     setSyncingRouterId(null);
+
+    if (res.error) {
+      setErrorMessage(`Failed to sync health for ${router.name}: ${res.error}`);
+      setTimeout(() => setErrorMessage(''), 4000);
+      return;
+    }
+
+    setSuccessMessage(`Health telemetry synced for ${router.name}.`);
+    setTimeout(() => setSuccessMessage(''), 4000);
+    loadRouters();
+  };
+
+  const handleDeleteRouter = async () => {
+    if (!routerToDelete) return;
+    setIsDeleting(true);
+    const res = await fetchApi(`/routers/${routerToDelete.id}`, {
+      method: 'DELETE',
+    });
+    setIsDeleting(false);
+    setRouterToDelete(null);
 
     if (res.error) {
       setErrorMessage(res.error);
@@ -272,37 +226,15 @@ export default function RoutersPage() {
       return;
     }
 
-    setSuccessMessage(`Telemetry synchronized for '${router.name}'.`);
-    setTimeout(() => setSuccessMessage(''), 3000);
-    loadRouters();
-  };
-
-  const handleDeleteRouter = async () => {
-    if (!routerToDelete) return;
-    setIsDeleting(true);
-
-    const res = await fetchApi(`/routers/${routerToDelete.id}`, {
-      method: 'DELETE',
-    });
-    setIsDeleting(false);
-
-    if (res.error) {
-      setErrorMessage(res.error);
-      setRouterToDelete(null);
-      setTimeout(() => setErrorMessage(''), 5000);
-      return;
-    }
-
-    setRouterToDelete(null);
-    setSuccessMessage(`Router '${routerToDelete.name}' removed successfully.`);
-    setTimeout(() => setSuccessMessage(''), 3000);
+    setSuccessMessage(`Router ${routerToDelete.name} deleted.`);
+    setTimeout(() => setSuccessMessage(''), 4000);
     loadRouters();
   };
 
   const isStale = (lastSeenAt: string | null) => {
     if (!lastSeenAt) return true;
     const diffMs = Date.now() - new Date(lastSeenAt).getTime();
-    return diffMs > 5 * 60 * 1000; // > 5 minutes
+    return diffMs > 5 * 60 * 1000;
   };
 
   const formatLastSeen = (lastSeenAt: string | null) => {
@@ -324,12 +256,12 @@ export default function RoutersPage() {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-neutral-900">{item.name}</span>
             {item.rosVersion && (
-              <span className="rounded bg-neutral-100 px-1.5 py-0.2 font-mono text-[10px] text-neutral-600">
+              <span className="rounded-md border border-neutral-200 bg-neutral-100 px-1.5 py-0.5 font-mono text-[10px] text-neutral-600">
                 v{item.rosVersion}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-2 font-mono text-[11px] text-neutral-500">
+          <div className="flex items-center gap-2 font-mono text-[11px] text-neutral-500 mt-0.5">
             <span>
               {item.host}:{item.port}
             </span>
@@ -346,7 +278,7 @@ export default function RoutersPage() {
         <div className="space-y-1">
           <StatusBadge status={item.connectionStatus} />
           {isStale(item.lastSeenAt) && item.connectionStatus === 'ONLINE' && (
-            <div className="flex items-center gap-1 text-[10px] text-amber-600">
+            <div className="flex items-center gap-1 text-[10px] text-amber-600 font-medium">
               <AlertTriangle className="h-3 w-3" /> Stale telemetry
             </div>
           )}
@@ -359,24 +291,24 @@ export default function RoutersPage() {
       render: (item: RouterItem) => (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-neutral-400">CPU</span>
-            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-neutral-100">
+            <span className="text-[10px] text-neutral-400 font-mono">CPU</span>
+            <div className="h-2 w-20 overflow-hidden rounded-full bg-neutral-100 border border-neutral-200/50">
               <div
-                className={`h-full ${
+                className={`h-full rounded-full transition-all ${
                   (item.cpuLoad || 0) > 80
                     ? 'bg-rose-500'
                     : (item.cpuLoad || 0) > 50
                     ? 'bg-amber-500'
-                    : 'bg-neutral-800'
+                    : 'bg-neutral-900'
                 }`}
                 style={{ width: `${item.cpuLoad || 0}%` }}
               />
             </div>
-            <span className="font-mono text-[11px] text-neutral-700">
+            <span className="font-mono text-[11px] font-semibold text-neutral-800">
               {item.cpuLoad !== null ? `${item.cpuLoad}%` : '—'}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[10px] text-neutral-500">
+          <div className="flex items-center gap-1.5 text-[10px] text-neutral-500 font-mono">
             <Clock className="h-3 w-3" />
             <span>Up: {item.uptime || '—'}</span>
           </div>
@@ -387,8 +319,8 @@ export default function RoutersPage() {
       key: 'sessions',
       header: 'PPPoE Sessions',
       render: (item: RouterItem) => (
-        <div className="font-mono font-medium text-neutral-900">
-          {item.activeSessionsCount ?? 0} active
+        <div className="font-mono font-semibold text-neutral-900">
+          {(item.activeSessionsCount ?? 0).toLocaleString()} <span className="text-xs font-normal text-neutral-500">tunnels</span>
         </div>
       ),
     },
@@ -411,8 +343,8 @@ export default function RoutersPage() {
           <button
             onClick={() => handleTestRowConnection(item)}
             disabled={testingRouterId === item.id}
-            title="Test Connection"
-            className="rounded border border-border bg-surface px-2 py-1 text-[11px] font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
+            title="Test Socket Connection"
+            className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 disabled:opacity-40 transition"
           >
             {testingRouterId === item.id ? (
               <RefreshCw className="h-3 w-3 animate-spin" />
@@ -423,8 +355,8 @@ export default function RoutersPage() {
           <button
             onClick={() => handleSyncHealth(item)}
             disabled={syncingRouterId === item.id}
-            title="Sync Telemetry"
-            className="rounded border border-border bg-surface px-2 py-1 text-[11px] font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-40"
+            title="Sync Hardware Telemetry"
+            className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 disabled:opacity-40 transition"
           >
             {syncingRouterId === item.id ? (
               <RefreshCw className="h-3 w-3 animate-spin" />
@@ -434,17 +366,17 @@ export default function RoutersPage() {
           </button>
           <Link
             href={`/dashboard/routers/${item.id}/pppoe-setup`}
-            title="Guided PPPoE Setup"
-            className="rounded border border-neutral-900 bg-neutral-900 px-2 py-1 text-[11px] font-medium text-white hover:bg-neutral-800"
+            title="Guided PPPoE Server Setup"
+            className="rounded-xl bg-neutral-900 px-3 py-1.5 text-[11px] font-semibold text-white shadow-xs hover:bg-neutral-800 transition"
           >
             Setup
           </Link>
           <button
             onClick={() => setRouterToDelete(item)}
             title="Delete Router"
-            className="rounded border border-neutral-200 bg-surface p-1 text-neutral-400 hover:border-rose-300 hover:text-rose-600"
+            className="rounded-xl border border-neutral-200 bg-white p-1.5 text-neutral-400 hover:border-rose-300 hover:text-rose-600 transition"
           >
-            <Trash2 className="h-3 w-3" />
+            <Trash2 className="h-3.5 w-3.5" />
           </button>
         </div>
       ),
@@ -460,7 +392,7 @@ export default function RoutersPage() {
           <button
             onClick={loadRouters}
             disabled={isLoading}
-            className="flex items-center gap-1.5 rounded border border-border bg-surface px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50"
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 transition"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -469,10 +401,9 @@ export default function RoutersPage() {
             id="open-add-router-btn"
             onClick={() => {
               setModalError('');
-              setModalTestResult(null);
               setIsAddModalOpen(true);
             }}
-            className="flex items-center gap-1.5 rounded bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-neutral-800"
+            className="flex items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-neutral-800 transition"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>Add Router Gateway</span>
@@ -480,21 +411,25 @@ export default function RoutersPage() {
         </div>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-6">
         {successMessage && (
-          <div className="flex items-center gap-2 rounded border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-800">
-            <CheckCircle2 className="h-4 w-4 shrink-0" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{successMessage}</span>
           </div>
         )}
 
         {errorMessage && (
-          <div className="flex items-center gap-2 rounded border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
         )}
 
+        {/* Modular Fleet KPI Cards */}
+        <RouterStatsCards routers={routers} />
+
+        {/* Data Table */}
         <DataTable<RouterItem>
           columns={columns}
           data={routers}
@@ -511,247 +446,32 @@ export default function RoutersPage() {
         />
       </div>
 
-      {/* Add Router Gateway Modal */}
-      <Modal
+      {/* Add Router Gateway Modular Modal */}
+      <RouterFormModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        title="Register MikroTik Router Gateway"
-        description="Provide RouterOS API or REST connection credentials. Passwords are encrypted at rest with AES-256-GCM."
-      >
-        <form onSubmit={handleCreateRouter} className="space-y-3.5">
-          {modalError && (
-            <div className="flex items-center gap-2 rounded border border-rose-200 bg-rose-50 p-2.5 text-xs text-rose-800">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>{modalError}</span>
-            </div>
-          )}
+        onSubmit={handleCreateRouter}
+        onTestConnection={handleTestCredentials}
+        isSaving={isSaving}
+        modalError={modalError}
+      />
 
-          <div>
-            <label className="block text-xs font-medium text-neutral-800">Router Name *</label>
-            <input
-              type="text"
-              required
-              value={routerName}
-              onChange={(e) => setRouterName(e.target.value)}
-              placeholder="e.g. Gulshan-Core-CCR2004"
-              className="mt-1 block w-full rounded border border-border bg-background px-3 py-2 text-xs text-neutral-900 focus:border-neutral-900 focus:outline-none"
-            />
-          </div>
+      {/* Connection Diagnostic Modal */}
+      <RouterTestResultModal
+        result={activeTestResult}
+        onClose={() => setActiveTestResult(null)}
+      />
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="col-span-2">
-              <label className="block text-xs font-medium text-neutral-800">
-                IP Address or Hostname *
-              </label>
-              <input
-                type="text"
-                required
-                value={host}
-                onChange={(e) => setHost(e.target.value)}
-                placeholder="192.168.88.1"
-                className="mt-1 block w-full rounded border border-border bg-background px-3 py-2 text-xs font-mono text-neutral-900 focus:border-neutral-900 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-neutral-800">Port *</label>
-              <input
-                type="number"
-                required
-                value={port}
-                onChange={(e) => setPort(parseInt(e.target.value, 10))}
-                className="mt-1 block w-full rounded border border-border bg-background px-3 py-2 text-xs font-mono text-neutral-900 focus:border-neutral-900 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-neutral-800">Connection Protocol</label>
-            <select
-              value={protocol}
-              onChange={(e) => setProtocol(e.target.value)}
-              className="mt-1 block w-full rounded border border-border bg-background px-3 py-2 text-xs text-neutral-900 focus:border-neutral-900 focus:outline-none"
-            >
-              <option value="REST_HTTPS">REST API over HTTPS (RouterOS v7 Recommended)</option>
-              <option value="REST_HTTP">REST API over HTTP</option>
-              <option value="API_SSL">RouterOS Binary API with SSL (Port 8729)</option>
-              <option value="API_PLAIN">RouterOS Binary API Plaintext (Port 8728)</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-neutral-800">API Username *</label>
-              <input
-                type="text"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="api-billing"
-                className="mt-1 block w-full rounded border border-border bg-background px-3 py-2 text-xs font-mono text-neutral-900 focus:border-neutral-900 focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-neutral-800">API Password *</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="mt-1 block w-full rounded border border-border bg-background px-3 py-2 text-xs font-mono text-neutral-900 focus:border-neutral-900 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          {/* Inline Test Result Box */}
-          {modalTestResult && (
-            <div
-              className={`rounded border p-3 text-xs ${
-                modalTestResult.success
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                  : 'border-rose-200 bg-rose-50 text-rose-800'
-              }`}
-            >
-              <div className="font-semibold">
-                {modalTestResult.success
-                  ? 'Connection Verified Successfully'
-                  : 'Connection Test Failed'}
-              </div>
-              {modalTestResult.success ? (
-                <div className="mt-1 space-y-0.5 font-mono text-[11px]">
-                  <div>Identity: {modalTestResult.identity}</div>
-                  <div>RouterOS Version: {modalTestResult.rosVersion}</div>
-                  <div>Board: {modalTestResult.boardName}</div>
-                  <div>Latency: {modalTestResult.latencyMs}ms</div>
-                </div>
-              ) : (
-                <div className="mt-1 text-[11px]">{modalTestResult.error}</div>
-              )}
-            </div>
-          )}
-
-          <div className="flex items-center justify-between pt-3">
-            <button
-              type="button"
-              onClick={handleTestModalCredentials}
-              disabled={isTestingModalConnection}
-              className="inline-flex items-center gap-1.5 rounded border border-border bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-200 disabled:opacity-50"
-            >
-              {isTestingModalConnection ? (
-                <RefreshCw className="h-3 w-3 animate-spin" />
-              ) : (
-                <Zap className="h-3 w-3" />
-              )}
-              Test Credentials
-            </button>
-
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAddModalOpen(false)}
-                className="rounded border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50"
-              >
-                Cancel
-              </button>
-              <button
-                id="save-router-btn"
-                type="submit"
-                disabled={isSaving}
-                className="inline-flex items-center gap-1.5 rounded bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
-              >
-                {isSaving && <RefreshCw className="h-3 w-3 animate-spin" />}
-                Save Router
-              </button>
-            </div>
-          </div>
-        </form>
-      </Modal>
-
-      {/* Row Test Result Modal */}
-      <Modal
-        isOpen={isTestResultModalOpen}
-        onClose={() => setIsTestResultModalOpen(false)}
-        title="Router Connection Probe Result"
-      >
-        {activeTestResult && (
-          <div className="space-y-4 text-xs">
-            <div
-              className={`flex items-center gap-2 rounded border p-3 ${
-                activeTestResult.success
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                  : 'border-rose-200 bg-rose-50 text-rose-800'
-              }`}
-            >
-              {activeTestResult.success ? (
-                <CheckCircle2 className="h-5 w-5 shrink-0" />
-              ) : (
-                <AlertCircle className="h-5 w-5 shrink-0" />
-              )}
-              <div>
-                <div className="font-semibold">
-                  {activeTestResult.success
-                    ? 'RouterOS Responded Successfully'
-                    : 'Router Connection Failed'}
-                </div>
-                <div className="text-[11px]">
-                  {activeTestResult.success
-                    ? `Probe latency: ${activeTestResult.latencyMs}ms`
-                    : activeTestResult.error}
-                </div>
-              </div>
-            </div>
-
-            {activeTestResult.success && (
-              <div className="divide-y divide-border rounded border border-border bg-neutral-50/50">
-                <div className="flex justify-between px-3 py-2">
-                  <span className="text-neutral-500">Router Identity</span>
-                  <span className="font-semibold text-neutral-900">
-                    {activeTestResult.identity || '—'}
-                  </span>
-                </div>
-                <div className="flex justify-between px-3 py-2">
-                  <span className="text-neutral-500">RouterOS Version</span>
-                  <span className="font-mono text-neutral-900">
-                    {activeTestResult.rosVersion || '—'}
-                  </span>
-                </div>
-                <div className="flex justify-between px-3 py-2">
-                  <span className="text-neutral-500">Hardware Board</span>
-                  <span className="font-mono text-neutral-900">
-                    {activeTestResult.boardName || '—'}
-                  </span>
-                </div>
-                <div className="flex justify-between px-3 py-2">
-                  <span className="text-neutral-500">System Uptime</span>
-                  <span className="font-mono text-neutral-900">
-                    {activeTestResult.uptime || '—'}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-end pt-2">
-              <button
-                onClick={() => setIsTestResultModalOpen(false)}
-                className="rounded bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white hover:bg-neutral-800"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      {/* Delete Confirmation Dialog */}
+      {/* Delete Confirmation */}
       <ConfirmDialog
-        isOpen={routerToDelete !== null}
+        isOpen={!!routerToDelete}
         onClose={() => setRouterToDelete(null)}
         onConfirm={handleDeleteRouter}
+        title={`Delete Router "${routerToDelete?.name}"?`}
+        message="Are you sure you want to remove this router? Subscribers provisioned on this router will lose hardware synchronization."
+        confirmLabel="Delete Gateway"
         isLoading={isDeleting}
         isDestructive={true}
-        title="Remove Router Gateway"
-        message={`Are you sure you want to remove router '${routerToDelete?.name}'? Active subscriber sessions and accounting records bound to this router must be reassigned first.`}
-        confirmLabel="Remove Router"
       />
     </AppShell>
   );

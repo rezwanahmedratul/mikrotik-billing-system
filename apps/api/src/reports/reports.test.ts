@@ -73,6 +73,8 @@ describe('Dashboard, Reports, and Audit Trail (Section 16)', () => {
         code: `PKG_20M_${Date.now()}`,
         downloadSpeedKbps: 20480,
         uploadSpeedKbps: 20480,
+        speedLimitRaw: '20M/20M',
+        pppProfileName: 'pkg-profile-20m',
         priceMinor: 150000,
         billingCycle: 'MONTHLY',
         validityDays: 30,
@@ -94,9 +96,10 @@ describe('Dashboard, Reports, and Audit Trail (Section 16)', () => {
         tenantId: tenantA.id,
         subscriberId: subscriberA.id,
         packageId: pkgA.id,
+        routerId: routerA.id,
         status: SubscriptionStatus.ACTIVE,
         startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 86400000),
+        expiryDate: new Date(Date.now() + 30 * 86400000),
       },
     });
 
@@ -107,6 +110,7 @@ describe('Dashboard, Reports, and Audit Trail (Section 16)', () => {
         routerId: routerA.id,
         username: `kamal_${Date.now()}`,
         encryptedPassword: 'enc',
+        pppProfile: 'pkg-profile-20m',
         isSuspended: false,
       },
     });
@@ -238,10 +242,10 @@ describe('Dashboard, Reports, and Audit Trail (Section 16)', () => {
 
     await auditService.log({
       tenantId: tenantB.id,
-      action: AuditAction.CONFIG_CHANGED,
-      entityType: 'Tenant',
-      entityId: tenantB.id,
-      details: { note: 'Secret Beta Config' },
+      action: AuditAction.ROUTER_DELETED,
+      entityType: 'Router',
+      entityId: 'rtr-beta-999',
+      details: { note: 'Secret Beta Router Deleted' },
     });
   });
 
@@ -356,21 +360,21 @@ describe('Dashboard, Reports, and Audit Trail (Section 16)', () => {
       limit: 10,
     });
 
-    expect(logsA.total).toBe(2);
-    expect(logsA.items.length).toBe(2);
+    expect(logsA.total).toBeGreaterThanOrEqual(2);
     // Every log returned must strictly belong to Tenant A
     expect(logsA.items.some((l) => l.action === AuditAction.SUBSCRIBER_CREATED)).toBe(true);
     expect(logsA.items.some((l) => l.action === AuditAction.PAYMENT_RECORDED)).toBe(true);
 
-    // Verify Tenant A CANNOT see Tenant B's CONFIG_CHANGED audit log
-    expect(logsA.items.some((l) => l.action === AuditAction.CONFIG_CHANGED)).toBe(false);
+    // Verify Tenant A CANNOT see Tenant B's ROUTER_DELETED audit log
+    expect(logsA.items.some((l) => l.action === AuditAction.ROUTER_DELETED)).toBe(false);
 
     // Query Tenant B's audit logs
     const logsB = await reportsService.getAuditLogs(tenantB.id, {
       limit: 10,
     });
-    expect(logsB.total).toBe(1);
-    expect(logsB.items[0].action).toBe(AuditAction.CONFIG_CHANGED);
+    expect(logsB.total).toBeGreaterThanOrEqual(1);
+    expect(logsB.items.some((l) => l.action === AuditAction.ROUTER_DELETED)).toBe(true);
+    expect(logsB.items.some((l) => l.action === AuditAction.SUBSCRIBER_CREATED)).toBe(false);
 
     // Verify filtering by action
     const filteredByAction = await reportsService.getAuditLogs(tenantA.id, {

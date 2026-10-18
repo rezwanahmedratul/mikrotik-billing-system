@@ -284,74 +284,74 @@ export default function PppoeSetupPage() {
     >
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Step Wizard Indicator */}
-        <div className="grid grid-cols-4 gap-2 border-b border-border pb-4 text-xs font-medium">
+        <div className="grid grid-cols-4 gap-3 rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-xs text-xs font-semibold">
           <div
-            className={`flex items-center gap-2 ${
-              step >= 1 ? 'text-neutral-900 font-semibold' : 'text-neutral-400'
+            className={`flex items-center gap-2.5 ${
+              step >= 1 ? 'text-neutral-900 font-bold' : 'text-neutral-400'
             }`}
           >
             <div
-              className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] ${
+              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-mono font-bold ${
                 step > 1
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-emerald-100 text-emerald-800'
                   : step === 1
                   ? 'bg-neutral-900 text-white'
-                  : 'border border-neutral-300 bg-neutral-100 text-neutral-500'
+                  : 'border border-neutral-200 bg-neutral-100 text-neutral-400'
               }`}
             >
-              {step > 1 ? <Check className="h-3.5 w-3.5" /> : '1'}
+              {step > 1 ? <Check className="h-4 w-4" /> : '1'}
             </div>
             <span>Inspection</span>
           </div>
 
           <div
-            className={`flex items-center gap-2 ${
-              step >= 2 ? 'text-neutral-900 font-semibold' : 'text-neutral-400'
+            className={`flex items-center gap-2.5 ${
+              step >= 2 ? 'text-neutral-900 font-bold' : 'text-neutral-400'
             }`}
           >
             <div
-              className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] ${
+              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-mono font-bold ${
                 step > 2
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-emerald-100 text-emerald-800'
                   : step === 2
                   ? 'bg-neutral-900 text-white'
-                  : 'border border-neutral-300 bg-neutral-100 text-neutral-500'
+                  : 'border border-neutral-200 bg-neutral-100 text-neutral-400'
               }`}
             >
-              {step > 2 ? <Check className="h-3.5 w-3.5" /> : '2'}
+              {step > 2 ? <Check className="h-4 w-4" /> : '2'}
             </div>
             <span>Parameters</span>
           </div>
 
           <div
-            className={`flex items-center gap-2 ${
-              step >= 3 ? 'text-neutral-900 font-semibold' : 'text-neutral-400'
+            className={`flex items-center gap-2.5 ${
+              step >= 3 ? 'text-neutral-900 font-bold' : 'text-neutral-400'
             }`}
           >
             <div
-              className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] ${
+              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-mono font-bold ${
                 step > 3
-                  ? 'bg-emerald-600 text-white'
+                  ? 'bg-emerald-100 text-emerald-800'
                   : step === 3
                   ? 'bg-neutral-900 text-white'
-                  : 'border border-neutral-300 bg-neutral-100 text-neutral-500'
+                  : 'border border-neutral-200 bg-neutral-100 text-neutral-400'
               }`}
             >
-              {step > 3 ? <Check className="h-3.5 w-3.5" /> : '3'}
+              {step > 3 ? <Check className="h-4 w-4" /> : '3'}
             </div>
             <span>Dry-Run Plan</span>
           </div>
 
           <div
-            className={`flex items-center gap-2 ${
-              step >= 4 ? 'text-neutral-900 font-semibold' : 'text-neutral-400'
+            className={`flex items-center gap-2.5 ${
+              step >= 4 ? 'text-neutral-900 font-bold' : 'text-neutral-400'
             }`}
           >
             <div
-              className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] ${
+              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-mono font-bold ${
                 step === 4
                   ? 'bg-emerald-600 text-white'
-                  : 'border border-neutral-300 bg-neutral-100 text-neutral-500'
+                  : 'border border-neutral-200 bg-neutral-100 text-neutral-400'
               }`}
             >
               4
@@ -361,15 +361,15 @@ export default function PppoeSetupPage() {
         </div>
 
         {errorMessage && (
-          <div className="flex items-center gap-2 rounded border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
-            <AlertCircle className="h-4 w-4 shrink-0" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
         )}
 
         {/* STEP 1: Pre-flight Inspection */}
         {step === 1 && (
-          <div className="space-y-5 rounded border border-border bg-surface p-6 shadow-sm">
+          <div className="space-y-6 rounded-2xl border border-neutral-200/80 bg-white p-7 shadow-xs">
             <div>
               <h2 className="text-sm font-semibold text-neutral-900">
                 Step 1: Router Readiness & Pre-flight Inspection

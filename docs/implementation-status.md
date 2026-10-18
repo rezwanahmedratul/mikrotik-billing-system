@@ -823,7 +823,133 @@
   - Audited manual overrides with mandatory reason verified.
   - Dry-run mode non-mutating execution verified.
 - **Next Step:**
-  - Section 16: Dashboard, Reports, and Audit Trail.
+  - Section 16: Dashboard, Reports, and Audit Trail (COMPLETED).
+
+---
+
+### Milestone Log: Section 16 — Dashboard, Reports, and Audit Trail
+
+- **Completed Work:**
+  - Implemented backend analytics and reports in `apps/api/src/reports/reports.service.ts`:
+    - High-frequency Dashboard Overview (`getDashboardOverview`):
+      - Calculates active subscribers, online sessions, online/total routers, current month billed, collections, outstanding balance, and overdue counts.
+      - Implements short-lived in-memory cache (15-second TTL) with data freshness timestamps and `isCached` metadata.
+      - Guarantees dashboard requests do not query every external router synchronously.
+    - Revenue & Collections Reporting (`getCollectionsReport`):
+      - Computes gross collected, reversals, and net collections in integer minor units (BDT poisha).
+      - Computes channel breakdown by payment method (CASH, BKASH, NAGAD, ROCKET, BANK_TRANSFER, CARD).
+      - Computes staff performance breakdown by cashier / collector.
+      - Computes chronological daily inflow trends with gross, reversals, and net intake.
+    - Subscriber Churn & Growth Analytics (`getSubscriberGrowthReport`):
+      - Calculates subscriber pool metrics (total, active, suspended).
+      - Calculates new subscriber acquisitions within configurable date windows.
+      - Breaks down subscriber distribution across tariff packages and router gateways.
+    - Overdue Aging Schedule (`getAgingReport`):
+      - Evaluates all unsettled invoices against real-time due dates.
+      - Categorizes receivables into 5 aging buckets: Current, 1–30 days past due, 31–60 days past due, 61–90 days past due, and 90+ days bad debt.
+      - Ranks top high-exposure debtors with days overdue, unpaid invoice count, and balance.
+    - Router Telemetry & Health Reporting (`getRouterHealthReport`):
+      - Aggregates hardware telemetry across router fleet (CPU load, memory, uptime, RouterOS version).
+      - Includes data freshness indicators and labels stale devices (>5m since last sync).
+    - Tamper-Evident Audit Trail Browsing (`getAuditLogs`):
+      - Paginated search and filtering across audit logs by action, entity type, actor, and date.
+      - Joins actor details and preserves full details JSON payload.
+      - Strictly enforces multi-tenant isolation.
+  - Implemented controller and module:
+    - `apps/api/src/reports/reports.controller.ts`: Role-guarded endpoints (`/reports/dashboard-overview`, `/reports/collections`, `/reports/subscriber-growth`, `/reports/aging`, `/reports/router-health`, `/reports/audit-logs`).
+    - `apps/api/src/reports/reports.module.ts`: Modular NestJS provider registration in `AppModule`.
+  - Co-located integration test suite:
+    - `apps/api/src/reports/reports.test.ts` (6/6 tests passed).
+  - Implemented modular frontend architecture in `apps/web/src/components/reports/` and `apps/web/src/app/dashboard/reports/page.tsx`:
+    - `reports.types.ts`: Domain models for overview, collections, aging buckets, subscriber growth, and audit logs.
+    - `ReportMetricsCards.tsx`: 4 monochrome KPI summary cards with rounded-2xl corners, subtle borders, high-contrast numbers, and live sync badges.
+    - `CollectionsReportView.tsx`: Gross/reversal/net summary, method breakdown with progress bars, cashier performance table, and daily inflow trend table.
+    - `AgingReportView.tsx`: Receivable exposure banner, 5 aging schedule cards, and top debtor accounts table.
+    - `SubscriberGrowthView.tsx`: Account pool status, tariff adoption progress, and router gateway loading.
+    - `AuditLogsTableView.tsx`: Searchable audit log table with action selector, expandable JSON payload viewer, and pagination.
+    - `ReportsPage` orchestrator: tab navigation pill bar, period presets (This Month, Last 30 Days, All Time), CSV data export for all report categories.
+  - Design & aesthetics:
+    - Built with rounded corners (`rounded-2xl`, `rounded-xl`, `rounded-full`), modern, minimal, monochrome palette, smooth transitions, and responsive mobile drawers.
+  - Verification & testing:
+    - Co-located integration tests passed (6/6 tests).
+    - Full monorepo test suite passed (109/109 tests).
+    - Next.js production build succeeded with exit code 0 (19/19 routes compiled).
+    - Verified HTTP 200 on `/dashboard/reports`.
+- **Files Changed:**
+  - `apps/api/src/reports/reports.dto.ts`
+  - `apps/api/src/reports/reports.service.ts`
+  - `apps/api/src/reports/reports.controller.ts`
+  - `apps/api/src/reports/reports.module.ts`
+  - `apps/api/src/reports/reports.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/api/src/lifecycle/service-lifecycle.dto.ts`
+  - `apps/api/src/notifications/notifications.dto.ts`
+  - `apps/api/src/payment-gateways/payment-gateways.dto.ts`
+  - `apps/web/src/components/reports/reports.types.ts`
+  - `apps/web/src/components/reports/ReportMetricsCards.tsx`
+  - `apps/web/src/components/reports/CollectionsReportView.tsx`
+  - `apps/web/src/components/reports/AgingReportView.tsx`
+  - `apps/web/src/components/reports/SubscriberGrowthView.tsx`
+  - `apps/web/src/components/reports/AuditLogsTableView.tsx`
+  - `apps/web/src/app/dashboard/reports/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test -- apps/api/src/reports/reports.test.ts` (6/6 tests passed)
+  - `pnpm test` (All 109 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web run build` (All 19 static routes compiled with code 0)
+  - `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/dashboard/reports` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Summary calculations and caching verified.
+  - Gross collections, reversals, and net intake verified.
+  - 5 aging buckets and debtor exposure ranking verified.
+  - Package adoption and router loading distribution verified.
+  - Router telemetry without synchronous hardware blocking verified.
+  - Paginated audit log search and strict cross-tenant isolation verified.
+- **Next Step:**
+  - Section 17: Performance and Scale (COMPLETED).
+
+---
+
+### Milestone Log: Section 17 — Performance, Query Optimization, and Scale Targets
+
+- **Completed Work:**
+  - High-Volume Query Indexing:
+    - Added compound index `@@index([routerId, status])` to `Subscription` in `packages/database/prisma/schema.prisma`.
+    - Pushed database schema migration to PostgreSQL and regenerated Prisma client.
+    - Verified all core high-volume query paths are backed by B-tree indexes: `Invoice (tenantId, status)`, `Invoice (dueDate)`, `Invoice (subscriberId)`, `Subscription (tenantId, status)`, `Subscription (routerId, status)`, `Subscription (expiryDate)`, `ActiveSessionSnapshot (routerId, username)`, `ActiveSessionSnapshot (observedAt)`, `Subscriber (tenantId, phone)`, `Subscriber (tenantId, isArchived)`, `Subscriber UNIQUE(tenantId, accountNumber)`, `AuditLog (tenantId, action)`, and `AuditLog (tenantId, createdAt)`.
+  - Latency Benchmarks & Validation:
+    - Cached dashboard overview latency: Measured p95 < 35ms (target < 300ms).
+    - Indexed subscriber pagination under concurrent load (40 concurrent requests): Measured p95 < 85ms (target < 500ms).
+    - Active subscriptions by router lookup: Measured < 15ms (target < 100ms).
+    - Invoices by tenant and status lookup: Measured < 12ms (target < 100ms).
+    - Enforced pagination bounds on list queries preventing unbounded memory allocation.
+  - Concurrency & Worker Isolation:
+    - Background router health poller operates with bounded concurrency (throttled batch workers), preventing socket exhaustion and router CPU overload.
+    - 5-second socket timeouts isolate unreachable gateways without blocking API request threads.
+  - Documentation:
+    - Created comprehensive `docs/performance.md` covering query execution plans, indexing tables, measured benchmark metrics, and concurrency architecture.
+  - Test Suite:
+    - Implemented `apps/api/src/common/performance.test.ts` with 4 automated benchmarks (4/4 passed).
+- **Files Changed:**
+  - `packages/database/prisma/schema.prisma`
+  - `apps/api/src/common/performance.test.ts`
+  - `docs/performance.md`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/database exec prisma db push` (Postgres schema synced)
+  - `pnpm --filter @mikrotik-billing/database run db:generate` (Prisma client generated)
+  - `pnpm --filter @mikrotik-billing/api test -- apps/api/src/common/performance.test.ts` (4/4 tests passed)
+  - `pnpm test` (All 113 tests passed across the monorepo)
+  - `pnpm run typecheck` (All 5 workspace projects passed with 0 errors)
+- **Tests & Verification:**
+  - Indexed list query latency p95 verified < 500ms target under concurrent load.
+  - Cached dashboard overview latency p95 verified < 300ms target.
+  - High-volume index lookups for active subscriptions and invoices verified < 50ms.
+  - Pagination limits preventing unbounded memory allocation verified.
+- **Next Step:**
+  - Section 18: Security Review and Hardening.
+
+
 
 
 
