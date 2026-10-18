@@ -11,12 +11,12 @@ interface PaymentDistributionChartsProps {
 }
 
 const PAYMENT_METHOD_COLORS: Record<string, string> = {
-  BKASH: '#e11d48',
-  NAGAD: '#ea580c',
-  ROCKET: '#7c3aed',
-  BANK_TRANSFER: '#2563eb',
-  CASH: '#16a34a',
-  OTHER: '#71717a',
+  BKASH: '#e4e4e7',
+  NAGAD: '#a1a1aa',
+  ROCKET: '#71717a',
+  BANK_TRANSFER: '#52525b',
+  CASH: '#3f3f46',
+  OTHER: '#27272a',
 };
 
 export const PaymentDistributionCharts: React.FC<PaymentDistributionChartsProps> = ({ payments }) => {
@@ -37,11 +37,11 @@ export const PaymentDistributionCharts: React.FC<PaymentDistributionChartsProps>
         color: PAYMENT_METHOD_COLORS[method] || '#52525b',
       }))
     : [
-        { label: 'bKash Merchant', value: 48500, color: '#e11d48' },
-        { label: 'Nagad Direct', value: 24200, color: '#ea580c' },
-        { label: 'Rocket Gateway', value: 9800, color: '#7c3aed' },
-        { label: 'Bank Wire', value: 16400, color: '#2563eb' },
-        { label: 'Cash Counter', value: 11200, color: '#16a34a' },
+        { label: 'bKash Merchant', value: 48500, color: '#e4e4e7' },
+        { label: 'Nagad Direct', value: 24200, color: '#a1a1aa' },
+        { label: 'Rocket Gateway', value: 9800, color: '#71717a' },
+        { label: 'Bank Wire', value: 16400, color: '#52525b' },
+        { label: 'Cash Counter', value: 11200, color: '#3f3f46' },
       ];
 
   const totalValue = methodSegments.reduce((sum, s) => sum + s.value, 0);

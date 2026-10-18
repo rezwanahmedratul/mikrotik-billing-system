@@ -279,7 +279,7 @@ export default function RoutersPage() {
         <div className="space-y-1">
           <StatusBadge status={item.connectionStatus} />
           {isStale(item.lastSeenAt) && item.connectionStatus === 'ONLINE' && (
-            <div className="flex items-center gap-1 text-[10px] text-amber-600 font-medium">
+            <div className="flex items-center gap-1 text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">
               <AlertTriangle className="h-3 w-3" /> Stale telemetry
             </div>
           )}
@@ -293,23 +293,21 @@ export default function RoutersPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-neutral-400 font-mono">CPU</span>
-            <div className="h-2 w-20 overflow-hidden rounded-full bg-neutral-100 border border-neutral-200/50">
+            <div className="h-2 w-20 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700">
               <div
                 className={`h-full rounded-full transition-all ${
                   (item.cpuLoad || 0) > 80
-                    ? 'bg-rose-500'
-                    : (item.cpuLoad || 0) > 50
-                    ? 'bg-amber-500'
-                    : 'bg-neutral-900'
+                    ? 'bg-black dark:bg-white'
+                    : 'bg-neutral-700 dark:bg-neutral-300'
                 }`}
                 style={{ width: `${item.cpuLoad || 0}%` }}
               />
             </div>
-            <span className="font-mono text-[11px] font-semibold text-neutral-800">
+            <span className="font-mono text-[11px] font-semibold text-neutral-800 dark:text-neutral-200">
               {item.cpuLoad !== null ? `${item.cpuLoad}%` : '—'}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[10px] text-neutral-500 font-mono">
+          <div className="flex items-center gap-1.5 text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">
             <Clock className="h-3 w-3" />
             <span>Up: {item.uptime || '—'}</span>
           </div>
@@ -375,7 +373,7 @@ export default function RoutersPage() {
           <button
             onClick={() => setRouterToDelete(item)}
             title="Delete Router"
-            className="rounded-xl border border-neutral-200 bg-white p-1.5 text-neutral-400 hover:border-rose-300 hover:text-rose-600 transition"
+            className="rounded-xl border border-neutral-200 bg-white p-1.5 text-neutral-400 hover:border-black hover:text-black dark:border-neutral-800 dark:bg-black dark:text-neutral-400 dark:hover:border-white dark:hover:text-white transition"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
@@ -393,7 +391,7 @@ export default function RoutersPage() {
           <button
             onClick={loadRouters}
             disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 transition"
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-200 dark:hover:bg-neutral-900 transition"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -404,7 +402,7 @@ export default function RoutersPage() {
               setModalError('');
               setIsAddModalOpen(true);
             }}
-            className="flex items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-neutral-800 transition"
+            className="flex items-center gap-1.5 rounded-xl bg-black px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 transition"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>Add Router Gateway</span>
@@ -414,15 +412,15 @@ export default function RoutersPage() {
     >
       <div className="space-y-6">
         {successMessage && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-neutral-300 bg-neutral-100 p-3.5 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-neutral-900 dark:text-white" />
             <span>{successMessage}</span>
           </div>
         )}
 
         {errorMessage && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-neutral-300 bg-neutral-100 p-3.5 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100">
+            <AlertCircle className="h-4 w-4 shrink-0 text-neutral-900 dark:text-white" />
             <span>{errorMessage}</span>
           </div>
         )}

@@ -80,23 +80,23 @@ export function RecordPaymentModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {modalError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-2">
+          <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-xl text-xs text-white flex items-center gap-2 dark:bg-white dark:text-black dark:border-white">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{modalError}</span>
           </div>
         )}
 
         {/* Invoice balance card */}
-        <div className="bg-neutral-50 border border-neutral-200/80 rounded-2xl p-4 flex items-center justify-between text-xs">
+        <div className="bg-neutral-50 dark:bg-black border border-neutral-200/80 dark:border-neutral-800 rounded-2xl p-4 flex items-center justify-between text-xs">
           <div>
-            <span className="text-neutral-400 block mb-0.5">Remaining Balance</span>
-            <span className="text-lg font-bold font-mono text-neutral-900">
+            <span className="text-neutral-500 dark:text-neutral-400 block mb-0.5 font-medium">Remaining Balance</span>
+            <span className="text-lg font-bold font-mono text-neutral-900 dark:text-white">
               ৳ {(invoice.balanceMinor / 100).toFixed(2)}
             </span>
           </div>
           <div className="text-right">
-            <span className="text-neutral-400 block mb-0.5">Invoice Total</span>
-            <span className="text-sm font-mono text-neutral-600">
+            <span className="text-neutral-500 dark:text-neutral-400 block mb-0.5 font-medium">Invoice Total</span>
+            <span className="text-sm font-mono text-neutral-700 dark:text-neutral-300">
               {invoice.totalFormatted}
             </span>
           </div>
@@ -104,13 +104,13 @@ export function RecordPaymentModal({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Payment Method *
             </label>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
             >
               <option value="BKASH">bKash</option>
               <option value="NAGAD">Nagad</option>
@@ -123,7 +123,7 @@ export function RecordPaymentModal({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Amount (BDT) *
             </label>
             <div className="relative">
@@ -137,14 +137,14 @@ export function RecordPaymentModal({
                 required
                 value={amountMajor}
                 onChange={(e) => setAmountMajor(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 bg-neutral-50 border border-neutral-300 rounded-xl text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+                className="w-full pl-8 pr-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
               />
             </div>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
             Transaction Reference / TrxID
           </label>
           <input
@@ -152,12 +152,12 @@ export function RecordPaymentModal({
             value={externalReference}
             onChange={(e) => setExternalReference(e.target.value)}
             placeholder="e.g. 9J47A83K1P"
-            className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-xl text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
             Notes / Remarks
           </label>
           <input
@@ -165,22 +165,22 @@ export function RecordPaymentModal({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Optional cashier remarks..."
-            className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-xl text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
           />
         </div>
 
-        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-200">
+        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-200 dark:border-neutral-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-medium rounded-xl transition-colors"
+            className="px-4 py-2 border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-xl transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium rounded-xl transition-colors shadow-sm disabled:opacity-60 flex items-center gap-1.5"
+            className="px-4 py-2 bg-neutral-900 hover:bg-black text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-xs font-semibold rounded-xl transition-colors shadow-xs disabled:opacity-60 flex items-center gap-1.5"
           >
             {isSubmitting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
             Confirm Payment

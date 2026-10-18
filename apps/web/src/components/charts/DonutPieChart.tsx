@@ -14,11 +14,12 @@ interface DonutPieChartProps {
 }
 
 const MONOCHROME_PALETTE = [
-  '#18181b', // neutral-900 / white in dark mode
-  '#52525b', // neutral-600
-  '#a1a1aa', // neutral-400
-  '#d4d4d8', // neutral-300
-  '#71717a', // neutral-500
+  '#d4d4d8',
+  '#71717a',
+  '#a1a1aa',
+  '#52525b',
+  '#3f3f46',
+  '#e4e4e7',
 ];
 
 export function DonutPieChart({
@@ -58,7 +59,7 @@ export function DonutPieChart({
 
   return (
     <div
-      className={`rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition-colors ${className}`}
+      className={`rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition-colors ${className}`}
     >
       {(title || description) && (
         <div className="mb-4">

@@ -45,10 +45,10 @@ export function GatewayCredentialsCard({ settings }: GatewayCredentialsCardProps
   ];
 
   return (
-    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs">
-      <div className="mb-5 border-b border-neutral-100 pb-4">
-        <h2 className="text-sm font-semibold text-neutral-900">Payment Gateways & Integrations</h2>
-        <p className="mt-0.5 text-xs text-neutral-500">
+    <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-black">
+      <div className="mb-5 border-b border-neutral-100 dark:border-neutral-800 pb-4">
+        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Payment Gateways & Integrations</h2>
+        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
           Digital merchant accounts and automated settlement services with secret key masking
         </p>
       </div>
@@ -59,34 +59,34 @@ export function GatewayCredentialsCard({ settings }: GatewayCredentialsCardProps
           return (
             <div
               key={gw.name}
-              className="flex flex-col justify-between gap-3 rounded-xl border border-neutral-200/80 p-4 transition hover:bg-neutral-50/50 sm:flex-row sm:items-center"
+              className="flex flex-col justify-between gap-3 rounded-xl border border-neutral-200 dark:border-neutral-800 dark:bg-black p-4 transition hover:bg-neutral-50/50 dark:hover:bg-neutral-900 sm:flex-row sm:items-center"
             >
               <div className="flex items-start gap-3.5">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
                   <Icon className="h-4.5 w-4.5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-neutral-900">{gw.name}</span>
-                    <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-mono text-neutral-600">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-white">{gw.name}</span>
+                    <span className="rounded-full bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-[10px] font-mono text-neutral-600 dark:text-neutral-300">
                       {gw.category}
                     </span>
                   </div>
-                  <p className="mt-0.5 text-[11px] text-neutral-500">{gw.description}</p>
+                  <p className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{gw.description}</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-auto">
                 <span
-                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-medium ${
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-mono font-medium ${
                     gw.configured
-                      ? 'border border-emerald-200 bg-emerald-50 text-emerald-800'
-                      : 'border border-neutral-200 bg-neutral-100 text-neutral-600'
+                      ? 'bg-black text-white dark:bg-white dark:text-black'
+                      : 'border border-neutral-200 bg-neutral-100 text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400'
                   }`}
                 >
                   <span
                     className={`h-1.5 w-1.5 rounded-full ${
-                      gw.configured ? 'bg-emerald-500' : 'bg-neutral-400'
+                      gw.configured ? 'bg-white dark:bg-black' : 'bg-neutral-400'
                     }`}
                   />
                   <span>{gw.status}</span>

@@ -54,12 +54,12 @@ export function CollectionsReportView({ data, isLoading, onExportCsv }: Collecti
     <div className="space-y-6">
       {/* Financial Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               Gross Collections
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
               <CreditCard className="h-4 w-4" />
             </div>
           </div>
@@ -69,32 +69,32 @@ export function CollectionsReportView({ data, isLoading, onExportCsv }: Collecti
           </div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               Payment Reversals
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-rose-600 dark:bg-neutral-800 dark:text-rose-400">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
               <RotateCcw className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-rose-600 dark:text-rose-400">৳ {reversalsFormatted}</div>
-          <div className="text-xs text-rose-600 dark:text-rose-400 mt-1">
+          <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">৳ {reversalsFormatted}</div>
+          <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
             {data.reversalsMinor > 0 ? 'Chargebacks and reversals refunded' : 'Zero reversal deductions'}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               Net Settled Revenue
             </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-black text-white dark:bg-white dark:text-black">
               <Wallet className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">৳ {netFormatted}</div>
-          <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+          <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">৳ {netFormatted}</div>
+          <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
             Cleared cash and gateway balance
           </div>
         </div>
@@ -146,7 +146,7 @@ export function CollectionsReportView({ data, isLoading, onExportCsv }: Collecti
       </div>
 
       {/* Collector / Cashier Performance Table */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">Collector / Cashier Performance</h3>
@@ -154,7 +154,7 @@ export function CollectionsReportView({ data, isLoading, onExportCsv }: Collecti
           </div>
           <button
             onClick={onExportCsv}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200/80 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-2xs transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-2xs transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:bg-neutral-900"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export CSV</span>

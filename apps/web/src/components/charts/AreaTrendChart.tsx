@@ -94,13 +94,13 @@ export function AreaTrendChart({
 
   return (
     <div
-      className={`rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition-colors ${className}`}
+      className={`rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition-colors ${className}`}
     >
       {(title || description) && (
         <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
             {title && (
-              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
                 {title}
               </h3>
             )}
@@ -132,7 +132,7 @@ export function AreaTrendChart({
       )}
 
       {/* SVG Canvas */}
-      <div className="relative">
+      <div className="relative text-neutral-900 dark:text-white">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="h-full w-full overflow-visible"
@@ -140,11 +140,11 @@ export function AreaTrendChart({
         >
           <defs>
             <linearGradient id={`${chartId}-grad1`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#18181b" stopOpacity="0.20" />
-              <stop offset="100%" stopColor="#18181b" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0.0" />
             </linearGradient>
             <linearGradient id={`${chartId}-grad2`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#71717a" stopOpacity="0.15" />
+              <stop offset="0%" stopColor="#71717a" stopOpacity="0.18" />
               <stop offset="100%" stopColor="#71717a" stopOpacity="0.0" />
             </linearGradient>
           </defs>

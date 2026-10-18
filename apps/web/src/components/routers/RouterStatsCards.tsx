@@ -28,12 +28,12 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Total Gateways */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Total Gateways
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             <Network className="h-4 w-4" />
           </div>
         </div>
@@ -49,13 +49,13 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
       </div>
 
       {/* Connection Status */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Online Fleet Health
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <Activity className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <Activity className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="mt-2 flex items-center justify-between">
@@ -68,13 +68,13 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
             </div>
             <div className="mt-1 flex items-center gap-1.5 text-[11px]">
               {offlineRouters > 0 ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 font-medium text-rose-700 dark:bg-rose-950/40 dark:text-rose-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-rose-600 animate-pulse"></span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 px-2 py-0.5 font-medium">
+                  <span className="h-1.5 w-1.5 rounded-full bg-neutral-800 dark:bg-white animate-pulse"></span>
                   {offlineRouters} offline
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-black px-2 py-0.5 font-semibold">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white dark:bg-black"></span>
                   100% reachable
                 </span>
               )}
@@ -84,18 +84,18 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
             percentage={fleetHealthPct}
             size={50}
             strokeWidth={5}
-            color="#16a34a"
+            color="currentColor"
           />
         </div>
       </div>
 
       {/* Live PPPoE Sessions */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Active PPPoE Sessions
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             <Users className="h-4 w-4" />
           </div>
         </div>
@@ -106,7 +106,7 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
             </span>
             <span className="text-xs text-neutral-500 dark:text-neutral-400">tunnels</span>
           </div>
-          <MetricSparkline data={sessionSparkline} height={26} width={80} color="#18181b" />
+          <MetricSparkline data={sessionSparkline} height={26} width={80} color="currentColor" />
         </div>
         <div className="mt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
           Aggregated across online gateways
@@ -114,12 +114,12 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
       </div>
 
       {/* Fleet CPU Utilization */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Fleet Avg CPU Load
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             <Cpu className="h-4 w-4" />
           </div>
         </div>
@@ -138,7 +138,7 @@ export function RouterStatsCards({ routers }: RouterStatsCardsProps) {
             percentage={avgCpu || 24}
             size={50}
             strokeWidth={5}
-            color={avgCpu && avgCpu > 70 ? '#dc2626' : '#18181b'}
+            color="currentColor"
           />
         </div>
       </div>

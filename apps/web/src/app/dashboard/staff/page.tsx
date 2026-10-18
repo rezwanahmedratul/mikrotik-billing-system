@@ -164,12 +164,12 @@ export default function StaffManagementPage() {
       header: 'Status',
       render: (item: StaffMember) =>
         item.isActive ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-600"></span> Active
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-black text-white dark:bg-white dark:text-black px-2.5 py-0.5 text-[11px] font-mono font-medium">
+            <span className="h-1.5 w-1.5 rounded-full bg-white dark:bg-black"></span> Active
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-neutral-300"></span> Inactive
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-100 px-2.5 py-0.5 text-[11px] font-mono font-medium text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-neutral-400"></span> Inactive
           </span>
         ),
     },
@@ -214,15 +214,15 @@ export default function StaffManagementPage() {
     >
       <div className="space-y-6">
         {successMessage && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-800">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-neutral-300 bg-neutral-100 p-3.5 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-neutral-900 dark:text-white" />
             <span>{successMessage}</span>
           </div>
         )}
 
         {errorMessage && (
-          <div className="flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+          <div className="flex items-center gap-2.5 rounded-xl border border-neutral-300 bg-neutral-100 p-3.5 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100">
+            <AlertCircle className="h-4 w-4 shrink-0 text-neutral-900 dark:text-white" />
             <span>{errorMessage}</span>
           </div>
         )}

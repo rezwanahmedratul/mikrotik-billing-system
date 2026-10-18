@@ -18,8 +18,8 @@ export function RadialProgressRing({
   sublabel,
   size = 64,
   strokeWidth = 6,
-  color = '#18181b',
-  className = '',
+  color = 'currentColor',
+  className = 'text-neutral-900 dark:text-white',
 }: RadialProgressRingProps) {
   const clamped = Math.min(100, Math.max(0, percentage));
   const radius = (size - strokeWidth) / 2;

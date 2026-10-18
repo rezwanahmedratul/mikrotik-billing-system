@@ -18,9 +18,9 @@ export const LifecycleDistributionCharts: React.FC<LifecycleDistributionChartsPr
   const discrepancies = report?.discrepancies.length ?? 1;
 
   const lifecycleSegments: DonutSegment[] = [
-    { label: 'Active In Service', value: activeCount, color: '#16a34a' },
-    { label: 'In Grace Period', value: Math.max(1, discrepancies), color: '#ea580c' },
-    { label: 'Suspended (Cutoff)', value: Math.max(1, suspendedCount), color: '#dc2626' },
+    { label: 'Active In Service', value: activeCount, color: '#e4e4e7' },
+    { label: 'In Grace Period', value: Math.max(1, discrepancies), color: '#a1a1aa' },
+    { label: 'Suspended (Cutoff)', value: Math.max(1, suspendedCount), color: '#52525b' },
   ];
 
   const total = activeCount + suspendedCount + discrepancies;

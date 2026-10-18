@@ -130,20 +130,20 @@ export function SubscriberFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {modalError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2">
+          <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-xl text-xs text-white flex items-center gap-2 dark:bg-white dark:text-black dark:border-white">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{modalError}</span>
           </div>
         )}
 
         {/* Contact Info */}
-        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 pt-1 border-b border-neutral-100 pb-1">
+        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 pt-1 border-b border-neutral-100 dark:border-neutral-800 pb-1">
           Subscriber Contact Details
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Full Name *
             </label>
             <input
@@ -152,12 +152,12 @@ export function SubscriberFormModal({
               value={fullName}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="e.g. Zahirul Islam"
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Mobile Phone Number *
             </label>
             <input
@@ -166,14 +166,14 @@ export function SubscriberFormModal({
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="e.g. 01712345678"
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Email Address
             </label>
             <input
@@ -181,12 +181,12 @@ export function SubscriberFormModal({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g. client@example.com"
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               NID / Passport
             </label>
             <input
@@ -194,13 +194,13 @@ export function SubscriberFormModal({
               value={nidOrPassport}
               onChange={(e) => setNidOrPassport(e.target.value)}
               placeholder="e.g. 199026925..."
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
             Service Address
           </label>
           <input
@@ -208,25 +208,25 @@ export function SubscriberFormModal({
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="e.g. House 42, Road 11, Block D, Banani"
-            className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+            className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
           />
         </div>
 
         {/* Plan & Network Gateway */}
-        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 pt-2 border-b border-neutral-100 pb-1">
+        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 pt-2 border-b border-neutral-100 dark:border-neutral-800 pb-1">
           Service Package & MikroTik Gateway
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Internet Package *
             </label>
             <select
               value={packageId}
               onChange={(e) => setPackageId(e.target.value)}
               required
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             >
               {packages.map((pkg) => (
                 <option key={pkg.id} value={pkg.id}>
@@ -237,14 +237,14 @@ export function SubscriberFormModal({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Router Gateway *
             </label>
             <select
               value={routerId}
               onChange={(e) => setRouterId(e.target.value)}
               required
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             >
               {routers.map((r) => (
                 <option key={r.id} value={r.id}>
@@ -256,13 +256,13 @@ export function SubscriberFormModal({
         </div>
 
         {/* PPPoE Credentials */}
-        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 pt-2 border-b border-neutral-100 pb-1">
+        <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 pt-2 border-b border-neutral-100 dark:border-neutral-800 pb-1">
           PPPoE Secret Credentials
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               PPPoE Username
             </label>
             <input
@@ -270,19 +270,19 @@ export function SubscriberFormModal({
               value={pppoeUsername}
               onChange={(e) => setPppoeUsername(e.target.value)}
               placeholder="e.g. zahir_101"
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider">
+              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
                 PPPoE Password
               </label>
               <button
                 type="button"
                 onClick={handleGeneratePassword}
-                className="text-[11px] text-neutral-500 hover:text-neutral-900 underline flex items-center gap-1"
+                className="text-[11px] text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white underline flex items-center gap-1 transition"
               >
                 <KeyRound className="w-3 h-3" />
                 Generate New
@@ -292,9 +292,9 @@ export function SubscriberFormModal({
               type="text"
               value={pppoePassword}
               onChange={(e) => setPppoePassword(e.target.value)}
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
-            <span className="text-[11px] text-neutral-400">
+            <span className="text-[11px] text-neutral-400 dark:text-neutral-500">
               Encrypted at rest with AES-256-GCM. Never shown again in plain text.
             </span>
           </div>
@@ -302,7 +302,7 @@ export function SubscriberFormModal({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Static IP (Optional)
             </label>
             <input
@@ -310,12 +310,12 @@ export function SubscriberFormModal({
               value={staticIp}
               onChange={(e) => setStaticIp(e.target.value)}
               placeholder="e.g. 10.10.20.55"
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Caller ID / MAC Lock (Optional)
             </label>
             <input
@@ -323,23 +323,23 @@ export function SubscriberFormModal({
               value={callerId}
               onChange={(e) => setCallerId(e.target.value)}
               placeholder="e.g. 00:1A:2B:3C:4D:5E"
-              className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-black border border-neutral-300 dark:border-neutral-800 rounded-xl text-sm font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-white transition"
             />
           </div>
         </div>
 
-        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-200">
+        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-200 dark:border-neutral-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-sm font-medium rounded-lg transition-colors"
+            className="px-4 py-2 border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-xl transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors shadow-sm disabled:opacity-60 flex items-center gap-2"
+            className="px-4 py-2 bg-neutral-900 hover:bg-black text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-xs font-semibold rounded-xl transition-colors shadow-xs disabled:opacity-60 flex items-center gap-2"
           >
             {isSubmitting && <RefreshCw className="w-4 h-4 animate-spin" />}
             Register & Provision

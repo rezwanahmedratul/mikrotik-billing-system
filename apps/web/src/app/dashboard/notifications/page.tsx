@@ -140,7 +140,7 @@ export default function NotificationsPage() {
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
             <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <p className="text-sm font-medium">{errorMessage}</p>
@@ -158,7 +158,7 @@ export default function NotificationsPage() {
       <NotificationDistributionCharts logs={logs} />
 
       {/* Top Toolbar: Tabs and Actions */}
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-4 mb-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="bg-white border border-neutral-200 rounded-2xl p-4 mb-6 shadow-xs dark:border-neutral-800 dark:bg-black flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Tab Switcher */}
         <div className="flex items-center gap-2 p-1 bg-neutral-100 dark:bg-neutral-800 rounded-xl">
           <button

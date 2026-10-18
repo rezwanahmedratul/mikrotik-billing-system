@@ -400,14 +400,14 @@ export default function SubscribersPage() {
               return (
                 <div>
                   <div
-                    className={`inline-flex items-center gap-1 text-xs font-medium ${
-                      isUrgent ? 'text-amber-600 font-semibold' : 'text-neutral-700'
+                    className={`inline-flex items-center gap-1 text-xs font-mono font-medium ${
+                      isUrgent ? 'text-neutral-900 dark:text-white font-bold' : 'text-neutral-700 dark:text-neutral-300'
                     }`}
                   >
                     <Clock className="w-3.5 h-3.5" />
                     <span>{days > 0 ? `${days} days left` : 'Expired'}</span>
                   </div>
-                  <div className="text-[11px] text-neutral-400 mt-0.5">
+                  <div className="text-[11px] font-mono text-neutral-400 mt-0.5">
                     {sub.currentSubscription?.expiryDate
                       ? new Date(sub.currentSubscription.expiryDate).toLocaleDateString()
                       : '—'}
@@ -449,7 +449,7 @@ export default function SubscribersPage() {
                 <div className="flex items-center justify-end gap-1.5">
                   <Link
                     href={`/dashboard/subscribers/${sub.id}`}
-                    className="px-2.5 py-1 text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors"
+                    className="px-2.5 py-1 text-xs font-medium text-neutral-700 hover:text-black bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors"
                   >
                     Details
                   </Link>
@@ -462,8 +462,8 @@ export default function SubscribersPage() {
                     }
                     className={`px-2.5 py-1 text-xs font-medium rounded-xl transition-colors ${
                       isSuspended
-                        ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
-                        : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'
+                        ? 'bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200'
+                        : 'border border-neutral-300 bg-neutral-100 text-neutral-800 hover:bg-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white'
                     }`}
                   >
                     {isSuspended ? 'Restore' : 'Suspend'}

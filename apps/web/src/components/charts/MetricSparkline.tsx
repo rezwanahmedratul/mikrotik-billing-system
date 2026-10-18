@@ -12,10 +12,10 @@ interface MetricSparklineProps {
 
 export function MetricSparkline({
   data,
-  color = '#18181b',
+  color = 'currentColor',
   height = 36,
   width = 100,
-  className = '',
+  className = 'text-neutral-900 dark:text-white',
 }: MetricSparklineProps) {
   if (!data || data.length < 2) return null;
 

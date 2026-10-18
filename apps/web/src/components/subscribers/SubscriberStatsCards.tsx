@@ -24,48 +24,48 @@ export function SubscriberStatsCards({ subscribers, totalCount }: SubscriberStat
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
             Total Accounts
           </span>
-          <Users className="w-4 h-4 text-neutral-400" />
+          <Users className="w-4 h-4 text-neutral-400 dark:text-neutral-500" />
         </div>
-        <div className="text-2xl font-bold text-neutral-900">{totalCount || subscribers.length}</div>
-        <div className="text-xs text-neutral-500 mt-1">Registered ISP subscribers</div>
+        <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{totalCount || subscribers.length}</div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Registered ISP subscribers</div>
       </div>
 
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
             Active Service
           </span>
-          <UserCheck className="w-4 h-4 text-emerald-600" />
+          <UserCheck className="w-4 h-4 text-neutral-900 dark:text-white" />
         </div>
-        <div className="text-2xl font-bold text-neutral-900">{activeCount}</div>
-        <div className="text-xs text-emerald-600 font-medium mt-1">Online with valid subscription</div>
+        <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{activeCount}</div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Online with valid subscription</div>
       </div>
 
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
             Suspended
           </span>
-          <UserX className="w-4 h-4 text-rose-500" />
+          <UserX className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
         </div>
-        <div className="text-2xl font-bold text-neutral-900">{suspendedCount}</div>
-        <div className="text-xs text-rose-500 font-medium mt-1">Cut off or disabled on router</div>
+        <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{suspendedCount}</div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Cut off or disabled on router</div>
       </div>
 
-      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider dark:text-neutral-400">
             Expiring / Expired
           </span>
-          <AlertTriangle className="w-4 h-4 text-amber-500" />
+          <AlertTriangle className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
         </div>
-        <div className="text-2xl font-bold text-neutral-900">{expiredCount}</div>
-        <div className="text-xs text-amber-600 font-medium mt-1">Renewal action needed</div>
+        <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{expiredCount}</div>
+        <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Renewal action needed</div>
       </div>
     </div>
   );

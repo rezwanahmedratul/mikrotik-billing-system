@@ -191,15 +191,11 @@ export default function SessionsPage() {
         <div className="flex items-center gap-2">
           {/* Live Freshness Indicator Badge */}
           <div
-            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono font-medium transition-colors ${
-              hasDegradedRouters
-                ? 'bg-amber-50 text-amber-800 border-amber-300'
-                : 'bg-emerald-50 text-emerald-800 border-emerald-300'
-            }`}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-neutral-300 bg-neutral-100 text-neutral-900 dark:border-neutral-800 dark:bg-black dark:text-neutral-200 text-xs font-mono font-medium transition-colors"
           >
             <span
               className={`w-2 h-2 rounded-full ${
-                hasDegradedRouters ? 'bg-amber-500' : 'bg-emerald-500 animate-pulse'
+                hasDegradedRouters ? 'bg-neutral-400' : 'bg-black dark:bg-white animate-pulse'
               }`}
             ></span>
             <span>
@@ -365,7 +361,7 @@ export default function SessionsPage() {
               <div className="flex items-center justify-end">
                 <button
                   onClick={() => setSessionToDisconnect(s)}
-                  className="px-2.5 py-1 text-xs font-medium text-red-700 hover:text-red-900 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors flex items-center gap-1"
+                  className="px-2.5 py-1 text-xs font-medium text-neutral-900 hover:text-black bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-white rounded-lg transition-colors flex items-center gap-1"
                   title="Disconnect user session"
                 >
                   <Power className="w-3 h-3" />

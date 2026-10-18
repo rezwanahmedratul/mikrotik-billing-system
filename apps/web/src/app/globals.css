@@ -3,13 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
-  --foreground: #09090b;
+  --background: #ffffff;
+  --foreground: #000000;
+  --surface: #ffffff;
+  --surface-subtle: #f4f4f5;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #000000;
+  --foreground: #ffffff;
+  --surface: #000000;
+  --surface-subtle: #09090b;
+  --border: #27272a;
+  --border-strong: #3f3f46;
 }
 
 body {
@@ -17,10 +25,45 @@ body {
   background: var(--background);
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-/* Custom scrollbars for data tables and charts */
+/* Ensure pitch dark background in dark mode */
+.dark body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Global Monochrome Form Controls in Dark Mode */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark select,
+.dark textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #27272a !important;
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark select:focus,
+.dark textarea:focus {
+  background-color: #050505 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 0 1px #ffffff !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #71717a !important;
+}
+
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -41,3 +84,4 @@ body {
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #3f3f46;
 }
+

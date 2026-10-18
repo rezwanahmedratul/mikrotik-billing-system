@@ -22,9 +22,9 @@ export const NotificationDistributionCharts: React.FC<NotificationDistributionCh
   const effectiveFailed = logs.length > 0 ? failed : 4;
 
   const statusSegments: DonutSegment[] = [
-    { label: 'Delivered', value: effectiveDelivered, color: '#16a34a' },
+    { label: 'Delivered', value: effectiveDelivered, color: '#e4e4e7' },
     { label: 'Queued / In Flight', value: Math.max(1, effectiveQueued), color: '#71717a' },
-    { label: 'Failed Attempts', value: Math.max(1, effectiveFailed), color: '#dc2626' },
+    { label: 'Failed Attempts', value: Math.max(1, effectiveFailed), color: '#3f3f46' },
   ];
 
   const weeklyTrafficBars: ChartDataPoint[] = [

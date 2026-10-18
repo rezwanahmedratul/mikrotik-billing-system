@@ -44,17 +44,17 @@ export function AgingReportView({ data, isLoading }: AgingReportViewProps) {
 
   // Donut Segments
   const bucketSegments: DonutSegment[] = [
-    { label: 'Current', value: Math.max(1, Math.round(buckets.current.totalMinor / 100)), color: '#16a34a' },
-    { label: '1-30 Days', value: Math.max(1, Math.round(buckets.days1to30.totalMinor / 100)), color: '#ca8a04' },
-    { label: '31-60 Days', value: Math.max(1, Math.round(buckets.days31to60.totalMinor / 100)), color: '#ea580c' },
-    { label: '61-90 Days', value: Math.max(1, Math.round(buckets.days61to90.totalMinor / 100)), color: '#dc2626' },
-    { label: '90+ Days', value: Math.max(1, Math.round(buckets.days90Plus.totalMinor / 100)), color: '#991b1b' },
+    { label: 'Current', value: Math.max(1, Math.round(buckets.current.totalMinor / 100)), color: '#e4e4e7' },
+    { label: '1-30 Days', value: Math.max(1, Math.round(buckets.days1to30.totalMinor / 100)), color: '#a1a1aa' },
+    { label: '31-60 Days', value: Math.max(1, Math.round(buckets.days31to60.totalMinor / 100)), color: '#71717a' },
+    { label: '61-90 Days', value: Math.max(1, Math.round(buckets.days61to90.totalMinor / 100)), color: '#52525b' },
+    { label: '90+ Days', value: Math.max(1, Math.round(buckets.days90Plus.totalMinor / 100)), color: '#27272a' },
   ];
 
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Total Outstanding Receivables
@@ -63,7 +63,7 @@ export function AgingReportView({ data, isLoading }: AgingReportViewProps) {
             <span className="text-3xl font-bold font-mono text-neutral-900 dark:text-white">
               ৳ {totalOutstandingFormatted}
             </span>
-            <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+            <span className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
               Across {data.totalOverdueCount} overdue invoices
             </span>
           </div>
@@ -71,7 +71,7 @@ export function AgingReportView({ data, isLoading }: AgingReportViewProps) {
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/lifecycle"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200/80 bg-neutral-50 px-3.5 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-200/80 bg-neutral-50 px-3.5 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
           >
             <Clock className="h-3.5 w-3.5 text-neutral-500" />
             <span>Service Lifecycle & Grace</span>
@@ -102,7 +102,7 @@ export function AgingReportView({ data, isLoading }: AgingReportViewProps) {
       </div>
 
       {/* Top Delinquent Debtors Table */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
         <div className="mb-4">
           <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">High-Exposure Accounts (Top Debtors)</h3>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">Subscribers with greatest overdue balances</p>
@@ -110,7 +110,7 @@ export function AgingReportView({ data, isLoading }: AgingReportViewProps) {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-neutral-100 bg-neutral-50/70 text-[11px] font-medium uppercase tracking-wider text-neutral-500 dark:border-neutral-800 dark:bg-neutral-800/60 dark:text-neutral-400">
+            <thead className="border-b border-neutral-100 bg-neutral-50/70 text-[11px] font-medium uppercase tracking-wider text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400">
               <tr>
                 <th className="px-3 py-2.5">Subscriber Account</th>
                 <th className="px-3 py-2.5">Contact Phone</th>
@@ -141,17 +141,17 @@ export function AgingReportView({ data, isLoading }: AgingReportViewProps) {
                       {debtor.invoiceCount} invoices
                     </td>
                     <td className="px-3 py-2.5">
-                      <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-mono font-medium text-rose-700 dark:border-rose-900/40 dark:bg-rose-950/40 dark:text-rose-400">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-neutral-300 bg-neutral-100 px-2 py-0.5 text-[10px] font-mono font-medium text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
                         {debtor.daysOverdue} days
                       </span>
                     </td>
-                    <td className="px-3 py-2.5 text-right font-mono font-bold text-rose-600 dark:text-rose-400">
+                    <td className="px-3 py-2.5 text-right font-mono font-bold text-neutral-900 dark:text-white">
                       ৳ {(debtor.balanceMinor / 100).toFixed(2)}
                     </td>
                     <td className="px-3 py-2.5 text-right">
                       <Link
                         href={`/dashboard/subscribers/${debtor.subscriberId}`}
-                        className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 bg-white px-2 py-1 text-[11px] font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                        className="inline-flex items-center gap-1 rounded-lg border border-neutral-200 bg-white px-2 py-1 text-[11px] font-medium text-neutral-700 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:bg-neutral-900"
                       >
                         <span>Profile</span>
                         <ArrowUpRight className="h-3 w-3 text-neutral-400" />

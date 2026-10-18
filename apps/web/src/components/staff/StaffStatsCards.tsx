@@ -19,12 +19,12 @@ export function StaffStatsCards({ staff }: StaffStatsCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
       {/* Total Staff */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Total Team
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             <Users className="h-4 w-4" />
           </div>
         </div>
@@ -35,7 +35,7 @@ export function StaffStatsCards({ staff }: StaffStatsCardsProps) {
             </span>
             <span className="text-xs text-neutral-500 dark:text-neutral-400">members</span>
           </div>
-          <MetricSparkline data={sparkline} height={26} width={75} color="#18181b" />
+          <MetricSparkline data={sparkline} height={26} width={75} color="currentColor" />
         </div>
         <div className="mt-2 text-[11px] text-neutral-500 dark:text-neutral-400">
           Tenant-scoped user memberships
@@ -43,13 +43,13 @@ export function StaffStatsCards({ staff }: StaffStatsCardsProps) {
       </div>
 
       {/* Administrators */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             ISP Administrators
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <Shield className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="mt-2 flex items-center justify-between">
@@ -68,19 +68,19 @@ export function StaffStatsCards({ staff }: StaffStatsCardsProps) {
             percentage={Math.round((admins / totalStaff) * 100)}
             size={48}
             strokeWidth={5}
-            color="#16a34a"
+            color="currentColor"
           />
         </div>
       </div>
 
       {/* NOC / Operators */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Network Operators
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <Radio className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <Radio className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="mt-2 flex items-center justify-between">
@@ -99,19 +99,19 @@ export function StaffStatsCards({ staff }: StaffStatsCardsProps) {
             percentage={Math.round((operators / totalStaff) * 100)}
             size={48}
             strokeWidth={5}
-            color="#52525b"
+            color="#71717a"
           />
         </div>
       </div>
 
       {/* Cashiers */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs transition hover:border-neutral-300 dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Cashiers & Billing
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <CreditCard className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <CreditCard className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="mt-2 flex items-center justify-between">
@@ -130,7 +130,7 @@ export function StaffStatsCards({ staff }: StaffStatsCardsProps) {
             percentage={Math.round((cashiers / totalStaff) * 100)}
             size={48}
             strokeWidth={5}
-            color="#71717a"
+            color="#a1a1aa"
           />
         </div>
       </div>

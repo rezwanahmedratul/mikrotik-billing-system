@@ -73,13 +73,13 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="mt-6 rounded-2xl border border-neutral-200/80 bg-white p-7 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-7 shadow-xs dark:border-neutral-800 dark:bg-black">
           {errorMessage && (
             <div
               id="login-error-alert"
-              className="mb-5 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400"
+              className="mb-5 flex items-center gap-2.5 rounded-xl border border-neutral-300 bg-neutral-100 p-3.5 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
             >
-              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+              <AlertCircle className="h-4 w-4 shrink-0 text-neutral-900 dark:text-neutral-100" />
               <span>{errorMessage}</span>
             </div>
           )}
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="operator@fastnet.com"
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:bg-neutral-800 dark:focus:ring-white transition"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black dark:border-neutral-800 dark:bg-black dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:ring-white transition"
               />
             </div>
 
@@ -111,7 +111,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:bg-neutral-800 dark:focus:ring-white transition"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black dark:border-neutral-800 dark:bg-black dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:ring-white transition"
               />
             </div>
 
@@ -125,7 +125,7 @@ export default function LoginPage() {
                 value={tenantCode}
                 onChange={(e) => setTenantCode(e.target.value)}
                 placeholder="e.g. FASTNET"
-                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-neutral-50/50 px-3.5 py-2.5 text-xs font-mono text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-700 dark:bg-neutral-800/60 dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:bg-neutral-800 dark:focus:ring-white transition"
+                className="mt-1.5 block w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-xs font-mono text-neutral-900 placeholder-neutral-400 focus:border-black focus:outline-none focus:ring-1 focus:ring-black dark:border-neutral-800 dark:bg-black dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:ring-white transition"
               />
             </div>
 
@@ -133,7 +133,7 @@ export default function LoginPage() {
               id="login-submit-btn"
               type="submit"
               disabled={isLoading}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 dark:focus:ring-white disabled:opacity-50"
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-black py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-black dark:bg-white dark:text-black dark:hover:bg-neutral-200 dark:focus:ring-white disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -157,7 +157,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setPreset('admin@fastnet.com', 'FASTNET')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
+                className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 transition"
               >
                 <span className="font-semibold block text-neutral-900 dark:text-white">FastNet Admin</span>
                 Owner (Full Access)
@@ -165,7 +165,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setPreset('cashier@fastnet.com', 'FASTNET')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
+                className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 transition"
               >
                 <span className="font-semibold block text-neutral-900 dark:text-white">FastNet Cashier</span>
                 Billing Only
@@ -173,7 +173,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setPreset('operator@fastnet.com', 'FASTNET')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
+                className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 transition"
               >
                 <span className="font-semibold block text-neutral-900 dark:text-white">FastNet NOC</span>
                 Router Operator
@@ -181,7 +181,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setPreset('admin@skylink.com', 'SKYLINK')}
-                className="rounded-xl border border-neutral-200/80 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700/80 dark:bg-neutral-800/50 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 transition"
+                className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-2.5 text-left text-[11px] text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:border-neutral-700 dark:hover:bg-neutral-900 transition"
               >
                 <span className="font-semibold block text-neutral-900 dark:text-white">SkyLink Admin</span>
                 Tenant B Isolation

@@ -23,12 +23,12 @@ export const PaymentStatsCards: React.FC<PaymentStatsCardsProps> = ({ payments }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {/* Gross Confirmed */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Gross Collections
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             <CreditCard className="h-4 w-4" />
           </div>
         </div>
@@ -36,7 +36,7 @@ export const PaymentStatsCards: React.FC<PaymentStatsCardsProps> = ({ payments }
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">
             ৳ {(totalConfirmedMinor / 100).toFixed(2)}
           </div>
-          <MetricSparkline data={collectionSparkline} height={26} width={75} color="#16a34a" />
+          <MetricSparkline data={collectionSparkline} height={26} width={75} color="currentColor" />
         </div>
         <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
           {confirmedPayments.length} confirmed transactions
@@ -44,20 +44,20 @@ export const PaymentStatsCards: React.FC<PaymentStatsCardsProps> = ({ payments }
       </div>
 
       {/* Net Revenue */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Net Cash Flow
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <TrendingUp className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="flex items-baseline justify-between mt-2">
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">
             ৳ {(netCollectedMinor / 100).toFixed(2)}
           </div>
-          <MetricSparkline data={netSparkline} height={26} width={75} color="#18181b" />
+          <MetricSparkline data={netSparkline} height={26} width={75} color="currentColor" />
         </div>
         <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">
           After accounting for chargebacks
@@ -65,13 +65,13 @@ export const PaymentStatsCards: React.FC<PaymentStatsCardsProps> = ({ payments }
       </div>
 
       {/* Reversed Volume */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Reversals
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <RotateCcw className="h-4 w-4 text-rose-500" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <RotateCcw className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white mt-2">
@@ -83,13 +83,13 @@ export const PaymentStatsCards: React.FC<PaymentStatsCardsProps> = ({ payments }
       </div>
 
       {/* Average Transaction */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Avg Collection
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <Wallet className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <Wallet className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white mt-2">

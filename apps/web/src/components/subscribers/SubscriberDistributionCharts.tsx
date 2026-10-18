@@ -30,10 +30,10 @@ export function SubscriberDistributionCharts({
   const pendingCount = Math.max(0, (totalCount || subscribers.length) - activeCount - suspendedCount - expiredCount);
 
   const statusSegments: DonutSegment[] = [
-    { label: 'Active Broadband', value: activeCount, color: '#16a34a' },
-    { label: 'Suspended (Cut-off)', value: suspendedCount, color: '#dc2626' },
-    { label: 'Expired / Due', value: expiredCount, color: '#ca8a04' },
-    ...(pendingCount > 0 ? [{ label: 'Pending Provisioning', value: pendingCount, color: '#71717a' }] : []),
+    { label: 'Active Broadband', value: activeCount, color: '#e4e4e7' },
+    { label: 'Suspended (Cut-off)', value: suspendedCount, color: '#71717a' },
+    { label: 'Expired / Due', value: expiredCount, color: '#a1a1aa' },
+    ...(pendingCount > 0 ? [{ label: 'Pending Provisioning', value: pendingCount, color: '#3f3f46' }] : []),
   ];
 
   // 6-Month Subscriber Intake (Registrations vs Activations)

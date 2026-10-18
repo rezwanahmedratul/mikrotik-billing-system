@@ -20,11 +20,11 @@ export function InvoiceDistributionCharts({ invoices }: InvoiceDistributionChart
   const total = invoices.length || 1;
 
   const statusSegments: DonutSegment[] = [
-    { label: 'Settled / Paid', value: paidCount, color: '#16a34a' },
-    { label: 'Pending / Issued', value: issuedCount, color: '#18181b' },
-    { label: 'Partially Paid', value: partialCount, color: '#ca8a04' },
-    { label: 'Overdue Receivable', value: overdueCount, color: '#dc2626' },
-    ...(voidCount > 0 ? [{ label: 'Voided Statement', value: voidCount, color: '#a1a1aa' }] : []),
+    { label: 'Settled / Paid', value: paidCount, color: '#e4e4e7' },
+    { label: 'Pending / Issued', value: issuedCount, color: '#71717a' },
+    { label: 'Partially Paid', value: partialCount, color: '#a1a1aa' },
+    { label: 'Overdue Receivable', value: overdueCount, color: '#3f3f46' },
+    ...(voidCount > 0 ? [{ label: 'Voided Statement', value: voidCount, color: '#27272a' }] : []),
   ];
 
   // 6-Month Invoiced Volume vs Recovered Receipts (in thousands BDT)

@@ -45,7 +45,7 @@ export function SystemDiagnosticsCard({ system }: SystemDiagnosticsCardProps) {
   const healthPct = Math.round((okCount / subsystems.length) * 100);
 
   return (
-    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+    <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs dark:border-neutral-800 dark:bg-black transition">
       <div className="mb-5 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4">
         <div>
           <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">System Diagnostics & Core Daemons</h2>
@@ -58,7 +58,7 @@ export function SystemDiagnosticsCard({ system }: SystemDiagnosticsCardProps) {
             percentage={healthPct}
             size={36}
             strokeWidth={4}
-            color="#16a34a"
+            color="currentColor"
           />
           <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-0.5 font-mono text-[11px] text-neutral-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
             {system.platformVersion}
@@ -72,24 +72,24 @@ export function SystemDiagnosticsCard({ system }: SystemDiagnosticsCardProps) {
           return (
             <div
               key={sub.name}
-              className="flex items-start gap-3 rounded-xl border border-neutral-200/80 bg-neutral-50/40 p-3.5 dark:border-neutral-800 dark:bg-neutral-800/40 transition hover:bg-neutral-50 dark:hover:bg-neutral-800/70"
+              className="flex items-start gap-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/40 dark:bg-black p-3.5 transition hover:bg-neutral-50 dark:hover:bg-neutral-900"
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white text-neutral-800 shadow-2xs dark:bg-neutral-800 dark:text-neutral-200">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
                 <Icon className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between">
                   <div className="truncate text-xs font-semibold text-neutral-900 dark:text-white">{sub.name}</div>
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold ${
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-mono font-medium ${
                       sub.isOk
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400'
-                        : 'bg-red-50 text-red-700 dark:bg-rose-950/40 dark:text-rose-400'
+                        ? 'bg-black text-white dark:bg-white dark:text-black'
+                        : 'border border-neutral-300 bg-neutral-100 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300'
                     }`}
                   >
                     <span
                       className={`h-1 w-1 rounded-full ${
-                        sub.isOk ? 'bg-emerald-500' : 'bg-red-500'
+                        sub.isOk ? 'bg-white dark:bg-black' : 'bg-neutral-400'
                       }`}
                     />
                     <span>{sub.status}</span>

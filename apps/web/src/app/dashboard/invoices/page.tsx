@@ -304,7 +304,7 @@ export default function InvoicesPage() {
             render: (inv: InvoiceItem) => (
               <div
                 className={`text-xs font-mono font-bold ${
-                  inv.balanceMinor > 0 ? 'text-red-600' : 'text-emerald-700'
+                  inv.balanceMinor > 0 ? 'text-neutral-900 dark:text-white' : 'text-neutral-400 dark:text-neutral-500'
                 }`}
               >
                 {inv.balanceFormatted}
@@ -338,7 +338,7 @@ export default function InvoicesPage() {
               <div className="flex items-center justify-end gap-1.5">
                 <button
                   onClick={() => setSelectedInvoiceForReceipt(inv)}
-                  className="px-2.5 py-1 text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors flex items-center gap-1"
+                  className="px-2.5 py-1 text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors flex items-center gap-1 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
                   title="View Printable Statement"
                 >
                   <Printer className="w-3 h-3" />
@@ -349,7 +349,7 @@ export default function InvoicesPage() {
                   <>
                     <button
                       onClick={() => setSelectedInvoiceForOnlinePay(inv)}
-                      className="px-2 py-1 text-xs font-medium text-neutral-800 hover:text-black bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors flex items-center gap-1"
+                      className="px-2 py-1 text-xs font-medium text-neutral-800 hover:text-black bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors flex items-center gap-1 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white"
                       title="Pay via Online Gateway (bKash/Nagad/Cards)"
                     >
                       <Globe className="w-3 h-3" />
@@ -357,7 +357,7 @@ export default function InvoicesPage() {
                     </button>
                     <button
                       onClick={() => setSelectedInvoiceForPayment(inv)}
-                      className="px-2.5 py-1 text-xs font-medium text-white bg-neutral-900 hover:bg-neutral-800 rounded-xl transition-colors flex items-center gap-1 shadow-xs"
+                      className="px-2.5 py-1 text-xs font-medium text-white bg-neutral-900 hover:bg-black rounded-xl transition-colors flex items-center gap-1 shadow-xs dark:bg-white dark:text-black dark:hover:bg-neutral-200"
                       title="Record payment"
                     >
                       <CreditCard className="w-3 h-3" />
@@ -369,7 +369,7 @@ export default function InvoicesPage() {
                 {inv.paidAmountMinor === 0 && inv.status !== 'VOID' && (
                   <button
                     onClick={() => setInvoiceToVoid(inv)}
-                    className="p-1 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                    className="p-1 text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors dark:hover:bg-neutral-900 dark:hover:text-white"
                     title="Void Invoice"
                   >
                     <Ban className="w-3.5 h-3.5" />

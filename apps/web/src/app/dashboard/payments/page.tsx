@@ -259,7 +259,7 @@ export default function PaymentsPage() {
                   {p.status === 'CONFIRMED' && (
                     <button
                       onClick={() => setPaymentToReverse(p)}
-                      className="px-2.5 py-1 text-neutral-500 hover:text-red-700 hover:bg-neutral-100 rounded-xl transition-colors flex items-center gap-1.5 text-xs font-medium"
+                      className="px-2.5 py-1 text-neutral-500 hover:text-black hover:bg-neutral-100 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors flex items-center gap-1.5 text-xs font-medium"
                       title="Reverse Payment"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />

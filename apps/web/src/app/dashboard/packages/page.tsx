@@ -392,7 +392,7 @@ export default function PackagesPage() {
                 </button>
                 <button
                   onClick={() => setPackageToDelete(pkg)}
-                  className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                  className="p-1.5 text-neutral-400 hover:text-black hover:bg-neutral-100 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors"
                   title="Delete Package"
                 >
                   <Trash2 className="w-4 h-4" />

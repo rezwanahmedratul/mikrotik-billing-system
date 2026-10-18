@@ -60,13 +60,13 @@ export function MultiBarChart({
 
   return (
     <div
-      className={`rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition-colors ${className}`}
+      className={`rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition-colors ${className}`}
     >
       {(title || description) && (
         <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
             {title && (
-              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
                 {title}
               </h3>
             )}

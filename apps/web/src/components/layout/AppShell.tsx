@@ -106,7 +106,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
   };
 
   const navContent = (
-    <div className="flex h-full flex-col justify-between bg-white dark:bg-neutral-900 transition-colors">
+    <div className="flex h-full flex-col justify-between bg-white dark:bg-black transition-colors">
       <div className="flex flex-col space-y-5 p-4">
         {/* Brand */}
         <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-4">
@@ -119,7 +119,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
                 {tenantName}
               </div>
               <div className="flex items-center gap-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-neutral-900 dark:bg-white animate-pulse" />
                 <span>MikroTik Sync Active</span>
               </div>
             </div>
@@ -208,20 +208,20 @@ export function AppShell({ children, title, description, action }: AppShellProps
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50/50 dark:bg-neutral-950 transition-colors">
+    <div className="min-h-screen bg-neutral-50/40 dark:bg-black transition-colors">
       {/* Mobile Drawer Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white dark:bg-neutral-900 shadow-2xl">
+          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white dark:bg-black shadow-2xl">
             <div className="absolute right-3 top-3">
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                className="flex h-8 w-8 items-center justify-center rounded-xl text-neutral-500 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900"
                 aria-label="Close menu"
               >
                 <X className="h-4 w-4" />
@@ -233,18 +233,18 @@ export function AppShell({ children, title, description, action }: AppShellProps
       )}
 
       {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-neutral-200/80 bg-white dark:border-neutral-800 dark:bg-neutral-900 lg:block transition-colors">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-neutral-200/80 bg-white dark:border-neutral-800 dark:bg-black lg:block transition-colors">
         {navContent}
       </aside>
 
       {/* Main Container */}
       <div className="flex flex-col lg:pl-64">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-neutral-200/80 bg-white/95 px-4 backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/90 sm:px-6 transition-colors">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-neutral-200/80 bg-white/95 px-4 backdrop-blur-md dark:border-neutral-800 dark:bg-black/90 sm:px-6 transition-colors">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="flex h-8 w-8 items-center justify-center rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800 lg:hidden"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-900 lg:hidden"
               aria-label="Open sidebar"
             >
               <Menu className="h-4 w-4" />
@@ -261,14 +261,14 @@ export function AppShell({ children, title, description, action }: AppShellProps
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-1.5 rounded-full border border-neutral-200/80 bg-neutral-50 px-3 py-1 text-[11px] text-neutral-600 dark:border-neutral-800 dark:bg-neutral-800/80 dark:text-neutral-300 sm:flex">
-              <Activity className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
+            <div className="hidden items-center gap-1.5 rounded-full border border-neutral-200/80 bg-neutral-50 px-3 py-1 text-[11px] text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-300 sm:flex">
+              <Activity className="h-3 w-3 text-neutral-900 dark:text-white" />
               <span>API & Worker Online</span>
             </div>
             <ThemeToggle />
             <Link
               href="/dashboard/routers"
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
             >
               Routers
             </Link>

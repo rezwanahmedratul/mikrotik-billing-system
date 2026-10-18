@@ -57,8 +57,8 @@ export default function HomePage() {
       {/* Hero Section */}
       <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 py-16 sm:py-20">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3.5 py-1 text-xs font-medium text-neutral-700 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3.5 py-1 text-xs font-medium text-neutral-700 shadow-xs dark:border-neutral-800 dark:bg-black dark:text-neutral-300">
+            <span className="h-2 w-2 rounded-full bg-black dark:bg-white animate-pulse"></span>
             Production Ready Multi-Tenant Architecture
           </div>
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-5xl lg:text-6xl leading-[1.12]">
@@ -72,13 +72,13 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-5 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+              className="inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white shadow-xs transition hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
               Launch Console <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/onboarding"
-              className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold text-neutral-800 shadow-xs transition hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+              className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold text-neutral-800 shadow-xs transition hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-200 dark:hover:bg-neutral-900"
             >
               Register Organization
             </Link>
@@ -87,31 +87,31 @@ export default function HomePage() {
 
         {/* Live Status Chip Banner */}
         <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-black">
             <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider dark:text-neutral-400">REST / API Protocol</div>
             <div className="mt-1 text-lg font-bold font-mono text-neutral-900 dark:text-white">RouterOS v7+</div>
-            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
               <CheckCircle2 className="h-3 w-3" /> TLS / AES-256 Encrypted
             </div>
           </div>
-          <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-black">
             <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider dark:text-neutral-400">Financial Precision</div>
             <div className="mt-1 text-lg font-bold font-mono text-neutral-900 dark:text-white">BDT Poisha</div>
-            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
               <CheckCircle2 className="h-3 w-3" /> Zero Floating-Point Drift
             </div>
           </div>
-          <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-black">
             <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider dark:text-neutral-400">Automated Lifecycle</div>
             <div className="mt-1 text-lg font-bold font-mono text-neutral-900 dark:text-white">Zero-Touch</div>
-            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
               <CheckCircle2 className="h-3 w-3" /> Auto Restore on Payment
             </div>
           </div>
-          <div className="rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-xs dark:border-neutral-800 dark:bg-black">
             <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider dark:text-neutral-400">Multi-Tenant Isolation</div>
             <div className="mt-1 text-lg font-bold font-mono text-neutral-900 dark:text-white">Strict RBAC</div>
-            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+            <div className="mt-1 flex items-center gap-1.5 text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
               <CheckCircle2 className="h-3 w-3" /> PostgreSQL Scoped Data
             </div>
           </div>
@@ -121,8 +121,8 @@ export default function HomePage() {
         <div className="mt-12">
           <div className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">Core Operating Modules</div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-black dark:hover:border-neutral-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
                 <Network className="h-5 w-5" />
               </div>
               <h3 className="mt-4 text-sm font-bold text-neutral-900 dark:text-white">Router Fleet Orchestration</h3>
@@ -131,8 +131,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-black dark:hover:border-neutral-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
                 <Users className="h-5 w-5" />
               </div>
               <h3 className="mt-4 text-sm font-bold text-neutral-900 dark:text-white">PPPoE Provisioning</h3>
@@ -141,8 +141,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-black dark:hover:border-neutral-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
                 <CreditCard className="h-5 w-5" />
               </div>
               <h3 className="mt-4 text-sm font-bold text-neutral-900 dark:text-white">Automated Invoicing & MFS</h3>
@@ -151,8 +151,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-white">
+            <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-xs transition hover:border-neutral-400 dark:border-neutral-800 dark:bg-black dark:hover:border-neutral-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-900 dark:bg-neutral-900 dark:text-white">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <h3 className="mt-4 text-sm font-bold text-neutral-900 dark:text-white">Security & Audit Trails</h3>
@@ -165,7 +165,7 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-200/80 bg-white px-6 py-8 text-xs text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 transition-colors">
+      <footer className="border-t border-neutral-200 bg-white px-6 py-8 text-xs text-neutral-500 dark:border-neutral-800 dark:bg-black dark:text-neutral-400 transition-colors">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
           <div>
             &copy; {new Date().getFullYear()} MikroTik Billing System. Production Edition.

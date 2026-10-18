@@ -131,7 +131,7 @@ export function PackageFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {modalError && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2">
+          <div className="p-3 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-xl text-xs text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{modalError}</span>
           </div>
@@ -139,7 +139,7 @@ export function PackageFormModal({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Plan Name *
             </label>
             <input
@@ -163,7 +163,7 @@ export function PackageFormModal({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Package Code
             </label>
             <input
@@ -182,7 +182,7 @@ export function PackageFormModal({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1">
               Bandwidth Limit (Upload / Download) *
             </label>
             <input
@@ -194,8 +194,8 @@ export function PackageFormModal({
               className="w-full px-3 py-2 bg-neutral-50 border border-neutral-300 rounded-lg text-sm font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900"
             />
             {parsedUpload && parsedDownload ? (
-              <div className="mt-1 flex items-center gap-2 text-xs text-emerald-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+              <div className="mt-1 flex items-center gap-2 text-xs font-mono text-neutral-900 dark:text-white font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-neutral-900 dark:text-white" />
                 <span>
                   Upload: {parsedUpload} | Download: {parsedDownload}
                 </span>
@@ -322,9 +322,9 @@ export function PackageFormModal({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors shadow-sm disabled:opacity-60 flex items-center gap-2"
+            className="px-4 py-2 bg-black hover:bg-neutral-800 text-white text-xs font-semibold rounded-xl transition-colors shadow-sm disabled:opacity-60 flex items-center gap-2 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
           >
-            {isSubmitting && <RefreshCw className="w-4 h-4 animate-spin" />}
+            {isSubmitting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
             {editingPackage ? 'Save Changes' : 'Create Package'}
           </button>
         </div>

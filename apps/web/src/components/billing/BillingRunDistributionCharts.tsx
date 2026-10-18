@@ -15,7 +15,7 @@ export const BillingRunDistributionCharts: React.FC<BillingRunDistributionCharts
   const dryRunCount = runs.filter((r) => r.isDryRun).length;
 
   const modeSegments: DonutSegment[] = [
-    { label: 'Live Executed', value: Math.max(1, liveCount || 3), color: '#16a34a' },
+    { label: 'Live Executed', value: Math.max(1, liveCount || 3), color: '#e4e4e7' },
     { label: 'Dry Run Simulation', value: Math.max(1, dryRunCount || 2), color: '#71717a' },
   ];
 

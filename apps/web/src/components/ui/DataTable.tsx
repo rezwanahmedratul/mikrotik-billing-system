@@ -68,13 +68,13 @@ export function DataTable<T>({
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         {searchFilter ? (
           <div className="relative w-full max-w-xs">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-neutral-400" />
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-neutral-400 dark:text-neutral-500" />
             <input
               type="text"
               placeholder={searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl border border-neutral-200/80 bg-white py-2 pl-9 pr-3 text-xs text-neutral-900 placeholder-neutral-400 shadow-2xs transition-colors focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full rounded-xl border border-neutral-200/80 bg-white py-2 pl-9 pr-3 text-xs text-neutral-900 placeholder-neutral-400 shadow-2xs transition-colors focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:border-neutral-800 dark:bg-black dark:text-white dark:placeholder-neutral-500 dark:focus:border-white dark:focus:ring-white"
             />
           </div>
         ) : (
@@ -82,17 +82,17 @@ export function DataTable<T>({
         )}
         <div className="flex items-center gap-2">
           {actions}
-          <span className="text-xs text-neutral-500">
-            Total: <span className="font-semibold text-neutral-800">{filteredData.length}</span>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            Total: <span className="font-semibold text-neutral-900 dark:text-white">{filteredData.length}</span>
           </span>
         </div>
       </div>
 
       {/* Table Container */}
-      <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-xs">
+      <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-xs dark:border-neutral-800 dark:bg-black">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-neutral-100 bg-neutral-50/70 text-[11px] font-medium uppercase tracking-wider text-neutral-500">
+            <thead className="border-b border-neutral-100 bg-neutral-50/70 text-[11px] font-medium uppercase tracking-wider text-neutral-500 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400">
               <tr>
                 {columns.map((col) => (
                   <th
@@ -105,15 +105,15 @@ export function DataTable<T>({
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100">
+            <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
               {isLoading ? (
                 <TableSkeletonRows cols={columns.length} rows={pageSize > 5 ? 5 : pageSize} />
               ) : paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length} className="py-12 text-center text-neutral-500">
-                    <Inbox className="mx-auto h-7 w-7 stroke-1 text-neutral-400" />
-                    <div className="mt-2 text-xs font-medium text-neutral-800">{emptyTitle}</div>
-                    <div className="mt-0.5 text-[11px] text-neutral-500">{emptyDescription}</div>
+                  <td colSpan={columns.length} className="py-12 text-center text-neutral-500 dark:text-neutral-400">
+                    <Inbox className="mx-auto h-7 w-7 stroke-1 text-neutral-400 dark:text-neutral-600" />
+                    <div className="mt-2 text-xs font-medium text-neutral-800 dark:text-neutral-200">{emptyTitle}</div>
+                    <div className="mt-0.5 text-[11px] text-neutral-500 dark:text-neutral-400">{emptyDescription}</div>
                   </td>
                 </tr>
               ) : (
@@ -123,12 +123,12 @@ export function DataTable<T>({
                     <tr
                       key={key}
                       onClick={() => onRowClick?.(item)}
-                      className={`transition-colors hover:bg-neutral-50/80 ${
+                      className={`text-neutral-900 transition-colors hover:bg-neutral-50/80 dark:text-neutral-100 dark:hover:bg-neutral-900/50 ${
                         onRowClick ? 'cursor-pointer' : ''
                       }`}
                     >
                       {columns.map((col) => (
-                        <td key={col.key} className={`px-4 py-3 ${col.className || ''}`}>
+                        <td key={col.key} className={`px-4 py-3.5 ${col.className || ''}`}>
                           {col.render
                             ? col.render(item, idx)
                             : (item as Record<string, any>)[col.key] ?? '—'}
@@ -144,34 +144,34 @@ export function DataTable<T>({
 
         {/* Pagination Bar */}
         {!isLoading && filteredData.length > pageSize && (
-          <div className="flex items-center justify-between border-t border-neutral-100 bg-neutral-50/50 px-4 py-2.5 text-xs text-neutral-600">
+          <div className="flex items-center justify-between border-t border-neutral-100 bg-neutral-50/50 px-4 py-2.5 text-xs text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-400">
             <div>
               Showing{' '}
-              <span className="font-semibold text-neutral-900">
+              <span className="font-semibold text-neutral-900 dark:text-white">
                 {(currentPage - 1) * pageSize + 1}
               </span>{' '}
               to{' '}
-              <span className="font-semibold text-neutral-900">
+              <span className="font-semibold text-neutral-900 dark:text-white">
                 {Math.min(currentPage * pageSize, filteredData.length)}
               </span>{' '}
-              of <span className="font-semibold text-neutral-900">{filteredData.length}</span>
+              of <span className="font-semibold text-neutral-900 dark:text-white">{filteredData.length}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
               </button>
-              <span className="px-2 text-[11px] font-medium text-neutral-700">
+              <span className="px-2 text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 aria-label="Next page"
               >
                 <ChevronRight className="h-3.5 w-3.5" />

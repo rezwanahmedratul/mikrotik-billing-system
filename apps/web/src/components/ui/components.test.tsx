@@ -12,7 +12,7 @@ describe('Monochrome Design System Components', () => {
     it('renders correct labels and classes for ONLINE and ACTIVE', () => {
       const htmlOnline = renderToStaticMarkup(<StatusBadge status="ONLINE" />);
       expect(htmlOnline).toContain('online');
-      expect(htmlOnline).toContain('bg-emerald-600');
+      expect(htmlOnline).toContain('bg-black text-white');
 
       const htmlActive = renderToStaticMarkup(<StatusBadge status="ACTIVE" label="Running" />);
       expect(htmlActive).toContain('running');
@@ -21,13 +21,13 @@ describe('Monochrome Design System Components', () => {
     it('renders correct labels and classes for OFFLINE and FAILED', () => {
       const htmlOffline = renderToStaticMarkup(<StatusBadge status="OFFLINE" />);
       expect(htmlOffline).toContain('offline');
-      expect(htmlOffline).toContain('bg-rose-600');
+      expect(htmlOffline).toContain('bg-neutral-200 text-neutral-900');
     });
 
     it('renders correct labels and classes for PENDING and WARNING', () => {
       const htmlWarning = renderToStaticMarkup(<StatusBadge status="WARNING" />);
       expect(htmlWarning).toContain('warning');
-      expect(htmlWarning).toContain('bg-amber-500');
+      expect(htmlWarning).toContain('bg-neutral-100 text-neutral-800');
     });
   });
 
@@ -110,7 +110,7 @@ describe('Monochrome Design System Components', () => {
       expect(html).toContain('Delete Router');
       expect(html).toContain('This action will terminate active sessions.');
       expect(html).toContain('Delete Permanently');
-      expect(html).toContain('bg-rose-600');
+      expect(html).toContain('bg-neutral-900');
     });
   });
 

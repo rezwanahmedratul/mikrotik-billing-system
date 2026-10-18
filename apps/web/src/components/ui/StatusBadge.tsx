@@ -34,26 +34,26 @@ export function StatusBadge({ status, variant, label, className = '' }: StatusBa
   }
 
   const variantStyles: Record<StatusVariant, string> = {
-    success: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200',
-    error: 'bg-rose-50 text-rose-800 border-rose-200',
-    info: 'bg-sky-50 text-sky-800 border-sky-200',
-    neutral: 'bg-neutral-100 text-neutral-800 border-neutral-200',
-    outline: 'bg-transparent text-neutral-700 border-neutral-300',
+    success: 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-semibold shadow-2xs',
+    warning: 'bg-neutral-100 text-neutral-800 border-neutral-300 dark:bg-neutral-900 dark:text-neutral-200 dark:border-neutral-700 font-medium',
+    error: 'bg-neutral-200 text-neutral-900 border-neutral-400 dark:bg-neutral-800 dark:text-neutral-100 dark:border-neutral-600 font-medium',
+    info: 'bg-neutral-100 text-neutral-700 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-800 font-medium',
+    neutral: 'bg-neutral-50 text-neutral-600 border-neutral-200 dark:bg-neutral-950 dark:text-neutral-400 dark:border-neutral-800 font-medium',
+    outline: 'bg-transparent text-neutral-800 border-neutral-300 dark:text-neutral-200 dark:border-neutral-700 font-medium',
   };
 
   const dotStyles: Record<StatusVariant, string> = {
-    success: 'bg-emerald-600',
-    warning: 'bg-amber-500',
-    error: 'bg-rose-600',
-    info: 'bg-sky-600',
-    neutral: 'bg-neutral-500',
-    outline: 'bg-neutral-400',
+    success: 'bg-white dark:bg-black',
+    warning: 'bg-neutral-500 dark:bg-neutral-400',
+    error: 'bg-neutral-800 dark:bg-neutral-200',
+    info: 'bg-neutral-600 dark:bg-neutral-400',
+    neutral: 'bg-neutral-400 dark:bg-neutral-600',
+    outline: 'bg-neutral-500 dark:bg-neutral-400',
   };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium tracking-tight ${variantStyles[resolvedVariant]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] tracking-tight ${variantStyles[resolvedVariant]} ${className}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${dotStyles[resolvedVariant]}`} />
       <span className="capitalize">{displayLabel.toLowerCase()}</span>

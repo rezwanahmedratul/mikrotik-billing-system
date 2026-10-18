@@ -77,7 +77,7 @@ export default function OnboardingPage() {
         </div>
 
         {/* Card */}
-        <div className="mt-6 rounded-2xl border border-neutral-200/80 bg-white p-7 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="mt-6 rounded-2xl border border-neutral-200 bg-white p-7 shadow-xs dark:border-neutral-800 dark:bg-black">
           {isSuccess ? (
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <CheckCircle2 className="h-12 w-12 text-neutral-900 dark:text-white animate-bounce" />
@@ -93,9 +93,9 @@ export default function OnboardingPage() {
               {errorMessage && (
                 <div
                   id="onboarding-error-alert"
-                  className="mb-5 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-400"
+                  className="mb-5 flex items-center gap-2.5 rounded-xl border border-neutral-300 bg-neutral-100 p-3.5 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
                 >
-                  <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+                  <AlertCircle className="h-4 w-4 shrink-0 text-neutral-900 dark:text-neutral-100" />
                   <span>{errorMessage}</span>
                 </div>
               )}

@@ -71,8 +71,8 @@ export function StaffFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {modalError && (
-          <div className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
+          <div className="flex items-center gap-2 rounded-xl border border-neutral-300 bg-neutral-100 p-3 text-xs text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100">
+            <AlertCircle className="h-4 w-4 shrink-0 text-neutral-900 dark:text-white" />
             <span>{modalError}</span>
           </div>
         )}
@@ -168,11 +168,11 @@ export function StaffFormModal({
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-neutral-100 pt-4">
+        <div className="flex items-center justify-end gap-2 border-t border-neutral-100 dark:border-neutral-800 pt-4">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-neutral-200 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 transition"
+            className="rounded-xl border border-neutral-200 bg-white px-3.5 py-2 text-xs font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:bg-neutral-900 transition"
           >
             Cancel
           </button>
@@ -180,7 +180,7 @@ export function StaffFormModal({
             id="create-staff-submit-btn"
             type="submit"
             disabled={isSubmitting}
-            className="flex items-center gap-1.5 rounded-xl bg-neutral-900 px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-neutral-800 disabled:opacity-50 transition"
+            className="flex items-center gap-1.5 rounded-xl bg-black px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 disabled:opacity-50 transition"
           >
             {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
             <span>Add Member</span>

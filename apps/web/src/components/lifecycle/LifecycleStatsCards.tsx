@@ -31,30 +31,30 @@ export const LifecycleStatsCards: React.FC<LifecycleStatsCardsProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {/* Active Subscriptions */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Active Online
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             <Users className="w-4 h-4" />
           </div>
         </div>
         <div className="flex items-baseline justify-between mt-2">
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{activeCount}</div>
-          <MetricSparkline data={activeSparkline} height={26} width={75} color="#16a34a" />
+          <MetricSparkline data={activeSparkline} height={26} width={75} color="currentColor" />
         </div>
         <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-2">Normal service status</div>
       </div>
 
       {/* Suspended Subscriptions */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Suspended (Cutoff)
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <Ban className="w-4 h-4 text-rose-500" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <Ban className="w-4 h-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="flex items-center justify-between mt-1">
@@ -66,19 +66,19 @@ export const LifecycleStatsCards: React.FC<LifecycleStatsCardsProps> = ({
             percentage={healthPct}
             size={50}
             strokeWidth={5}
-            color="#16a34a"
+            color="currentColor"
           />
         </div>
       </div>
 
       {/* Recent Auto Restorations */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Auto Restorations
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
-            <RefreshCw className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
+            <RefreshCw className="w-4 h-4 text-neutral-900 dark:text-white" />
           </div>
         </div>
         <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white mt-2">
@@ -90,16 +90,16 @@ export const LifecycleStatsCards: React.FC<LifecycleStatsCardsProps> = ({
       </div>
 
       {/* Service Discrepancies */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900 transition">
+      <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Discrepancies
           </span>
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white">
             {discrepanciesCount === 0 ? (
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-neutral-900 dark:text-white" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-amber-500" />
+              <AlertCircle className="w-4 h-4 text-neutral-900 dark:text-white" />
             )}
           </div>
         </div>

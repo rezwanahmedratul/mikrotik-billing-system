@@ -46,45 +46,45 @@ export function SubscriberGrowthView({ data, isLoading }: SubscriberGrowthViewPr
     <div className="space-y-6">
       {/* 4 Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               Total Subscribers
             </span>
-            <Users className="h-4 w-4 text-neutral-400" />
+            <Users className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{data.totalCount}</div>
           <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">All registered accounts</div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               Active Online
             </span>
-            <div className="h-2 w-2 rounded-full bg-emerald-500" />
+            <div className="h-2 w-2 rounded-full bg-black dark:bg-white" />
           </div>
-          <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">{data.activeCount}</div>
-          <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1">Authorized with active secret</div>
+          <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{data.activeCount}</div>
+          <div className="text-xs text-neutral-500 dark:text-neutral-400 font-medium mt-1">Authorized with active secret</div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               Suspended (Cutoff)
             </span>
-            <div className="h-2 w-2 rounded-full bg-rose-500" />
+            <div className="h-2 w-2 rounded-full bg-neutral-400 dark:bg-neutral-600" />
           </div>
-          <div className="text-2xl font-bold font-mono text-rose-600 dark:text-rose-400">{data.suspendedCount}</div>
-          <div className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1">Disabled on RouterOS</div>
+          <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{data.suspendedCount}</div>
+          <div className="text-xs text-neutral-500 dark:text-neutral-400 font-medium mt-1">Disabled on RouterOS</div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               New This Month
             </span>
-            <UserPlus className="h-4 w-4 text-neutral-700 dark:text-neutral-300" />
+            <UserPlus className="h-4 w-4 text-neutral-900 dark:text-white" />
           </div>
           <div className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">{data.newSubscribersInPeriod}</div>
           <div className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Recent intake registrations</div>

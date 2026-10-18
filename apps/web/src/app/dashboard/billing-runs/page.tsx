@@ -125,24 +125,24 @@ export default function BillingRunsPage() {
     >
       {/* Alert Notifications */}
       {successMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-emerald-950/20 bg-emerald-50 text-emerald-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-neutral-900 dark:text-white flex-shrink-0" />
             <p className="text-sm font-medium">{successMessage}</p>
           </div>
-          <button onClick={() => setSuccessMessage('')} className="text-xs text-emerald-700 hover:underline">
+          <button onClick={() => setSuccessMessage('')} className="text-xs hover:underline">
             Dismiss
           </button>
         </div>
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-red-950/20 bg-red-50 text-red-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 text-neutral-900 dark:text-white flex-shrink-0" />
             <p className="text-sm font-medium">{errorMessage}</p>
           </div>
-          <button onClick={() => setErrorMessage('')} className="text-xs text-red-700 hover:underline">
+          <button onClick={() => setErrorMessage('')} className="text-xs hover:underline">
             Dismiss
           </button>
         </div>
@@ -276,41 +276,39 @@ export default function BillingRunsPage() {
 
           {/* Dry Run Forecast Receipt */}
           {forecastResult && (
-            <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-2xl space-y-2 text-xs text-amber-900 animate-in fade-in">
+            <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-2xl space-y-2 text-xs text-neutral-900 dark:text-neutral-100 animate-in fade-in">
               <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-[11px]">
-                <FileSpreadsheet className="w-4 h-4 text-amber-600" />
+                <FileSpreadsheet className="w-4 h-4 text-neutral-900 dark:text-white" />
                 <span>Dry Run Simulation Forecast</span>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-1 font-mono">
                 <div>
-                  <span className="text-amber-700/80 block text-[11px]">Eligible Subscriptions:</span>
+                  <span className="text-neutral-500 dark:text-neutral-400 block text-[11px]">Eligible Subscriptions:</span>
                   <span className="font-bold text-sm">{forecastResult.invoicesGenerated} clients</span>
                 </div>
                 <div>
-                  <span className="text-amber-700/80 block text-[11px]">Projected Total Revenue:</span>
+                  <span className="text-neutral-500 dark:text-neutral-400 block text-[11px]">Projected Total Revenue:</span>
                   <span className="font-bold text-sm">{forecastResult.totalBilledFormatted}</span>
                 </div>
               </div>
-              <p className="text-[11px] text-amber-800 pt-1 border-t border-amber-200/60">
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 pt-1 border-t border-neutral-200 dark:border-neutral-800">
                 To proceed with actual invoice creation, uncheck &quot;Dry Run Simulation&quot; above and click &quot;Execute Live Run&quot;.
               </p>
             </div>
           )}
 
-          <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-200">
+          <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-200 dark:border-neutral-800">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 border border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-medium rounded-xl transition-colors"
+              className="px-4 py-2 border border-neutral-300 hover:bg-neutral-50 text-neutral-700 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 text-xs font-medium rounded-xl transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`px-4 py-2 text-white text-xs font-medium rounded-xl transition-colors shadow-sm disabled:opacity-60 flex items-center gap-1.5 ${
-                isDryRun ? 'bg-amber-600 hover:bg-amber-700' : 'bg-neutral-900 hover:bg-neutral-800'
-              }`}
+              className="px-4 py-2 text-white text-xs font-semibold rounded-xl transition-colors shadow-sm disabled:opacity-60 flex items-center gap-1.5 bg-black hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200"
             >
               {isSubmitting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
               {isDryRun ? 'Calculate Forecast' : 'Execute Live Run'}
