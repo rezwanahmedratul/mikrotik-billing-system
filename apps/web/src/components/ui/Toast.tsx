@@ -58,7 +58,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <div
             key={item.id}
             role={item.type === 'error' ? 'alert' : 'status'}
-            className="pointer-events-auto flex w-full items-start gap-3 rounded border border-border bg-surface p-3.5 shadow-lg transition-all"
+            className="pointer-events-auto flex w-full items-start gap-3 rounded-2xl border border-neutral-200/90 bg-white/95 p-4 shadow-xl backdrop-blur-sm transition-all"
           >
             <div className="mt-0.5 shrink-0">
               {item.type === 'success' && (
@@ -82,7 +82,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             </div>
             <button
               onClick={() => dismiss(item.id)}
-              className="text-neutral-400 hover:text-neutral-700 focus:outline-none"
+              className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none"
               aria-label="Close notification"
             >
               <X className="h-3.5 w-3.5" />

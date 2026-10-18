@@ -12,6 +12,7 @@ import { SessionsModule } from './sessions/sessions.module.js';
 import { BillingModule } from './billing/billing.module.js';
 import { PaymentGatewaysModule } from './payment-gateways/payment-gateways.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { ServiceLifecycleModule } from './lifecycle/service-lifecycle.module.js';
 import { AuditService } from './common/audit.service.js';
 import { JwtAuthGuard } from './common/jwt-auth.guard.js';
 import { RolesGuard } from './common/roles.guard.js';
@@ -25,6 +26,7 @@ import { RolesGuard } from './common/roles.guard.js';
     BillingModule,
     PaymentGatewaysModule,
     NotificationsModule,
+    ServiceLifecycleModule,
   ],
   controllers: [HealthController, AuthController, TenantsController],
   providers: [

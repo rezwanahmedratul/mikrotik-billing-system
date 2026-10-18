@@ -74,7 +74,7 @@ export function DataTable<T>({
               placeholder={searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded border border-border bg-surface py-2 pl-9 pr-3 text-xs text-neutral-900 placeholder-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
+              className="w-full rounded-xl border border-neutral-200/80 bg-white py-2 pl-9 pr-3 text-xs text-neutral-900 placeholder-neutral-400 shadow-2xs transition-colors focus:border-neutral-900 focus:outline-none focus:ring-1 focus:ring-neutral-900"
             />
           </div>
         ) : (
@@ -89,23 +89,23 @@ export function DataTable<T>({
       </div>
 
       {/* Table Container */}
-      <div className="overflow-hidden rounded border border-border bg-surface shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-neutral-200/80 bg-white shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-border bg-neutral-50 text-[11px] font-medium uppercase tracking-wider text-neutral-500">
+            <thead className="border-b border-neutral-100 bg-neutral-50/70 text-[11px] font-medium uppercase tracking-wider text-neutral-500">
               <tr>
                 {columns.map((col) => (
                   <th
                     key={col.key}
                     scope="col"
-                    className={`px-4 py-3 ${col.headerClassName || ''}`}
+                    className={`px-4 py-3.5 ${col.headerClassName || ''}`}
                   >
                     {col.header}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
+            <tbody className="divide-y divide-neutral-100">
               {isLoading ? (
                 <TableSkeletonRows cols={columns.length} rows={pageSize > 5 ? 5 : pageSize} />
               ) : paginatedData.length === 0 ? (
@@ -123,7 +123,7 @@ export function DataTable<T>({
                     <tr
                       key={key}
                       onClick={() => onRowClick?.(item)}
-                      className={`transition-colors hover:bg-neutral-50/60 ${
+                      className={`transition-colors hover:bg-neutral-50/80 ${
                         onRowClick ? 'cursor-pointer' : ''
                       }`}
                     >
@@ -144,7 +144,7 @@ export function DataTable<T>({
 
         {/* Pagination Bar */}
         {!isLoading && filteredData.length > pageSize && (
-          <div className="flex items-center justify-between border-t border-border bg-neutral-50/50 px-4 py-2.5 text-xs text-neutral-600">
+          <div className="flex items-center justify-between border-t border-neutral-100 bg-neutral-50/50 px-4 py-2.5 text-xs text-neutral-600">
             <div>
               Showing{' '}
               <span className="font-semibold text-neutral-900">
@@ -156,11 +156,11 @@ export function DataTable<T>({
               </span>{' '}
               of <span className="font-semibold text-neutral-900">{filteredData.length}</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="flex h-7 w-7 items-center justify-center rounded border border-border bg-surface text-neutral-700 hover:bg-neutral-100 disabled:opacity-40"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
@@ -171,7 +171,7 @@ export function DataTable<T>({
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="flex h-7 w-7 items-center justify-center rounded border border-border bg-surface text-neutral-700 hover:bg-neutral-100 disabled:opacity-40"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40"
                 aria-label="Next page"
               >
                 <ChevronRight className="h-3.5 w-3.5" />
