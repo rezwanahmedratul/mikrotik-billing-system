@@ -947,7 +947,68 @@
   - High-volume index lookups for active subscriptions and invoices verified < 50ms.
   - Pagination limits preventing unbounded memory allocation verified.
 - **Next Step:**
-  - Section 18: Security Review and Hardening.
+  - Section 18: Security Review and Hardening (COMPLETED).
+
+---
+
+### Milestone Log: Section 18 — Security Review and Hardening
+
+- **Completed Work:**
+  - Infrastructure Network Hardening:
+    - Updated `infrastructure/docker-compose.yml` to bind PostgreSQL and Redis explicitly to `127.0.0.1:5432:5432` and `127.0.0.1:6379:6379`, eliminating unintentional public exposure of databases.
+  - Multi-Tenant Isolation & Penetration Tests:
+    - Verified strict boundary isolation between Tenant A and Tenant B: cross-tenant access to routers, subscribers, packages, subscriptions, invoices, payments, and audit logs throws `NotFoundException` or `ForbiddenException`.
+  - Secret Redaction & At-Rest Encryption:
+    - Verified PPPoE subscriber secrets and router passwords encrypted with AES-256-GCM (`iv:tag:ciphertext`).
+    - Verified subscriber detail API outputs redact passwords (`hasPassword: true`) without leaking plaintext or raw cipher strings.
+  - Webhook Cryptographic Signatures & Replay Protection:
+    - Verified HMAC-SHA256 signature verification over raw request bodies.
+    - Verified immediate replayed duplicate webhooks return `already_processed` idempotently without double-crediting subscriber balances.
+  - Financial Ledger Input Sanitization:
+    - Verified negative or zero payment amounts are strictly rejected by domain validation.
+  - Role-Based Access Control (RBAC):
+    - Verified separation of duties (Cashiers cannot reverse payments without administrator authorization).
+  - Modern Minimal Monochrome Frontend Elevation:
+    - Refactored `apps/web/src/app/page.tsx` (landing page), `apps/web/src/app/login/page.tsx`, `apps/web/src/app/onboarding/page.tsx`, `apps/web/src/app/dashboard/routers/page.tsx`, `apps/web/src/app/dashboard/staff/page.tsx`, and `apps/web/src/app/dashboard/routers/[id]/pppoe-setup/page.tsx`.
+    - Created modular router components: `RouterStatsCards.tsx`, `RouterFormModal.tsx`, `RouterTestResultModal.tsx`, and `routers.types.ts`.
+    - Created modular staff components: `StaffStatsCards.tsx`, `StaffFormModal.tsx`, and `staff.types.ts`.
+    - Consistent aesthetic with rounded corners (`rounded-2xl`, `rounded-xl`, `rounded-full`), modern monochrome styling, high contrast typography, and subtle shadows.
+  - Documentation:
+    - Authored `docs/security.md` covering threat model, cryptographic key management, RBAC matrix, and operational incident response runbooks.
+  - Automated Test Suite:
+    - Co-located integration test suite `apps/api/src/common/security.test.ts` (11/11 tests passed).
+- **Files Changed:**
+  - `infrastructure/docker-compose.yml`
+  - `apps/api/src/common/security.test.ts`
+  - `apps/web/src/app/page.tsx`
+  - `apps/web/src/app/login/page.tsx`
+  - `apps/web/src/app/onboarding/page.tsx`
+  - `apps/web/src/components/routers/routers.types.ts`
+  - `apps/web/src/components/routers/RouterStatsCards.tsx`
+  - `apps/web/src/components/routers/RouterFormModal.tsx`
+  - `apps/web/src/components/routers/RouterTestResultModal.tsx`
+  - `apps/web/src/app/dashboard/routers/page.tsx`
+  - `apps/web/src/components/staff/staff.types.ts`
+  - `apps/web/src/components/staff/StaffStatsCards.tsx`
+  - `apps/web/src/components/staff/StaffFormModal.tsx`
+  - `apps/web/src/app/dashboard/staff/page.tsx`
+  - `apps/web/src/app/dashboard/routers/[id]/pppoe-setup/page.tsx`
+  - `docs/security.md`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test src/common/security.test.ts` (11/11 tests passed)
+  - `pnpm test` (All 124 tests passed across the monorepo)
+  - `pnpm run typecheck` (All 5 workspace projects passed with 0 errors)
+  - `pnpm --filter @mikrotik-billing/web run build` (All 19 static routes compiled with code 0)
+- **Tests & Verification:**
+  - Cross-tenant penetration tests verified.
+  - Secret redaction and AES-256-GCM encryption verified.
+  - Webhook HMAC signature verification and duplicate replay idempotency verified.
+  - Malformed financial input rejection verified.
+  - Role-based separation of duties verified.
+- **Next Step:**
+  - Section 19: End-to-End Testing and Release Readiness.
+
 
 
 

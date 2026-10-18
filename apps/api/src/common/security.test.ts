@@ -297,13 +297,16 @@ describe('Security Review and Hardening Verification (Section 18)', () => {
   describe('4. RBAC Separation of Duties', () => {
     it('Cashier cannot reverse confirmed payments', async () => {
       // Record a valid payment
-      const payment = await paymentsService.recordPayment(tenantA.id, {
-        subscriberId: subscriberA.id,
-        amountMinor: 20000,
-        method: PaymentMethod.CASH,
-        externalReference: `PAY_REV_TEST_${Date.now()}`,
-        recordedByUserId: cashierA.userId,
-      });
+      const payment = await paymentsService.recordPayment(
+        tenantA.id,
+        {
+          subscriberId: subscriberA.id,
+          amountMinor: 20000,
+          method: PaymentMethod.CASH,
+          externalReference: `PAY_REV_TEST_${Date.now()}`,
+        },
+        cashierA.userId
+      );
 
       expect(payment.id).toBeDefined();
 
