@@ -432,6 +432,13 @@ export default function RoutersPage() {
               'Sync'
             )}
           </button>
+          <Link
+            href={`/dashboard/routers/${item.id}/pppoe-setup`}
+            title="Guided PPPoE Setup"
+            className="rounded border border-neutral-900 bg-neutral-900 px-2 py-1 text-[11px] font-medium text-white hover:bg-neutral-800"
+          >
+            Setup
+          </Link>
           <button
             onClick={() => setRouterToDelete(item)}
             title="Delete Router"

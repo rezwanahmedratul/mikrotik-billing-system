@@ -14,8 +14,8 @@
 | **Section 4**  | Authentication, Tenant Isolation & RBAC     | Completed   | Argon2id, JWT guards, RBAC, tenant boundary tests passed       |
 | **Section 5**  | UI Foundation & Monochrome Design System    | Completed   | Monochrome design system, AppShell, components & tests passed  |
 | **Section 6**  | Router Inventory & Secure Connections       | Completed   | AES-256-GCM, RouterAdapter, inventory API, worker poller, UI   |
-| **Section 7**  | PPPoE Setup & Router Configuration          | In Progress | Profile management, dry-run, router jobs                       |
-| **Section 8**  | Internet Packages                           | Pending     | Bandwidth limits, pricing, lifecycle, validation               |
+| **Section 7**  | PPPoE Setup & Router Configuration          | Completed   | Guided workflow, pre-flight checks, dry-run, post-verification |
+| **Section 8**  | Internet Packages                           | In Progress | Bandwidth limits, pricing, lifecycle, validation               |
 | **Section 9**  | Subscriber & Subscription Management        | Pending     | Subscriber CRUD, PPPoE secret generation, state history        |
 | **Section 10** | Active PPPoE Sessions & Usage Monitoring    | Pending     | Session inspection, normalization, fresh indicators            |
 | **Section 11** | Invoices & Billing Ledger                   | Pending     | Idempotent billing runs, integer cents, invoice lifecycle      |

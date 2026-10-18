@@ -125,15 +125,39 @@ export interface ActiveSession {
   sessionId?: string;
 }
 
+export interface IpPool {
+  id?: string;
+  name: string;
+  ranges: string; // e.g. "10.10.20.2-10.10.20.254"
+  nextPool?: string;
+  comment?: string;
+}
+
+export interface PppoeServer {
+  id?: string;
+  serviceName: string;
+  interfaceName: string;
+  defaultProfile: string;
+  oneSessionPerHost?: boolean;
+  maxMtu?: number;
+  maxMru?: number;
+  disabled?: boolean;
+}
+
 export interface RouterAdapter {
   testConnection(config: RouterConnectionConfig): Promise<ConnectionTestResult>;
   getHealth(config: RouterConnectionConfig): Promise<RouterHealthSnapshot>;
   getInterfaces(config: RouterConnectionConfig): Promise<RouterInterface[]>;
+  getIpPools(config: RouterConnectionConfig): Promise<IpPool[]>;
+  upsertIpPool(config: RouterConnectionConfig, pool: IpPool): Promise<IpPool>;
   getPppoeProfiles(config: RouterConnectionConfig): Promise<PppoeProfile[]>;
   upsertPppoeProfile(config: RouterConnectionConfig, profile: PppoeProfileInput): Promise<PppoeProfile>;
+  getPppoeServers(config: RouterConnectionConfig): Promise<PppoeServer[]>;
+  upsertPppoeServer(config: RouterConnectionConfig, server: PppoeServer): Promise<PppoeServer>;
   getPppoeSecrets(config: RouterConnectionConfig): Promise<PppoeSecret[]>;
   upsertPppoeSecret(config: RouterConnectionConfig, secret: PppoeSecretInput): Promise<PppoeSecret>;
   deletePppoeSecret(config: RouterConnectionConfig, username: string): Promise<boolean>;
   getActiveSessions(config: RouterConnectionConfig): Promise<ActiveSession[]>;
   disconnectSession(config: RouterConnectionConfig, usernameOrSessionId: string): Promise<boolean>;
 }
+

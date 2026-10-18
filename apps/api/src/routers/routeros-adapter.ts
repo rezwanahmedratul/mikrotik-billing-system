@@ -9,6 +9,8 @@ import {
   PppoeSecret,
   PppoeSecretInput,
   ActiveSession,
+  IpPool,
+  PppoeServer,
   RouterAuthError,
   RouterTimeoutError,
   RouterUnreachableError,
@@ -310,5 +312,94 @@ export class RouterOsAdapter implements RouterAdapter {
       return true;
     }
     return true;
+  }
+
+  async getIpPools(config: RouterConnectionConfig): Promise<IpPool[]> {
+    const list = await this.request<any[]>(config, '/ip/pool');
+    if (!Array.isArray(list)) return [];
+
+    return list.map((item) => ({
+      id: item['.id'],
+      name: item.name,
+      ranges: item.ranges,
+      nextPool: item['next-pool'],
+      comment: item.comment,
+    }));
+  }
+
+  async upsertIpPool(config: RouterConnectionConfig, pool: IpPool): Promise<IpPool> {
+    const existingList = await this.getIpPools(config);
+    const existing = existingList.find((p) => p.name === pool.name);
+
+    const body: Record<string, any> = {
+      name: pool.name,
+      ranges: pool.ranges,
+    };
+    if (pool.nextPool) body['next-pool'] = pool.nextPool;
+    if (pool.comment) body.comment = pool.comment;
+
+    if (existing?.id) {
+      await this.request(config, `/ip/pool/${existing.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      });
+      return { id: existing.id, ...pool };
+    } else {
+      const created = await this.request(config, '/ip/pool', {
+        method: 'PUT',
+        body: JSON.stringify(body),
+      });
+      return { id: created?.['.id'], ...pool };
+    }
+  }
+
+  async getPppoeServers(config: RouterConnectionConfig): Promise<PppoeServer[]> {
+    const list = await this.request<any[]>(config, '/interface/pppoe-server/server');
+    if (!Array.isArray(list)) return [];
+
+    return list.map((item) => ({
+      id: item['.id'],
+      serviceName: item['service-name'] || item.name,
+      interfaceName: item.interface,
+      defaultProfile: item['default-profile'],
+      oneSessionPerHost: item['one-session-per-host'] === 'yes' || item['one-session-per-host'] === true,
+      maxMtu: parseInt(item['max-mtu'] || '1480', 10),
+      maxMru: parseInt(item['max-mru'] || '1480', 10),
+      disabled: item.disabled === 'yes' || item.disabled === true,
+    }));
+  }
+
+  async upsertPppoeServer(
+    config: RouterConnectionConfig,
+    server: PppoeServer
+  ): Promise<PppoeServer> {
+    const existingList = await this.getPppoeServers(config);
+    const existing = existingList.find(
+      (s) => s.serviceName === server.serviceName || s.interfaceName === server.interfaceName
+    );
+
+    const body: Record<string, any> = {
+      'service-name': server.serviceName,
+      interface: server.interfaceName,
+      'default-profile': server.defaultProfile,
+      'one-session-per-host': server.oneSessionPerHost ? 'yes' : 'no',
+      'max-mtu': String(server.maxMtu || 1480),
+      'max-mru': String(server.maxMru || 1480),
+      disabled: server.disabled ? 'yes' : 'no',
+    };
+
+    if (existing?.id) {
+      await this.request(config, `/interface/pppoe-server/server/${existing.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      });
+      return { id: existing.id, ...server };
+    } else {
+      const created = await this.request(config, '/interface/pppoe-server/server', {
+        method: 'PUT',
+        body: JSON.stringify(body),
+      });
+      return { id: created?.['.id'], ...server };
+    }
   }
 }

@@ -16,16 +16,24 @@ import { RolesGuard } from '../common/roles.guard';
 import { Roles, CurrentTenant, CurrentUser } from '../common/decorators';
 import { AuthenticatedUser } from '../common/auth-user.interface';
 import { RoutersService } from './routers.service';
+import { PppoeSetupService } from './pppoe-setup.service';
 import {
   CreateRouterDto,
   UpdateRouterDto,
   TestRouterConnectionDto,
 } from './routers.dto';
+import {
+  PppoeSetupPlanDto,
+  PppoeSetupApplyDto,
+} from './pppoe-setup.dto';
 
 @Controller('routers')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class RoutersController {
-  constructor(private readonly routersService: RoutersService) {}
+  constructor(
+    private readonly routersService: RoutersService,
+    private readonly pppoeSetupService: PppoeSetupService
+  ) {}
 
   @Get()
   @Roles(
@@ -104,5 +112,53 @@ export class RoutersController {
     @Param('id') id: string
   ) {
     return this.routersService.delete(tenantId, id, user.userId);
+  }
+
+  @Post(':id/pppoe/inspect')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.PLATFORM_ADMIN, UserRole.ISP_ADMIN, UserRole.ISP_OPERATOR)
+  async inspectPppoe(
+    @CurrentTenant() tenantId: string,
+    @Param('id') id: string
+  ) {
+    return this.pppoeSetupService.inspect(tenantId, id);
+  }
+
+  @Post(':id/pppoe/plan')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.PLATFORM_ADMIN, UserRole.ISP_ADMIN, UserRole.ISP_OPERATOR)
+  async planPppoe(
+    @CurrentTenant() tenantId: string,
+    @Param('id') id: string,
+    @Body() dto: PppoeSetupPlanDto
+  ) {
+    return this.pppoeSetupService.plan(tenantId, id, dto);
+  }
+
+  @Post(':id/pppoe/apply')
+  @HttpCode(HttpStatus.OK)
+  @Roles(UserRole.PLATFORM_ADMIN, UserRole.ISP_ADMIN, UserRole.ISP_OPERATOR)
+  async applyPppoe(
+    @CurrentTenant() tenantId: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: PppoeSetupApplyDto
+  ) {
+    return this.pppoeSetupService.apply(tenantId, id, dto, user.userId);
+  }
+
+  @Get(':id/jobs')
+  @Roles(
+    UserRole.PLATFORM_ADMIN,
+    UserRole.ISP_ADMIN,
+    UserRole.ISP_OPERATOR,
+    UserRole.CASHIER,
+    UserRole.AUDITOR
+  )
+  async getRouterJobs(
+    @CurrentTenant() tenantId: string,
+    @Param('id') id: string
+  ) {
+    return this.pppoeSetupService.getRouterJobs(tenantId, id);
   }
 }

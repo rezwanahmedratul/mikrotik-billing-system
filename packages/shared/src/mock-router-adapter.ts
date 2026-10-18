@@ -9,6 +9,8 @@ import {
   PppoeSecret,
   PppoeSecretInput,
   ActiveSession,
+  IpPool,
+  PppoeServer,
   RouterAuthError,
   RouterTimeoutError,
   RouterUnreachableError,
@@ -46,6 +48,34 @@ export class MockRouterAdapter implements RouterAdapter {
         remoteAddress: 'pppoe-pool-1',
         onlyOne: 'yes',
         comment: '50Mbps business profile',
+      },
+    ],
+  ]);
+
+  private ipPools: Map<string, IpPool> = new Map([
+    [
+      'pppoe-pool-1',
+      {
+        id: '*pool1',
+        name: 'pppoe-pool-1',
+        ranges: '10.10.20.2-10.10.20.254',
+        comment: 'Default subscriber dynamic pool',
+      },
+    ],
+  ]);
+
+  private pppoeServers: Map<string, PppoeServer> = new Map([
+    [
+      'pppoe-in-lan',
+      {
+        id: '*srv1',
+        serviceName: 'pppoe-in-lan',
+        interfaceName: 'ether2-lan',
+        defaultProfile: 'default',
+        oneSessionPerHost: true,
+        maxMtu: 1480,
+        maxMru: 1480,
+        disabled: false,
       },
     ],
   ]);
@@ -254,5 +284,37 @@ export class MockRouterAdapter implements RouterAdapter {
       }
     }
     return true;
+  }
+
+  async getIpPools(config: RouterConnectionConfig): Promise<IpPool[]> {
+    this.checkFailureTriggers(config);
+    return Array.from(this.ipPools.values());
+  }
+
+  async upsertIpPool(config: RouterConnectionConfig, pool: IpPool): Promise<IpPool> {
+    this.checkFailureTriggers(config);
+    const existing = this.ipPools.get(pool.name);
+    const updated: IpPool = {
+      id: existing?.id || `*pool-${Date.now()}`,
+      ...pool,
+    };
+    this.ipPools.set(pool.name, updated);
+    return updated;
+  }
+
+  async getPppoeServers(config: RouterConnectionConfig): Promise<PppoeServer[]> {
+    this.checkFailureTriggers(config);
+    return Array.from(this.pppoeServers.values());
+  }
+
+  async upsertPppoeServer(config: RouterConnectionConfig, server: PppoeServer): Promise<PppoeServer> {
+    this.checkFailureTriggers(config);
+    const existing = this.pppoeServers.get(server.serviceName);
+    const updated: PppoeServer = {
+      id: existing?.id || `*srv-${Date.now()}`,
+      ...server,
+    };
+    this.pppoeServers.set(server.serviceName, updated);
+    return updated;
   }
 }
