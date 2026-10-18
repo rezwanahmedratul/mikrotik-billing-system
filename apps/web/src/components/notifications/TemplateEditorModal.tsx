@@ -89,19 +89,19 @@ export const TemplateEditorModal: React.FC<TemplateEditorModalProps> = ({
       description="Update SMS template phrasing, dynamic variables, and automated trigger status."
       maxWidth="max-w-xl"
     >
-      <form onSubmit={handleFormSubmit} className="space-y-5">
+      <form onSubmit={handleFormSubmit} className="space-y-4">
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-neutral-100 border border-neutral-300 text-neutral-900 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-neutral-100 border border-neutral-300 dark:bg-neutral-900 dark:border-neutral-800 text-neutral-900 dark:text-neutral-200 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
         {/* Enabled Toggle */}
-        <div className="flex items-center justify-between p-3.5 bg-neutral-50 rounded-xl border border-neutral-200/80">
+        <div className="flex items-center justify-between p-3.5 bg-neutral-50 dark:bg-neutral-900/60 rounded-xl border border-neutral-200/80 dark:border-neutral-800">
           <div>
-            <div className="text-xs font-semibold text-neutral-900">Enable Automated Trigger</div>
-            <div className="text-[11px] text-neutral-500 mt-0.5">
+            <div className="text-xs font-semibold text-neutral-900 dark:text-white">Enable Automated Trigger</div>
+            <div className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
               Send SMS automatically when this business event occurs
             </div>
           </div>
@@ -109,12 +109,12 @@ export const TemplateEditorModal: React.FC<TemplateEditorModalProps> = ({
             type="button"
             onClick={() => setIsEnabled(!isEnabled)}
             className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
-              isEnabled ? 'bg-neutral-900' : 'bg-neutral-200'
+              isEnabled ? 'bg-neutral-900 dark:bg-white' : 'bg-neutral-200 dark:bg-neutral-800'
             }`}
           >
             <div
-              className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                isEnabled ? 'translate-x-5' : 'translate-x-0'
+              className={`w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                isEnabled ? 'translate-x-5 bg-white dark:bg-black' : 'translate-x-0 bg-white dark:bg-neutral-400'
               }`}
             />
           </button>
@@ -122,7 +122,7 @@ export const TemplateEditorModal: React.FC<TemplateEditorModalProps> = ({
 
         {/* Insert Dynamic Variables */}
         <div>
-          <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-2">
             Dynamic Variables (Click to Insert)
           </label>
           <div className="flex flex-wrap gap-1.5">
@@ -131,7 +131,7 @@ export const TemplateEditorModal: React.FC<TemplateEditorModalProps> = ({
                 key={v.tag}
                 type="button"
                 onClick={() => handleInsertTag(v.tag)}
-                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-[11px] font-mono rounded-lg transition-colors border border-neutral-200/60 flex items-center gap-1"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 text-[11px] font-mono rounded-lg transition-colors border border-neutral-200/60 dark:border-neutral-700 flex items-center gap-1 interactive-btn"
                 title={v.desc}
               >
                 <span>{v.tag}</span>
@@ -143,10 +143,10 @@ export const TemplateEditorModal: React.FC<TemplateEditorModalProps> = ({
         {/* Template Textarea */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-semibold text-neutral-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
               Template Message Body
             </label>
-            <span className="text-[11px] font-mono text-neutral-400">
+            <span className="text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
               {templateText.length} chars (~{Math.ceil(templateText.length / 160) || 1} SMS)
             </span>
           </div>
@@ -154,35 +154,35 @@ export const TemplateEditorModal: React.FC<TemplateEditorModalProps> = ({
             value={templateText}
             onChange={(e) => setTemplateText(e.target.value)}
             rows={4}
-            className="w-full p-3 bg-neutral-50/70 border border-neutral-200 rounded-xl text-xs font-mono text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="w-full p-3 bg-neutral-50/70 border border-neutral-200 dark:border-neutral-800 dark:bg-black rounded-xl text-xs font-mono text-neutral-900 dark:text-white focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
             placeholder="Write template message with {{tags}}..."
           />
         </div>
 
         {/* Live Preview Box */}
-        <div className="p-3.5 bg-neutral-100/70 rounded-xl border border-neutral-200/80">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-neutral-600 mb-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-neutral-800" />
+        <div className="p-3.5 bg-neutral-100/70 dark:bg-neutral-900/60 rounded-xl border border-neutral-200/80 dark:border-neutral-800">
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mb-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-neutral-800 dark:text-neutral-200" />
             <span>Sample Client SMS Preview:</span>
           </div>
-          <div className="text-xs text-neutral-800 font-sans leading-relaxed bg-white p-3 rounded-lg border border-neutral-200/60 shadow-xs">
+          <div className="text-xs text-neutral-800 dark:text-neutral-200 font-sans leading-relaxed bg-white dark:bg-black p-3 rounded-lg border border-neutral-200/60 dark:border-neutral-800 shadow-xs">
             {previewText}
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-100">
+        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-100 dark:border-neutral-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-neutral-200 text-neutral-700 text-xs font-medium rounded-xl hover:bg-neutral-50 transition-colors"
+            className="px-4 py-2 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSaving}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-black dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors disabled:opacity-50 interactive-btn"
           >
             {isSaving ? (
               <>

@@ -61,14 +61,14 @@ export const SendSmsModal: React.FC<SendSmsModalProps> = ({ isOpen, onClose, onS
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {errorMessage && (
-          <div className="p-3 rounded-xl bg-neutral-100 border border-neutral-300 text-neutral-900 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-neutral-100 border border-neutral-300 dark:bg-neutral-900 dark:border-neutral-800 text-neutral-900 dark:text-neutral-200 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
 
         <div>
-          <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider mb-1.5">
             Recipient Mobile Number
           </label>
           <input
@@ -76,19 +76,19 @@ export const SendSmsModal: React.FC<SendSmsModalProps> = ({ isOpen, onClose, onS
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="e.g. 01715000001"
-            className="w-full px-3.5 py-2.5 bg-neutral-50/70 border border-neutral-200 rounded-xl text-sm font-mono text-neutral-900 placeholder-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="w-full px-3.5 py-2.5 bg-neutral-50/70 border border-neutral-200 dark:border-neutral-800 dark:bg-black rounded-xl text-sm font-mono text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
           />
-          <div className="text-[11px] text-neutral-400 mt-1">
+          <div className="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1">
             Standard Bangladeshi 11-digit mobile format
           </div>
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-semibold text-neutral-700 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wider">
               Message Text
             </label>
-            <span className="text-[11px] font-mono text-neutral-400">
+            <span className="text-[11px] font-mono text-neutral-400 dark:text-neutral-500">
               {message.length} chars (~{Math.ceil(message.length / 160) || 1} SMS)
             </span>
           </div>
@@ -97,22 +97,22 @@ export const SendSmsModal: React.FC<SendSmsModalProps> = ({ isOpen, onClose, onS
             onChange={(e) => setMessage(e.target.value)}
             rows={4}
             placeholder="Type your SMS message..."
-            className="w-full p-3 bg-neutral-50/70 border border-neutral-200 rounded-xl text-sm text-neutral-900 placeholder-neutral-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-900 transition-colors"
+            className="w-full p-3 bg-neutral-50/70 border border-neutral-200 dark:border-neutral-800 dark:bg-black rounded-xl text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-1 focus:ring-neutral-900 dark:focus:ring-white transition-colors"
           />
         </div>
 
-        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-100">
+        <div className="pt-2 flex items-center justify-end gap-3 border-t border-neutral-100 dark:border-neutral-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-neutral-200 text-neutral-700 text-xs font-medium rounded-xl hover:bg-neutral-50 transition-colors"
+            className="px-4 py-2 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-medium rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSending}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-black text-white text-xs font-semibold rounded-xl shadow-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-black dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors disabled:opacity-50 interactive-btn"
           >
             {isSending ? (
               <>

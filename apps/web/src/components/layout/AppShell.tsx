@@ -144,7 +144,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
                       <Link
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 ${
+                        className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-200 ease-out hover:translate-x-1 ${
                           isActive
                             ? 'bg-neutral-900 text-white shadow-xs dark:bg-white dark:text-neutral-900'
                             : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100'
@@ -152,7 +152,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
                       >
                         <div className="flex items-center gap-2.5">
                           <Icon
-                            className={`h-4 w-4 transition-colors ${
+                            className={`h-4 w-4 transition-transform duration-200 group-hover:scale-110 ${
                               isActive
                                 ? 'text-white dark:text-neutral-900'
                                 : 'text-neutral-500 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-white'
@@ -162,7 +162,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
                         </div>
                         {item.badge && (
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-medium transition-transform duration-200 group-hover:scale-105 ${
                               isActive
                                 ? 'bg-neutral-800 text-neutral-200 dark:bg-neutral-200 dark:text-neutral-800'
                                 : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
@@ -268,7 +268,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
             <ThemeToggle />
             <Link
               href="/dashboard/routers"
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 interactive-btn"
             >
               Routers
             </Link>
@@ -276,7 +276,7 @@ export function AppShell({ children, title, description, action }: AppShellProps
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 animate-fluid-fade-in">
           {(title || action) && (
             <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
               <div>

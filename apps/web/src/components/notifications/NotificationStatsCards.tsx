@@ -25,7 +25,7 @@ export const NotificationStatsCards: React.FC<NotificationStatsCardsProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {/* Total SMS */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition hover:border-neutral-300">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black interactive-card hover:border-neutral-300 dark:hover:border-neutral-700">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Total Messages
@@ -42,7 +42,7 @@ export const NotificationStatsCards: React.FC<NotificationStatsCardsProps> = ({
       </div>
 
       {/* Delivered Rate */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition hover:border-neutral-300">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black interactive-card hover:border-neutral-300 dark:hover:border-neutral-700">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Delivery Rate
@@ -66,7 +66,7 @@ export const NotificationStatsCards: React.FC<NotificationStatsCardsProps> = ({
       </div>
 
       {/* Failed Count */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition hover:border-neutral-300">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black interactive-card hover:border-neutral-300 dark:hover:border-neutral-700">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Delivery Failures
@@ -82,7 +82,7 @@ export const NotificationStatsCards: React.FC<NotificationStatsCardsProps> = ({
       </div>
 
       {/* Active Templates */}
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black transition hover:border-neutral-300">
+      <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs dark:border-neutral-800 dark:bg-black interactive-card hover:border-neutral-300 dark:hover:border-neutral-700">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
             Active Templates

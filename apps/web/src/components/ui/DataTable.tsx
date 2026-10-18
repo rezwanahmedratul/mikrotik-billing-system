@@ -123,7 +123,7 @@ export function DataTable<T>({
                     <tr
                       key={key}
                       onClick={() => onRowClick?.(item)}
-                      className={`text-neutral-900 transition-colors hover:bg-neutral-50/80 dark:text-neutral-100 dark:hover:bg-neutral-900/50 ${
+                      className={`text-neutral-900 transition-all duration-150 hover:bg-neutral-50/90 dark:text-neutral-100 dark:hover:bg-neutral-900/60 ${
                         onRowClick ? 'cursor-pointer' : ''
                       }`}
                     >
@@ -160,7 +160,7 @@ export function DataTable<T>({
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 interactive-btn"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
@@ -171,7 +171,7 @@ export function DataTable<T>({
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-neutral-200/80 bg-white text-neutral-700 transition hover:bg-neutral-100 disabled:opacity-40 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 interactive-btn"
                 aria-label="Next page"
               >
                 <ChevronRight className="h-3.5 w-3.5" />

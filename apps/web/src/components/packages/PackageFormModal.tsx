@@ -127,7 +127,7 @@ export function PackageFormModal({
       onClose={onClose}
       title={editingPackage ? `Edit Package: ${editingPackage.name}` : 'Create Internet Package'}
       description="Configure speed limits, MikroTik PPPoE rate-limits, and billing rates."
-      maxWidth="lg"
+      maxWidth="max-w-lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {modalError && (

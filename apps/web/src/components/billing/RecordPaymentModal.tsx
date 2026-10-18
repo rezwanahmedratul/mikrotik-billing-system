@@ -76,7 +76,7 @@ export function RecordPaymentModal({
       onClose={onClose}
       title={`Record Payment for ${invoice.invoiceNumber}`}
       description={`Subscriber: ${invoice.subscriberName} (${invoice.accountNumber})`}
-      maxWidth="md"
+      maxWidth="max-w-md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {modalError && (

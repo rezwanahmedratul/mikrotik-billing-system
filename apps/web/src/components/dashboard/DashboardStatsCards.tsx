@@ -20,7 +20,7 @@ export function DashboardStatsCards({ metrics }: DashboardStatsCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Card 1: Active Subscribers */}
-      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-black">
+      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 dark:hover:border-neutral-700 interactive-card dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
             Active Subscribers
@@ -50,7 +50,7 @@ export function DashboardStatsCards({ metrics }: DashboardStatsCardsProps) {
       </div>
 
       {/* Card 2: Live PPPoE Sessions */}
-      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-black">
+      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 dark:hover:border-neutral-700 interactive-card dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
             Live PPPoE Sessions
@@ -81,7 +81,7 @@ export function DashboardStatsCards({ metrics }: DashboardStatsCardsProps) {
       </div>
 
       {/* Card 3: Router Gateways */}
-      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-black">
+      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 dark:hover:border-neutral-700 interactive-card dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
             Router Gateways
@@ -111,7 +111,7 @@ export function DashboardStatsCards({ metrics }: DashboardStatsCardsProps) {
       </div>
 
       {/* Card 4: Current Month Billed */}
-      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:bg-black">
+      <div className="group rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:border-neutral-300 dark:hover:border-neutral-700 interactive-card dark:border-neutral-800 dark:bg-black">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
             Current Month Billed

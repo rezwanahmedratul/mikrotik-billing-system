@@ -224,7 +224,7 @@ export default function BillingRunsPage() {
         onClose={() => setIsModalOpen(false)}
         title="Execute Recurring Billing Run"
         description="Invoice all eligible active subscribers for the selected billing cycle with automatic duplicate prevention."
-        maxWidth="md"
+        maxWidth="max-w-md"
       >
         <form onSubmit={handleExecuteRun} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">

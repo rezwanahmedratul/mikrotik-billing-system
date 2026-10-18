@@ -35,7 +35,7 @@ export function DisconnectDialog({
       onClose={onClose}
       title={`Disconnect PPPoE Session: ${session.username}`}
       description="Immediately terminate this client's active network connection on the MikroTik router."
-      maxWidth="md"
+      maxWidth="max-w-md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Session details card */}

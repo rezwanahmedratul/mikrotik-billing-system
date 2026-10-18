@@ -12,6 +12,23 @@ interface ModalProps {
   maxWidth?: string;
 }
 
+const MAX_WIDTH_MAP: Record<string, string> = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+  'max-w-sm': 'max-w-sm',
+  'max-w-md': 'max-w-md',
+  'max-w-lg': 'max-w-lg',
+  'max-w-xl': 'max-w-xl',
+  'max-w-2xl': 'max-w-2xl',
+  'max-w-3xl': 'max-w-3xl',
+  'max-w-4xl': 'max-w-4xl',
+};
+
 export function Modal({
   isOpen,
   onClose,
@@ -32,14 +49,16 @@ export function Modal({
 
   if (!isOpen) return null;
 
+  const resolvedMaxWidth = MAX_WIDTH_MAP[maxWidth] || maxWidth || 'max-w-md';
+
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs animate-fluid-fade-in"
     >
       <div
-        className={`w-full ${maxWidth} rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150 dark:border-neutral-800 dark:bg-black transition-colors`}
+        className={`w-full ${resolvedMaxWidth} max-h-[90vh] flex flex-col rounded-2xl border border-neutral-200/80 bg-white p-5 sm:p-6 shadow-2xl animate-fluid-scale dark:border-neutral-800 dark:bg-black transition-colors`}
       >
         <div className="flex items-start justify-between border-b border-neutral-100 pb-3 dark:border-neutral-800">
           <div>
@@ -57,7 +76,7 @@ export function Modal({
             <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="mt-4">{children}</div>
+        <div className="mt-3 flex-1 overflow-y-auto pr-1">{children}</div>
       </div>
     </div>
   );

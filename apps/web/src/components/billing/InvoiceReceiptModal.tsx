@@ -29,7 +29,7 @@ export function InvoiceReceiptModal({
       isOpen={isOpen}
       onClose={onClose}
       title={`Invoice Receipt #${invoice.invoiceNumber}`}
-      maxWidth="lg"
+      maxWidth="max-w-xl"
     >
       <div className="space-y-6 text-neutral-900 dark:text-neutral-100 print:text-black">
         {/* Actions Bar */}
