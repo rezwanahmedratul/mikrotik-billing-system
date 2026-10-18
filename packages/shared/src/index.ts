@@ -219,6 +219,16 @@ export function parseCurrencyToMinor(majorUnits: number | string): number {
   return Math.round(num * 100);
 }
 
+export function formatBytes(bytes: number | bigint | null | undefined): string {
+  if (bytes === null || bytes === undefined) return '0 B';
+  const num = typeof bytes === 'bigint' ? Number(bytes) : bytes;
+  if (num <= 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.min(units.length - 1, Math.floor(Math.log(num) / Math.log(1024)));
+  const val = num / Math.pow(1024, i);
+  return `${val.toFixed(val >= 100 || i === 0 ? 0 : 1)} ${units[i]}`;
+}
+
 export * from './encryption';
 export * from './router-adapter';
 export * from './mock-router-adapter';

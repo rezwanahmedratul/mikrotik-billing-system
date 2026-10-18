@@ -7,12 +7,14 @@ import { TenantsController } from './tenants/tenants.controller.js';
 import { TenantsService } from './tenants/tenants.service.js';
 import { RoutersModule } from './routers/routers.module.js';
 import { PackagesModule } from './packages/packages.module.js';
+import { SubscribersModule } from './subscribers/subscribers.module.js';
+import { SessionsModule } from './sessions/sessions.module.js';
 import { AuditService } from './common/audit.service.js';
 import { JwtAuthGuard } from './common/jwt-auth.guard.js';
 import { RolesGuard } from './common/roles.guard.js';
 
 @Module({
-  imports: [RoutersModule, PackagesModule],
+  imports: [RoutersModule, PackagesModule, SubscribersModule, SessionsModule],
   controllers: [HealthController, AuthController, TenantsController],
   providers: [
     AuditService,

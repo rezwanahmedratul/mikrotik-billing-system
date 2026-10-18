@@ -338,7 +338,166 @@
   - Full execution, post-change hardware verification, and `RouterJob` logging test passed.
   - Idempotent reapplication test passed.
 - **Next Step:**
-  - Section 8: Internet Packages.
+  - Section 8: Internet Packages (COMPLETED).
+
+---
+
+### Milestone Log: Section 8 — Internet Packages
+
+- **Completed Work:**
+  - Added bandwidth speed limit parsing and formatting to `@mikrotik-billing/shared`: `SpeedLimitSchema`, `parseSpeedStringToKbps`, and `formatSpeedKbps` supporting both `k/M/G` notation (e.g. `10M/10M`, `5120k/10240k`).
+  - Created `apps/api/src/packages/packages.dto.ts` with minor unit pricing validation, speed format validation, and billing cycle options.
+  - Implemented `PackagesService` and `PackagesController`:
+    - Tenant-scoped CRUD with strict isolation.
+    - Code auto-generation and per-tenant code uniqueness enforcement.
+    - RouterOS PPPoE profile mapping (`pppProfileName`).
+    - Prevention of deleting packages with active subscriptions (returning clear 400 Bad Request instructing the user to archive instead).
+    - Package archiving/restoration allowing sunset of old plans without breaking historical billing.
+    - Granular audit logging on creation, updates, and archival.
+    - Propagation policy configuration (`propagateToActiveSubscriptions`).
+  - Implemented modular frontend architecture for Packages:
+    - `apps/web/src/components/packages/packages.types.ts`: Domain models, form contracts, and filter types.
+    - `apps/web/src/components/packages/PackageStatsCards.tsx`: 4 KPI summary cards (Total Packages, Active Plans, Archived Plans, Subscribed Users).
+    - `apps/web/src/components/packages/PackageFiltersBar.tsx`: Real-time search, archive status toggle, and refresh trigger.
+    - `apps/web/src/components/packages/PackageFormModal.tsx`: Create / edit modal with real-time bandwidth preview, minor unit pricing, billing cycle, validity, and renewal propagation note.
+    - `apps/web/src/app/dashboard/packages/page.tsx`: Clean orchestrator coordinating data fetching, modal states, archive toggling, and delete confirmations.
+  - Integration testing:
+    - Co-located integration test suite `apps/api/src/packages/packages.test.ts` covering CRUD, tenant isolation, invalid speed rejection, code uniqueness, archive filtering, and in-use deletion protection.
+- **Files Changed:**
+  - `packages/shared/src/index.ts`
+  - `apps/api/src/packages/packages.dto.ts`
+  - `apps/api/src/packages/packages.service.ts`
+  - `apps/api/src/packages/packages.controller.ts`
+  - `apps/api/src/packages/packages.module.ts`
+  - `apps/api/src/packages/packages.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/packages/packages.types.ts`
+  - `apps/web/src/components/packages/PackageStatsCards.tsx`
+  - `apps/web/src/components/packages/PackageFiltersBar.tsx`
+  - `apps/web/src/components/packages/PackageFormModal.tsx`
+  - `apps/web/src/app/dashboard/packages/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test src/packages/packages.test.ts` (6/6 tests passed)
+  - `pnpm test` (All 67 tests passed across all packages)
+  - `pnpm --filter @mikrotik-billing/web run build` (Static export and typecheck passed with exit code 0)
+  - `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/dashboard/packages` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Creation with valid speed parsing test passed.
+  - Invalid speed format rejection test passed.
+  - Tenant-scoped code uniqueness test passed.
+  - Strict tenant isolation on list, get, update, and delete passed.
+  - Archiving and archive filtering test passed.
+  - In-use package delete prevention test passed.
+- **Next Step:**
+  - Section 9: Subscriber and Subscription Management (COMPLETED).
+
+---
+
+### Milestone Log: Section 9 — Subscriber and Subscription Management
+
+- **Completed Work:**
+  - Implemented modular backend architecture for subscribers and subscriptions:
+    - `apps/api/src/subscribers/subscribers.dto.ts`: Comprehensive DTOs for client registration, contact editing, service status transitions, package changes, renewals, and paginated queries.
+    - `apps/api/src/subscribers/pppoe-provisioning.service.ts`: Hardware sync service coordinating with `RouterAdapterFactory` and `RouterAdapter` to provision secrets, suspend accounts (disabling secret & kicking active sessions immediately), restore accounts, and clean up secrets.
+    - `apps/api/src/subscribers/subscriptions.service.ts`: Subscription lifecycle service handling package assignments, validity calculation, manual renewals with day extensions, and status transitions.
+    - `apps/api/src/subscribers/subscribers.service.ts`: Full subscriber CRUD, account number generation (`SUB-xxxx`), tenant-scoped PPPoE username uniqueness enforcement, AES-256-GCM password encryption, password redaction (`hasPassword: true`, never exposing raw passwords), service event timeline tracking (`ServiceEvent`), and audit logging.
+    - `apps/api/src/subscribers/subscribers.controller.ts`: Role-guarded endpoints (`/subscribers`, `/subscribers/:id`, `/subscribers/:id/service-status`, `/subscribers/:id/change-package`, `/subscribers/:id/renew`, `/subscribers/:id/reprovision`, `/subscribers/:id/archive`).
+    - `apps/api/src/subscribers/subscribers.module.ts`: Modular NestJS provider bundling.
+  - Implemented modular frontend architecture for Subscribers:
+    - `apps/web/src/components/subscribers/subscribers.types.ts`: Subscriber, Subscription, and PPPoE credential domain types.
+    - `apps/web/src/components/subscribers/SubscriberStatsCards.tsx`: Modern, minimal, monochrome summary cards with rounded corners (Total Accounts, Active Service, Suspended, Expiring/Expired).
+    - `apps/web/src/components/subscribers/SubscriberFiltersBar.tsx`: Real-time search, status filter pills, router gateway selector, and refresh.
+    - `apps/web/src/components/subscribers/SubscriberFormModal.tsx`: Complete registration modal with contact info, package assignment, gateway selection, and secure random credential generation.
+    - `apps/web/src/components/subscribers/ServiceStatusDialog.tsx`: Safe confirmation dialog for service suspension and restoration with audit reason.
+    - `apps/web/src/app/dashboard/subscribers/page.tsx`: Clean orchestrator table page with rounded corners and monochrome theme.
+    - `apps/web/src/app/dashboard/subscribers/[id]/page.tsx`: In-depth subscriber detail view with tariff subscription card, router gateway card with live reprovision trigger, billing balance summary, and full service event history timeline.
+  - Integration testing:
+    - Co-located integration test suite `apps/api/src/subscribers/subscribers.test.ts` (5/5 tests passed).
+- **Files Changed:**
+  - `apps/api/src/subscribers/subscribers.dto.ts`
+  - `apps/api/src/subscribers/pppoe-provisioning.service.ts`
+  - `apps/api/src/subscribers/subscriptions.service.ts`
+  - `apps/api/src/subscribers/subscribers.service.ts`
+  - `apps/api/src/subscribers/subscribers.controller.ts`
+  - `apps/api/src/subscribers/subscribers.module.ts`
+  - `apps/api/src/subscribers/subscribers.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/subscribers/subscribers.types.ts`
+  - `apps/web/src/components/subscribers/SubscriberStatsCards.tsx`
+  - `apps/web/src/components/subscribers/SubscriberFiltersBar.tsx`
+  - `apps/web/src/components/subscribers/SubscriberFormModal.tsx`
+  - `apps/web/src/components/subscribers/ServiceStatusDialog.tsx`
+  - `apps/web/src/app/dashboard/subscribers/page.tsx`
+  - `apps/web/src/app/dashboard/subscribers/[id]/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test src/subscribers/subscribers.test.ts` (5/5 tests passed)
+  - `pnpm test` (All 72 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web run build` (Static export and typecheck passed with exit code 0)
+  - `curl http://localhost:3000/dashboard/subscribers` (HTTP 200 OK)
+  - `curl http://localhost:3000/dashboard/subscribers/sub-1` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Registration, subscription creation, and router PPPoE secret provisioning test passed.
+  - Password redaction test passed (verified raw password never returned).
+  - Tenant-scoped PPPoE username uniqueness test passed.
+  - Cross-tenant access isolation test passed.
+  - Suspension & restoration lifecycle test passed (secret disabled/enabled, active session disconnect trigger, service event recorded).
+  - Manual subscription renewal test passed.
+- **Next Step:**
+  - Section 10: PPPoE Live Sessions, Disconnect, and Traffic Monitoring (COMPLETED).
+
+---
+
+### Milestone Log: Section 10 — PPPoE Active Sessions and Usage Monitoring
+
+- **Completed Work:**
+  - Added `formatBytes` utility to `@mikrotik-billing/shared` handling bytes, KB, MB, GB, TB formatting for network telemetry.
+  - Implemented modular backend architecture for PPPoE active sessions:
+    - `apps/api/src/sessions/sessions.dto.ts`: DTOs for session queries, session telemetry items, router health status, and session disconnect payloads.
+    - `apps/api/src/sessions/sessions.service.ts`:
+      - Concurrent polling across all tenant routers via `RouterAdapterFactory`.
+      - Correlates live sessions with subscriber records and internet packages (`subscriberName`, `accountNumber`, `packageName`, `speedLimitRaw`).
+      - Normalizes traffic counters (Rx Upload, Tx Download) and formatted uptime.
+      - Resilient offline router isolation: if any gateway times out or fails authentication, it falls back to the database snapshot (`ActiveSessionSnapshot`) and flags the router as `DEGRADED` without crashing the global sessions page.
+      - Disconnect action terminating active client sessions on the router with audit logging (`DISCONNECT_PPPOE_SESSION`).
+      - Automatic background persistence to `ActiveSessionSnapshot`.
+    - `apps/api/src/sessions/sessions.controller.ts`: Role-guarded endpoints (`/sessions`, `/sessions/disconnect`).
+    - `apps/api/src/sessions/sessions.module.ts`: Modular NestJS provider bundling.
+  - Implemented modular frontend architecture for Sessions:
+    - `apps/web/src/components/sessions/sessions.types.ts`: Domain models, freshness indicators, and router health contracts.
+    - `apps/web/src/components/sessions/SessionStatsCards.tsx`: Modern, minimal, monochrome summary cards with rounded-2xl corners (Active PPPoE Sessions, Total Download Tx, Total Upload Rx, Gateways in Sync).
+    - `apps/web/src/components/sessions/SessionFiltersBar.tsx`: Search bar, router selector, auto-refresh interval toggle (Off, 15s, 30s, 60s), and manual poll trigger.
+    - `apps/web/src/components/sessions/DisconnectDialog.tsx`: Safe confirmation modal with rounded corners, session metrics summary, and audit note input.
+    - `apps/web/src/app/dashboard/sessions/page.tsx`: Clean orchestrator table page with live freshness badge, real-time traffic statistics, and session disconnect controls.
+  - Integration testing:
+    - Co-located integration test suite `apps/api/src/sessions/sessions.test.ts` (4/4 tests passed).
+- **Files Changed:**
+  - `packages/shared/src/index.ts`
+  - `apps/api/src/sessions/sessions.dto.ts`
+  - `apps/api/src/sessions/sessions.service.ts`
+  - `apps/api/src/sessions/sessions.controller.ts`
+  - `apps/api/src/sessions/sessions.module.ts`
+  - `apps/api/src/sessions/sessions.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/sessions/sessions.types.ts`
+  - `apps/web/src/components/sessions/SessionStatsCards.tsx`
+  - `apps/web/src/components/sessions/SessionFiltersBar.tsx`
+  - `apps/web/src/components/sessions/DisconnectDialog.tsx`
+  - `apps/web/src/app/dashboard/sessions/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test src/sessions/sessions.test.ts` (4/4 tests passed)
+  - `pnpm test` (All 76 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web run build` (Static export and typecheck passed with exit code 0)
+  - `curl http://localhost:3000/dashboard/sessions` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Session retrieval and subscriber correlation test passed.
+  - Resilient degradation during router failure test passed (offline router caught gracefully, snapshot fallback used).
+  - Session termination & audit log test passed.
+  - Cross-tenant session access isolation test passed.
+- **Next Step:**
+  - Section 11: Invoice and Billing Ledger.
 
 
 
