@@ -39,9 +39,9 @@ export function Modal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-in fade-in duration-150"
     >
       <div
-        className={`w-full ${maxWidth} rounded border border-border bg-surface p-6 shadow-xl animate-in zoom-in-95 duration-150`}
+        className={`w-full ${maxWidth} rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-150`}
       >
-        <div className="flex items-start justify-between border-b border-border pb-3">
+        <div className="flex items-start justify-between border-b border-neutral-100 pb-3">
           <div>
             <h2 className="text-sm font-semibold text-neutral-900">{title}</h2>
             {description && (

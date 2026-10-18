@@ -232,4 +232,6 @@ export function formatBytes(bytes: number | bigint | null | undefined): string {
 export * from './encryption';
 export * from './router-adapter';
 export * from './mock-router-adapter';
+export * from './payment-gateway.interface';
+export * from './mock-payment-gateway-adapter';
 

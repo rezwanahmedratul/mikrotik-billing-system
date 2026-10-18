@@ -121,3 +121,33 @@ export interface BillingRunResponse {
   isDryRun: boolean;
   triggeredBy?: string | null;
 }
+
+export interface MethodBreakdown {
+  method: string;
+  count: number;
+  totalMinor: number;
+  totalFormatted: string;
+}
+
+export interface CollectorBreakdown {
+  collector: string;
+  count: number;
+  totalMinor: number;
+  totalFormatted: string;
+}
+
+export interface ReconciliationReportResponse {
+  periodStart: string;
+  periodEnd: string;
+  totalConfirmedMinor: number;
+  totalReversedMinor: number;
+  netCollectedMinor: number;
+  totalConfirmedFormatted: string;
+  totalReversedFormatted: string;
+  netCollectedFormatted: string;
+  paymentsCount: number;
+  reversedCount: number;
+  byMethod: MethodBreakdown[];
+  byCollector: CollectorBreakdown[];
+}
+

@@ -9,12 +9,19 @@ import { RoutersModule } from './routers/routers.module.js';
 import { PackagesModule } from './packages/packages.module.js';
 import { SubscribersModule } from './subscribers/subscribers.module.js';
 import { SessionsModule } from './sessions/sessions.module.js';
+import { BillingModule } from './billing/billing.module.js';
 import { AuditService } from './common/audit.service.js';
 import { JwtAuthGuard } from './common/jwt-auth.guard.js';
 import { RolesGuard } from './common/roles.guard.js';
 
 @Module({
-  imports: [RoutersModule, PackagesModule, SubscribersModule, SessionsModule],
+  imports: [
+    RoutersModule,
+    PackagesModule,
+    SubscribersModule,
+    SessionsModule,
+    BillingModule,
+  ],
   controllers: [HealthController, AuthController, TenantsController],
   providers: [
     AuditService,

@@ -497,7 +497,123 @@
   - Session termination & audit log test passed.
   - Cross-tenant session access isolation test passed.
 - **Next Step:**
-  - Section 11: Invoice and Billing Ledger.
+  - Section 11: Invoice and Billing Ledger (COMPLETED).
+
+---
+
+### Milestone Log: Section 11 — Invoice and Billing Ledger
+
+- **Completed Work:**
+  - Implemented modular backend architecture for invoicing, payment ledger, and billing runs:
+    - `apps/api/src/billing/billing.dto.ts`: DTOs for invoice creation, line items, payment recording, reversals, and billing run forecasts.
+    - `apps/api/src/billing/invoices.service.ts`:
+      - Sequential invoice numbering (`INV-xxxxx`).
+      - Line items calculation with subtotal, tax, discounts, and minor unit amounts in BDT.
+      - Unique constraint enforcement preventing duplicate billing for the same subscription period (`[subscriptionId, billingPeriodStart]`).
+      - Voiding mechanism blocking void of invoices with already-allocated payments.
+    - `apps/api/src/billing/payments.service.ts`:
+      - Sequential payment numbering (`PAY-xxxxx`).
+      - Automatic FIFO allocation to oldest unpaid client invoices.
+      - Partial and full payment tracking, updating invoice balances, setting `paidAt`, and transitioning status (`ISSUED` -> `PARTIALLY_PAID` -> `PAID`).
+      - Reversal transaction mechanism: reverts allocations, restores invoice balances and statuses, marks payment `REVERSED`, and records audit logs.
+    - `apps/api/src/billing/billing-runs.service.ts`:
+      - Automated/manual batch billing run execution.
+      - Safe dry-run simulation calculating eligible subscriptions and projected revenue without committing changes.
+      - Idempotent live execution automatically skipping subscriptions with existing period invoices.
+    - `apps/api/src/billing/billing.controller.ts`: Role-guarded endpoints (`/invoices`, `/invoices/:id`, `/invoices/:id/void`, `/payments`, `/payments/:id/reverse`, `/billing-runs`).
+    - `apps/api/src/billing/billing.module.ts`: Modular NestJS provider bundling.
+  - Implemented modular frontend architecture for Invoices, Payments, and Billing Runs:
+    - `apps/web/src/components/billing/billing.types.ts`: Domain models for invoices, invoice lines, payments, allocations, and billing runs.
+    - `apps/web/src/components/billing/InvoiceStatsCards.tsx`: Modern, minimal, monochrome summary cards with rounded-2xl corners (Total Invoiced, Total Collected, Outstanding Due, Overdue Invoices).
+    - `apps/web/src/components/billing/InvoiceFiltersBar.tsx`: Real-time search, status filter pills (`ALL`, `ISSUED`, `PARTIALLY_PAID`, `PAID`, `OVERDUE`, `VOID`), and refresh.
+    - `apps/web/src/components/billing/RecordPaymentModal.tsx`: Cashier modal with rounded-2xl styling for recording payments across cash, bKash, Nagad, and bank channels with balance checks.
+    - `apps/web/src/components/billing/InvoiceReceiptModal.tsx`: Official printable invoice/receipt statement layout with line items table, BDT totals, and status stamps.
+    - `apps/web/src/app/dashboard/invoices/page.tsx`: Clean orchestrator table page with rounded corners and monochrome design.
+    - `apps/web/src/app/dashboard/payments/page.tsx`: Payments ledger page with reverse payment action and allocation traces.
+    - `apps/web/src/app/dashboard/billing-runs/page.tsx`: Recurring billing run automation page with dry-run forecasting and execution history.
+  - Integration testing:
+    - Co-located integration test suite `apps/api/src/billing/billing.test.ts` (5/5 tests passed).
+- **Files Changed:**
+  - `apps/api/src/billing/billing.dto.ts`
+  - `apps/api/src/billing/invoices.service.ts`
+  - `apps/api/src/billing/payments.service.ts`
+  - `apps/api/src/billing/billing-runs.service.ts`
+  - `apps/api/src/billing/billing.controller.ts`
+  - `apps/api/src/billing/billing.module.ts`
+  - `apps/api/src/billing/billing.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/billing/billing.types.ts`
+  - `apps/web/src/components/billing/InvoiceStatsCards.tsx`
+  - `apps/web/src/components/billing/InvoiceFiltersBar.tsx`
+  - `apps/web/src/components/billing/RecordPaymentModal.tsx`
+  - `apps/web/src/components/billing/InvoiceReceiptModal.tsx`
+  - `apps/web/src/app/dashboard/invoices/page.tsx`
+  - `apps/web/src/app/dashboard/payments/page.tsx`
+  - `apps/web/src/app/dashboard/billing-runs/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test src/billing/billing.test.ts` (5/5 tests passed)
+  - `pnpm test` (All 81 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web run build` (Static export and typecheck passed with exit code 0)
+  - `curl http://localhost:3000/dashboard/invoices` (HTTP 200 OK)
+  - `curl http://localhost:3000/dashboard/payments` (HTTP 200 OK)
+  - `curl http://localhost:3000/dashboard/billing-runs` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Creation of invoices with line items, tax, discount, and balance in minor units passed.
+  - Duplicate invoice prevention for same subscription period passed.
+  - Payment recording, FIFO allocation, and status transitions passed.
+  - Payment reversal restoring invoice balances passed.
+  - Idempotent batch billing run with dry-run support passed.
+- **Next Step:**
+  - Section 12: Manual Payments and Reconciliation (COMPLETED).
+
+---
+
+### Milestone Log: Section 12 — Manual Payments and Reconciliation
+
+- **Completed Work:**
+  - Hardened payment idempotency & duplicate reference protection:
+    - Added verification in `apps/api/src/billing/payments.service.ts` checking `externalReference` uniqueness per tenant.
+    - Rejects duplicate transaction reference submissions with `409 ConflictException`.
+  - Implemented financial reconciliation reporting engine:
+    - Added `ReconciliationReportResponse`, `MethodBreakdown`, and `CollectorBreakdown` DTOs.
+    - Implemented `getReconciliationReport` in `PaymentsService` calculating confirmed totals, reversals, net collections, and breakdown by payment channel (CASH, BKASH, NAGAD, etc.) and cashier/collector.
+    - Exposed `@Get('payments/reconciliation')` in `BillingController` guarded by `PLATFORM_ADMIN`, `ISP_ADMIN`, `ISP_OPERATOR`, `CASHIER`, and `AUDITOR` roles.
+  - Enforced permission separation:
+    - Payment recording authorized for Cashiers and Operators.
+    - Payment reversals strictly restricted to Administrators (`PLATFORM_ADMIN`, `ISP_ADMIN`).
+  - Implemented modular frontend components with monochrome rounded-2xl design:
+    - `apps/web/src/components/billing/PaymentStatsCards.tsx`: Sleek monochrome KPI cards displaying Gross Collections, Net Cash Flow, Reversals, and Average Collection.
+    - `apps/web/src/components/billing/PaymentFiltersBar.tsx`: Real-time search, payment method dropdown, payment status dropdown, refresh action, and Daily Reconciliation trigger.
+    - `apps/web/src/components/billing/ReconciliationReportModal.tsx`: Comprehensive modal for viewing audited balances, period range, method breakdown, collector breakdown, and printable export.
+    - `apps/web/src/app/dashboard/payments/page.tsx`: Modular payments ledger with reverse confirmation dialog and allocations drill-down.
+  - Verification & testing:
+    - Added tests in `apps/api/src/billing/billing.test.ts` for duplicate external reference rejection and reconciliation reporting (7/7 billing tests passed).
+- **Files Changed:**
+  - `apps/api/src/billing/billing.dto.ts`
+  - `apps/api/src/billing/payments.service.ts`
+  - `apps/api/src/billing/billing.controller.ts`
+  - `apps/api/src/billing/billing.test.ts`
+  - `apps/web/src/components/billing/billing.types.ts`
+  - `apps/web/src/components/billing/PaymentStatsCards.tsx`
+  - `apps/web/src/components/billing/PaymentFiltersBar.tsx`
+  - `apps/web/src/components/billing/ReconciliationReportModal.tsx`
+  - `apps/web/src/components/ui/Modal.tsx`
+  - `apps/web/src/app/dashboard/payments/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test -- apps/api/src/billing/billing.test.ts` (7/7 tests passed)
+  - `pnpm test` (All 83 tests passed across all 5 workspace projects)
+  - `pnpm --filter @mikrotik-billing/web build` (All 16 static routes built successfully with 0 errors)
+  - `curl -I http://localhost:3000/dashboard/payments` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Duplicate payment submission rejected with `ConflictException`.
+  - Audited reconciliation breakdown by method and collector verified.
+  - Cashier vs Admin role enforcement verified.
+  - Reversal transaction restoring invoice balances and audit trails verified.
+- **Next Step:**
+  - Section 13: Payment Gateway Integration & Webhooks.
+
 
 
 
