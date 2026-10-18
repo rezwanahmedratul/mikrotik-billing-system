@@ -53,6 +53,7 @@ async function run() {
 
   async function setTheme(theme) {
     await page.evaluate((t) => {
+      localStorage.setItem('theme', t);
       localStorage.setItem('theme-mode', t);
       if (t === 'dark') {
         document.documentElement.classList.add('dark');
@@ -256,6 +257,15 @@ async function run() {
       await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'reports-growth-dark.png'), fullPage: true });
       await setTheme('light');
       await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'reports-growth-light.png'), fullPage: true });
+    }
+    const auditTabBtn = page.locator('button:has-text("Audit Trail Log")');
+    if (await auditTabBtn.isVisible()) {
+      await setTheme('dark');
+      await auditTabBtn.click();
+      await page.waitForTimeout(400);
+      await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'reports-audit-dark.png'), fullPage: true });
+      await setTheme('light');
+      await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'reports-audit-light.png'), fullPage: true });
     }
   } catch (err) {
     console.error('Error capturing modals:', err.message);

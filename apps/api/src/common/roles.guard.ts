@@ -6,7 +6,11 @@ import { AuthenticatedUser } from './auth-user.interface.js';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  private reflector: Reflector;
+
+  constructor(reflector?: Reflector) {
+    this.reflector = reflector || new Reflector();
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [

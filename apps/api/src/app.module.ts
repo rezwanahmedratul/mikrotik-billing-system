@@ -18,8 +18,11 @@ import { AuditService } from './common/audit.service.js';
 import { JwtAuthGuard } from './common/jwt-auth.guard.js';
 import { RolesGuard } from './common/roles.guard.js';
 
+import { CommonModule } from './common/common.module.js';
+
 @Module({
   imports: [
+    CommonModule,
     RoutersModule,
     PackagesModule,
     SubscribersModule,

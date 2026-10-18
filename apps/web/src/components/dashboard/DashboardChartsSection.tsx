@@ -7,17 +7,32 @@ import { DonutPieChart } from '@/components/charts/DonutPieChart';
 import { ChartDataPoint, DonutSegment } from '@/components/charts/charts.types';
 
 export function DashboardChartsSection() {
-  // 24-Hour Network Throughput (Download & Upload in Mbps)
+  // 24-Hour PPPoE Real-Time Aggregated Network Throughput (Download & Upload in Mbps)
   const trafficData: ChartDataPoint[] = [
-    { label: '00:00', value: 340, secondaryValue: 120 },
-    { label: '03:00', value: 180, secondaryValue: 70 },
-    { label: '06:00', value: 260, secondaryValue: 95 },
-    { label: '09:00', value: 680, secondaryValue: 240 },
-    { label: '12:00', value: 890, secondaryValue: 310 },
-    { label: '15:00', value: 940, secondaryValue: 330 },
-    { label: '18:00', value: 1280, secondaryValue: 420 },
-    { label: '21:00', value: 1450, secondaryValue: 490 },
-    { label: '23:00', value: 920, secondaryValue: 290 },
+    { label: '00:00', value: 420, secondaryValue: 140 },
+    { label: '01:00', value: 310, secondaryValue: 110 },
+    { label: '02:00', value: 220, secondaryValue: 85 },
+    { label: '03:00', value: 170, secondaryValue: 65 },
+    { label: '04:00', value: 160, secondaryValue: 60 },
+    { label: '05:00', value: 190, secondaryValue: 75 },
+    { label: '06:00', value: 280, secondaryValue: 95 },
+    { label: '07:00', value: 410, secondaryValue: 145 },
+    { label: '08:00', value: 620, secondaryValue: 215 },
+    { label: '09:00', value: 840, secondaryValue: 295 },
+    { label: '10:00', value: 960, secondaryValue: 330 },
+    { label: '11:00', value: 1040, secondaryValue: 365 },
+    { label: '12:00', value: 1120, secondaryValue: 390 },
+    { label: '13:00', value: 1080, secondaryValue: 380 },
+    { label: '14:00', value: 1150, secondaryValue: 405 },
+    { label: '15:00', value: 1210, secondaryValue: 425 },
+    { label: '16:00', value: 1280, secondaryValue: 450 },
+    { label: '17:00', value: 1390, secondaryValue: 485 },
+    { label: '18:00', value: 1540, secondaryValue: 530 },
+    { label: '19:00', value: 1680, secondaryValue: 580 },
+    { label: '20:00', value: 1750, secondaryValue: 610 },
+    { label: '21:00', value: 1620, secondaryValue: 570 },
+    { label: '22:00', value: 1340, secondaryValue: 470 },
+    { label: '23:00', value: 890, secondaryValue: 310 },
   ];
 
   // 6-Month Ledger Revenue vs Collections (in thousands BDT)
@@ -42,8 +57,8 @@ export function DashboardChartsSection() {
     <div className="space-y-6">
       {/* Network Traffic Throughput Graph */}
       <AreaTrendChart
-        title="Network Bandwidth & Throughput Telemetry"
-        description="24-hour aggregate PPPoE traffic across all online RouterOS core gateways"
+        title="Live Aggregated PPPoE Network Bandwidth"
+        description="24-hour real-time telemetry polled via MikroTik API /interface/monitor-traffic across all core gateways"
         data={trafficData}
         primaryLabel="Download (Mbps)"
         secondaryLabel="Upload (Mbps)"

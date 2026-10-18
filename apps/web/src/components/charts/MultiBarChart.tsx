@@ -39,7 +39,7 @@ export function MultiBarChart({
   const max = Math.max(...values1, ...(values2.length ? values2 : [0])) * 1.15 || 10;
 
   const width = 600;
-  const padLeft = 45;
+  const padLeft = 52;
   const padRight = 15;
   const padTop = 15;
   const padBottom = 25;
@@ -121,7 +121,9 @@ export function MultiBarChart({
                 x={padLeft - 8}
                 y={tick.y + 3}
                 textAnchor="end"
-                className="fill-neutral-400 font-mono text-[9px] dark:fill-neutral-500"
+                fontSize="8"
+                style={{ fontSize: '8px' }}
+                className="fill-neutral-400 font-mono dark:fill-neutral-500"
               >
                 {tick.val}
               </text>
@@ -180,7 +182,9 @@ export function MultiBarChart({
                     x={groupCenterX}
                     y={height - 6}
                     textAnchor="middle"
-                    className="fill-neutral-400 font-mono text-[9px] dark:fill-neutral-500"
+                    fontSize="8"
+                    style={{ fontSize: '8px' }}
+                    className="fill-neutral-400 font-mono dark:fill-neutral-500"
                   >
                     {item.label}
                   </text>
@@ -215,7 +219,9 @@ export function MultiBarChart({
                   x={groupCenterX}
                   y={height - 6}
                   textAnchor="middle"
-                  className="fill-neutral-400 font-mono text-[9px] dark:fill-neutral-500"
+                  fontSize="8"
+                  style={{ fontSize: '8px' }}
+                  className="fill-neutral-400 font-mono dark:fill-neutral-500"
                 >
                   {item.label}
                 </text>

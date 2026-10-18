@@ -186,34 +186,34 @@ export default function ReportsPage() {
       description="Audited ledger collections, subscriber churn analysis, aging receivables, and system tamper logs."
       action={
         <div className="flex items-center gap-2">
-          {/* Preset Window Pills */}
-          <div className="hidden sm:inline-flex rounded-full border border-neutral-200/80 p-1 bg-white">
+          {/* Preset Window Segmented Bar */}
+          <div className="hidden sm:inline-flex items-center p-1 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800">
             <button
               onClick={() => setPeriodPreset('this_month')}
-              className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
+              className={`px-3 py-1.5 text-xs rounded-lg transition-all ${
                 periodPreset === 'this_month'
-                  ? 'bg-neutral-900 text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900'
+                  ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-medium'
               }`}
             >
               This Month
             </button>
             <button
               onClick={() => setPeriodPreset('last_30_days')}
-              className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
+              className={`px-3 py-1.5 text-xs rounded-lg transition-all ${
                 periodPreset === 'last_30_days'
-                  ? 'bg-neutral-900 text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900'
+                  ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-medium'
               }`}
             >
               Last 30 Days
             </button>
             <button
               onClick={() => setPeriodPreset('all')}
-              className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
+              className={`px-3 py-1.5 text-xs rounded-lg transition-all ${
                 periodPreset === 'all'
-                  ? 'bg-neutral-900 text-white shadow-xs'
-                  : 'text-neutral-500 hover:text-neutral-900'
+                  ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold'
+                  : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-medium'
               }`}
             >
               All Time
@@ -223,7 +223,7 @@ export default function ReportsPage() {
           <button
             onClick={loadData}
             disabled={isLoading}
-            className="flex items-center gap-1.5 rounded-xl border border-neutral-200/80 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50"
+            className="flex items-center gap-1.5 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-black px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 transition hover:bg-neutral-50 dark:hover:bg-neutral-900 interactive-btn"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -232,7 +232,7 @@ export default function ReportsPage() {
           <button
             onClick={handleExportCsv}
             disabled={isExporting}
-            className="flex items-center gap-1.5 rounded-xl bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white transition hover:bg-neutral-800 shadow-xs"
+            className="flex items-center gap-1.5 rounded-xl bg-neutral-900 hover:bg-black text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 px-3.5 py-1.5 text-xs font-semibold transition shadow-xs interactive-btn"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export Report</span>
@@ -244,14 +244,14 @@ export default function ReportsPage() {
         {/* KPI Top Cards */}
         <ReportMetricsCards overview={overview} isLoading={isLoading} />
 
-        {/* Tab Navigation Pill Bar */}
-        <div className="inline-flex rounded-full border border-neutral-200/80 p-1 bg-white shadow-2xs">
+        {/* Sleek Segmented Report View Switcher */}
+        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-neutral-100/90 dark:bg-neutral-900/90 border border-neutral-200/80 dark:border-neutral-800 backdrop-blur-xs shadow-xs">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs transition-all ${
               activeTab === 'overview'
-                ? 'bg-neutral-900 text-white shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold border border-neutral-200/60 dark:border-neutral-800'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white font-medium hover:bg-white/50 dark:hover:bg-neutral-800/50'
             }`}
           >
             <CreditCard className="h-3.5 w-3.5" />
@@ -260,10 +260,10 @@ export default function ReportsPage() {
 
           <button
             onClick={() => setActiveTab('aging')}
-            className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs transition-all ${
               activeTab === 'aging'
-                ? 'bg-neutral-900 text-white shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold border border-neutral-200/60 dark:border-neutral-800'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white font-medium hover:bg-white/50 dark:hover:bg-neutral-800/50'
             }`}
           >
             <Clock className="h-3.5 w-3.5" />
@@ -272,10 +272,10 @@ export default function ReportsPage() {
 
           <button
             onClick={() => setActiveTab('growth')}
-            className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs transition-all ${
               activeTab === 'growth'
-                ? 'bg-neutral-900 text-white shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold border border-neutral-200/60 dark:border-neutral-800'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white font-medium hover:bg-white/50 dark:hover:bg-neutral-800/50'
             }`}
           >
             <Users className="h-3.5 w-3.5" />
@@ -284,10 +284,10 @@ export default function ReportsPage() {
 
           <button
             onClick={() => setActiveTab('audit')}
-            className={`flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs transition-all ${
               activeTab === 'audit'
-                ? 'bg-neutral-900 text-white shadow-xs'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white dark:bg-black text-neutral-900 dark:text-white shadow-xs font-semibold border border-neutral-200/60 dark:border-neutral-800'
+                : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white font-medium hover:bg-white/50 dark:hover:bg-neutral-800/50'
             }`}
           >
             <ShieldCheck className="h-3.5 w-3.5" />

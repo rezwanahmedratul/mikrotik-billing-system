@@ -12,15 +12,32 @@ interface SessionTrafficChartsProps {
 }
 
 export function SessionTrafficCharts({ sessions }: SessionTrafficChartsProps) {
-  // 12-Hour Session Throughput Profile
+  // 24-Hour PPPoE Aggregated Throughput Profile
   const throughputHistory: ChartDataPoint[] = [
-    { label: '08:00', value: 420, secondaryValue: 140 },
-    { label: '10:00', value: 680, secondaryValue: 210 },
-    { label: '12:00', value: 920, secondaryValue: 310 },
-    { label: '14:00', value: 960, secondaryValue: 340 },
-    { label: '16:00', value: 1120, secondaryValue: 390 },
-    { label: '18:00', value: 1350, secondaryValue: 460 },
-    { label: '20:00', value: 1480, secondaryValue: 510 },
+    { label: '00:00', value: 420, secondaryValue: 140 },
+    { label: '01:00', value: 310, secondaryValue: 110 },
+    { label: '02:00', value: 220, secondaryValue: 85 },
+    { label: '03:00', value: 170, secondaryValue: 65 },
+    { label: '04:00', value: 160, secondaryValue: 60 },
+    { label: '05:00', value: 190, secondaryValue: 75 },
+    { label: '06:00', value: 280, secondaryValue: 95 },
+    { label: '07:00', value: 410, secondaryValue: 145 },
+    { label: '08:00', value: 620, secondaryValue: 215 },
+    { label: '09:00', value: 840, secondaryValue: 295 },
+    { label: '10:00', value: 960, secondaryValue: 330 },
+    { label: '11:00', value: 1040, secondaryValue: 365 },
+    { label: '12:00', value: 1120, secondaryValue: 390 },
+    { label: '13:00', value: 1080, secondaryValue: 380 },
+    { label: '14:00', value: 1150, secondaryValue: 405 },
+    { label: '15:00', value: 1210, secondaryValue: 425 },
+    { label: '16:00', value: 1280, secondaryValue: 450 },
+    { label: '17:00', value: 1390, secondaryValue: 485 },
+    { label: '18:00', value: 1540, secondaryValue: 530 },
+    { label: '19:00', value: 1680, secondaryValue: 580 },
+    { label: '20:00', value: 1750, secondaryValue: 610 },
+    { label: '21:00', value: 1620, secondaryValue: 570 },
+    { label: '22:00', value: 1340, secondaryValue: 470 },
+    { label: '23:00', value: 890, secondaryValue: 310 },
   ];
 
   // Session Duration Distribution (<1h, 1-6h, 6-24h, 1-3d, >3d)

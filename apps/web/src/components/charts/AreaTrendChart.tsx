@@ -43,11 +43,11 @@ export function AreaTrendChart({
   const min = 0;
   const range = max - min;
 
-  const width = 600;
-  const padLeft = 45;
-  const padRight = 20;
-  const padTop = 15;
-  const padBottom = 25;
+  const width = 1000;
+  const padLeft = 85;
+  const padRight = 24;
+  const padTop = 18;
+  const padBottom = 26;
   const plotWidth = width - padLeft - padRight;
   const plotHeight = height - padTop - padBottom;
 
@@ -163,10 +163,12 @@ export function AreaTrendChart({
                 strokeWidth="1"
               />
               <text
-                x={padLeft - 8}
-                y={tick.y + 3}
+                x={padLeft - 10}
+                y={tick.y + 3.5}
                 textAnchor="end"
-                className="fill-neutral-400 font-mono text-[9px] dark:fill-neutral-500"
+                fontSize="8.5"
+                style={{ fontSize: '8.5px' }}
+                className="fill-neutral-400 font-mono dark:fill-neutral-500"
               >
                 {tick.val}
               </text>
@@ -201,16 +203,18 @@ export function AreaTrendChart({
           {/* X-Axis Labels */}
           {data.map((d, i) => {
             // Render label every N points to avoid overlap
-            const step = Math.ceil(data.length / 6);
+            const step = Math.ceil(data.length / 8);
             if (i % step !== 0 && i !== data.length - 1) return null;
             const x = padLeft + (i / (data.length - 1)) * plotWidth;
             return (
               <text
                 key={i}
                 x={x}
-                y={height - 5}
+                y={height - 6}
                 textAnchor="middle"
-                className="fill-neutral-400 font-mono text-[9px] dark:fill-neutral-500"
+                fontSize="8.5"
+                style={{ fontSize: '8.5px' }}
+                className="fill-neutral-400 font-mono dark:fill-neutral-500"
               >
                 {d.label}
               </text>

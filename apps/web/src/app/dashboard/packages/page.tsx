@@ -214,7 +214,7 @@ export default function PackagesPage() {
             setEditingPackage(null);
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium rounded-xl transition-colors shadow-xs"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-black dark:hover:bg-neutral-200 text-xs font-medium rounded-xl transition-colors shadow-xs interactive-btn"
         >
           <Plus className="w-4 h-4" />
           <span>Create Package</span>
@@ -238,14 +238,14 @@ export default function PackagesPage() {
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-neutral-900 flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 text-neutral-900 dark:text-white flex-shrink-0" />
             <p className="text-xs font-medium">{errorMessage}</p>
           </div>
           <button
             onClick={() => setErrorMessage('')}
-            className="text-xs text-neutral-600 hover:underline"
+            className="text-xs text-neutral-600 dark:text-neutral-400 hover:underline"
           >
             Dismiss
           </button>
@@ -279,17 +279,17 @@ export default function PackagesPage() {
             header: 'Package / Code',
             render: (pkg: PackageItem) => (
               <div>
-                <div className="font-semibold text-neutral-900 flex items-center gap-2">
+                <div className="font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
                   <span>{pkg.name}</span>
                   {pkg.isArchived && (
-                    <span className="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-neutral-200 text-neutral-600">
+                    <span className="text-[10px] font-semibold tracking-wider uppercase px-1.5 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">
                       Archived
                     </span>
                   )}
                 </div>
                 <div className="text-xs text-neutral-400 font-mono mt-0.5">{pkg.code}</div>
                 {pkg.description && (
-                  <p className="text-xs text-neutral-500 line-clamp-1 mt-1 max-w-sm">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 line-clamp-1 mt-1 max-w-sm">
                     {pkg.description}
                   </p>
                 )}
@@ -301,11 +301,11 @@ export default function PackagesPage() {
             header: 'Bandwidth (Up / Down)',
             render: (pkg: PackageItem) => (
               <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-neutral-100 font-mono text-xs font-medium text-neutral-800">
-                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-500" />
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-neutral-800 font-mono text-xs font-medium text-neutral-800 dark:text-neutral-200">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
                   <span>{(pkg.uploadSpeedKbps / 1024).toFixed(0)}M</span>
-                  <span className="text-neutral-300">/</span>
-                  <ArrowDownLeft className="w-3.5 h-3.5 text-neutral-500" />
+                  <span className="text-neutral-300 dark:text-neutral-600">/</span>
+                  <ArrowDownLeft className="w-3.5 h-3.5 text-neutral-500 dark:text-neutral-400" />
                   <span>{(pkg.downloadSpeedKbps / 1024).toFixed(0)}M</span>
                 </div>
                 <div className="text-[11px] text-neutral-400 font-mono mt-1">
@@ -319,8 +319,8 @@ export default function PackagesPage() {
             header: 'RouterOS Profile',
             render: (pkg: PackageItem) => (
               <div className="flex items-center gap-1.5">
-                <Tag className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-xs font-mono font-medium text-neutral-700">
+                <Tag className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
+                <span className="text-xs font-mono font-medium text-neutral-700 dark:text-neutral-300">
                   {pkg.pppProfileName}
                 </span>
               </div>
@@ -331,10 +331,10 @@ export default function PackagesPage() {
             header: 'Price / Cycle',
             render: (pkg: PackageItem) => (
               <div>
-                <div className="text-sm font-semibold text-neutral-900 font-mono">
+                <div className="text-sm font-semibold text-neutral-900 dark:text-white font-mono">
                   {pkg.priceFormatted}
                 </div>
-                <div className="text-xs text-neutral-500 capitalize">
+                <div className="text-xs text-neutral-500 dark:text-neutral-400 capitalize">
                   {pkg.billingCycle.toLowerCase()} ({pkg.validityDays} days)
                 </div>
               </div>
@@ -345,8 +345,8 @@ export default function PackagesPage() {
             header: 'Subscribers',
             render: (pkg: PackageItem) => (
               <div className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="text-xs font-medium text-neutral-700">
+                <Users className="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500" />
+                <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">
                   {pkg.activeSubscriptionsCount} users
                 </span>
               </div>
@@ -374,14 +374,14 @@ export default function PackagesPage() {
                     setEditingPackage(pkg);
                     setIsModalOpen(true);
                   }}
-                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
+                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors interactive-btn"
                   title="Edit Package"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setPackageToArchiveToggle(pkg)}
-                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
+                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors interactive-btn"
                   title={pkg.isArchived ? 'Restore to Active' : 'Archive Package'}
                 >
                   {pkg.isArchived ? (
@@ -392,7 +392,7 @@ export default function PackagesPage() {
                 </button>
                 <button
                   onClick={() => setPackageToDelete(pkg)}
-                  className="p-1.5 text-neutral-400 hover:text-black hover:bg-neutral-100 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors"
+                  className="p-1.5 text-neutral-400 hover:text-black hover:bg-neutral-100 dark:hover:text-white dark:hover:bg-neutral-800 rounded-xl transition-colors interactive-btn"
                   title="Delete Package"
                 >
                   <Trash2 className="w-4 h-4" />

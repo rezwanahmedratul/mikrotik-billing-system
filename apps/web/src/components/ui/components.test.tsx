@@ -159,5 +159,54 @@ describe('Monochrome Design System Components', () => {
       expect(html).toContain('Package Name');
       expect(html).toContain('Speed');
     });
+
+    it('renders router gateway records with telemetry and action buttons', () => {
+      const routerItems = [
+        {
+          id: 'r-1',
+          name: 'Core-CCR2004-Dhanmondi',
+          host: '10.200.0.1',
+          port: 443,
+          protocol: 'REST_HTTPS',
+          rosVersion: '7.14.3',
+          activeSessionsCount: 418,
+          connectionStatus: 'ONLINE',
+        },
+      ];
+
+      const routerColumns = [
+        {
+          key: 'name',
+          header: 'Router Gateway',
+          render: (item: any) => (
+            <div>
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">{item.name}</span>
+              <span className="font-mono">{item.host}:{item.port}</span>
+              <span>{item.protocol.replace('_', ' ')}</span>
+            </div>
+          ),
+        },
+        {
+          key: 'sessions',
+          header: 'PPPoE Sessions',
+          render: (item: any) => (
+            <div>{item.activeSessionsCount} tunnels</div>
+          ),
+        },
+      ];
+
+      const html = renderToStaticMarkup(
+        <DataTable
+          columns={routerColumns}
+          data={routerItems}
+          keyExtractor={(item) => item.id}
+        />
+      );
+      expect(html).toContain('Core-CCR2004-Dhanmondi');
+      expect(html).toContain('10.200.0.1:443');
+      expect(html).toContain('REST HTTPS');
+      expect(html).toContain('418 tunnels');
+    });
   });
 });
+

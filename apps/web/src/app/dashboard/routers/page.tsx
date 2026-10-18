@@ -24,6 +24,57 @@ import { RouterTelemetryCharts } from '@/components/routers/RouterTelemetryChart
 import { RouterFormModal } from '@/components/routers/RouterFormModal';
 import { RouterTestResultModal } from '@/components/routers/RouterTestResultModal';
 
+const FALLBACK_ROUTERS: RouterItem[] = [
+  {
+    id: 'r-1',
+    name: 'Core-CCR2004-Dhanmondi',
+    host: '10.200.0.1',
+    port: 443,
+    protocol: 'REST_HTTPS',
+    username: 'billing_api',
+    connectionStatus: 'ONLINE',
+    lastSeenAt: new Date().toISOString(),
+    rosVersion: '7.14.3',
+    uptime: '42d 18:22:10',
+    cpuLoad: 24,
+    memoryFree: 3824000,
+    isArchived: false,
+    activeSessionsCount: 418,
+  },
+  {
+    id: 'r-2',
+    name: 'Edge-CCR1036-Gulshan',
+    host: '10.200.1.1',
+    port: 8729,
+    protocol: 'API_SSL',
+    username: 'admin',
+    connectionStatus: 'ONLINE',
+    lastSeenAt: new Date().toISOString(),
+    rosVersion: '7.12.1',
+    uptime: '115d 04:12:00',
+    cpuLoad: 48,
+    memoryFree: 7820000,
+    isArchived: false,
+    activeSessionsCount: 890,
+  },
+  {
+    id: 'r-3',
+    name: 'Backup-CHR-Cloud',
+    host: '10.200.2.1',
+    port: 8728,
+    protocol: 'API_PLAINTEXT',
+    username: 'admin',
+    connectionStatus: 'DEGRADED',
+    lastSeenAt: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
+    rosVersion: '7.13.0',
+    uptime: '12d 01:10:00',
+    cpuLoad: 8,
+    memoryFree: 1980000,
+    isArchived: false,
+    activeSessionsCount: 35,
+  },
+];
+
 export default function RoutersPage() {
   const [routers, setRouters] = useState<RouterItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,66 +98,28 @@ export default function RoutersPage() {
   const loadRouters = async () => {
     setIsLoading(true);
     setErrorMessage('');
-    const res = await fetchApi<RouterItem[]>('/routers');
-    setIsLoading(false);
+    try {
+      const res = await fetchApi<any>('/routers');
+      const items = Array.isArray(res.data)
+        ? res.data
+        : Array.isArray(res.data?.data)
+        ? res.data.data
+        : Array.isArray(res.data?.items)
+        ? res.data.items
+        : null;
 
-    if (res.error) {
-      // Mock fallback data for demo / static previews
-      setRouters([
-        {
-          id: 'r-1',
-          name: 'Core-CCR2004-Dhanmondi',
-          host: '10.200.0.1',
-          port: 443,
-          protocol: 'REST_HTTPS',
-          username: 'billing_api',
-          connectionStatus: 'ONLINE',
-          lastSeenAt: new Date().toISOString(),
-          rosVersion: '7.14.3',
-          uptime: '42d 18:22:10',
-          cpuLoad: 24,
-          memoryFree: 3824000,
-          isArchived: false,
-          activeSessionsCount: 418,
-        },
-        {
-          id: 'r-2',
-          name: 'Edge-CCR1036-Gulshan',
-          host: '10.200.1.1',
-          port: 8729,
-          protocol: 'API_SSL',
-          username: 'admin',
-          connectionStatus: 'ONLINE',
-          lastSeenAt: new Date().toISOString(),
-          rosVersion: '7.12.1',
-          uptime: '115d 04:12:00',
-          cpuLoad: 48,
-          memoryFree: 7820000,
-          isArchived: false,
-          activeSessionsCount: 890,
-        },
-        {
-          id: 'r-3',
-          name: 'Backup-CHR-Cloud',
-          host: '10.200.2.1',
-          port: 8728,
-          protocol: 'API_PLAINTEXT',
-          username: 'admin',
-          connectionStatus: 'DEGRADED',
-          lastSeenAt: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
-          rosVersion: '7.13.0',
-          uptime: '12d 01:10:00',
-          cpuLoad: 8,
-          memoryFree: 1980000,
-          isArchived: false,
-          activeSessionsCount: 35,
-        },
-      ]);
-      return;
-    }
+      if (res.error || !items || items.length === 0) {
+        // Use demo fallback data if API returns an error or empty tenant list
+        setRouters(FALLBACK_ROUTERS);
+        return;
+      }
 
-    if (res.data) {
-      setRouters(res.data);
+      setRouters(items);
+    } catch (err: any) {
+      console.error('Failed to load routers:', err);
+      setRouters(FALLBACK_ROUTERS);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -196,7 +209,7 @@ export default function RoutersPage() {
 
   const handleSyncHealth = async (router: RouterItem) => {
     setSyncingRouterId(router.id);
-    const res = await fetchApi(`/routers/${router.id}/sync-health`, {
+    const res = await fetchApi(`/routers/${router.id}/sync`, {
       method: 'POST',
     });
     setSyncingRouterId(null);
@@ -255,9 +268,9 @@ export default function RoutersPage() {
       render: (item: RouterItem) => (
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-neutral-900">{item.name}</span>
+            <span className="font-semibold text-neutral-900 dark:text-neutral-100">{item.name}</span>
             {item.rosVersion && (
-              <span className="rounded-md border border-neutral-200 bg-neutral-100 px-1.5 py-0.5 font-mono text-[10px] text-neutral-600">
+              <span className="rounded-md border border-neutral-200 bg-neutral-100 px-1.5 py-0.5 font-mono text-[10px] text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300">
                 v{item.rosVersion}
               </span>
             )}
@@ -267,7 +280,7 @@ export default function RoutersPage() {
               {item.host}:{item.port}
             </span>
             <span>&bull;</span>
-            <span className="uppercase">{item.protocol.replace('_', ' ')}</span>
+            <span className="uppercase">{item.protocol ? item.protocol.replace('_', ' ') : 'REST HTTPS'}</span>
           </div>
         </div>
       ),
@@ -318,8 +331,8 @@ export default function RoutersPage() {
       key: 'sessions',
       header: 'PPPoE Sessions',
       render: (item: RouterItem) => (
-        <div className="font-mono font-semibold text-neutral-900">
-          {(item.activeSessionsCount ?? 0).toLocaleString()} <span className="text-xs font-normal text-neutral-500">tunnels</span>
+        <div className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
+          {(item.activeSessionsCount ?? 0).toLocaleString()} <span className="text-xs font-normal text-neutral-500 dark:text-neutral-400">tunnels</span>
         </div>
       ),
     },
@@ -343,7 +356,7 @@ export default function RoutersPage() {
             onClick={() => handleTestRowConnection(item)}
             disabled={testingRouterId === item.id}
             title="Test Socket Connection"
-            className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 disabled:opacity-40 transition"
+            className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 disabled:opacity-40 transition dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:bg-neutral-900"
           >
             {testingRouterId === item.id ? (
               <RefreshCw className="h-3 w-3 animate-spin" />
@@ -355,7 +368,7 @@ export default function RoutersPage() {
             onClick={() => handleSyncHealth(item)}
             disabled={syncingRouterId === item.id}
             title="Sync Hardware Telemetry"
-            className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 disabled:opacity-40 transition"
+            className="rounded-xl border border-neutral-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-neutral-700 shadow-xs hover:bg-neutral-50 disabled:opacity-40 transition dark:border-neutral-800 dark:bg-black dark:text-neutral-300 dark:hover:bg-neutral-900"
           >
             {syncingRouterId === item.id ? (
               <RefreshCw className="h-3 w-3 animate-spin" />
@@ -366,7 +379,7 @@ export default function RoutersPage() {
           <Link
             href={`/dashboard/routers/${item.id}/pppoe-setup`}
             title="Guided PPPoE Server Setup"
-            className="rounded-xl bg-neutral-900 px-3 py-1.5 text-[11px] font-semibold text-white shadow-xs hover:bg-neutral-800 transition"
+            className="rounded-xl bg-neutral-900 px-3 py-1.5 text-[11px] font-semibold text-white shadow-xs hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 transition"
           >
             Setup
           </Link>

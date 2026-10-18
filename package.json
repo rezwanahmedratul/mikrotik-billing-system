@@ -11,9 +11,12 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "clean": "pnpm -r exec rimraf dist .turbo .next coverage",
-    "docker:up": "docker compose -f infrastructure/docker-compose.yml up -d",
-    "docker:down": "docker compose -f infrastructure/docker-compose.yml down",
-    "docker:logs": "docker compose -f infrastructure/docker-compose.yml logs -f",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build",
+    "docker:logs": "docker compose logs -f",
+    "docker:infra:up": "docker compose -f infrastructure/docker-compose.yml up -d",
+    "docker:infra:down": "docker compose -f infrastructure/docker-compose.yml down",
     "db:reset": "tsx scripts/reset-dev-db.ts"
   },
   "devDependencies": {

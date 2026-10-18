@@ -6,27 +6,23 @@ import { ThemeMode, ThemeContextValue } from './theme.types';
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeMode>('light');
+  const [theme, setThemeState] = useState<ThemeMode>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('theme') as ThemeMode | null;
+        if (stored === 'light' || stored === 'dark' || stored === 'system') return stored;
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+      } catch (_) {}
+    }
+    return 'dark';
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    try {
-      const stored = localStorage.getItem('theme') as ThemeMode | null;
-      if (stored === 'light' || stored === 'dark' || stored === 'system') {
-        setThemeState(stored);
-      } else {
-        // Default to dark or system preference if preferred
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setThemeState(prefersDark ? 'dark' : 'light');
-      }
-    } catch {
-      // ignore localStorage errors in restricted environments
-    }
   }, []);
 
   const resolvedTheme = useMemo<'light' | 'dark'>(() => {
-    if (!mounted) return 'light';
     if (theme === 'system') {
       return typeof window !== 'undefined' &&
         window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -34,7 +30,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         : 'light';
     }
     return theme;
-  }, [theme, mounted]);
+  }, [theme]);
 
   useEffect(() => {
     if (!mounted) return;

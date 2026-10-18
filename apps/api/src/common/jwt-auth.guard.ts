@@ -6,7 +6,11 @@ import { JwtPayload, AuthenticatedUser } from './auth-user.interface.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  private reflector: Reflector;
+
+  constructor(reflector?: Reflector) {
+    this.reflector = reflector || new Reflector();
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [

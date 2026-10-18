@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+coverage
+*.log
+.git
+.github
+.DS_Store
+screenshots
+tmp
+.turbo
+.tempmediaStorage
