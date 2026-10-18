@@ -1,24 +1,8 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min } from 'class-validator';
-
 export class InitiateGatewayPaymentDto {
-  @IsString()
-  @IsNotEmpty()
   subscriberId!: string;
-
-  @IsString()
-  @IsOptional()
   invoiceId?: string;
-
-  @IsInt()
-  @Min(1)
   amountMinor!: number;
-
-  @IsString()
-  @IsNotEmpty()
   provider!: string; // 'BKASH' | 'NAGAD' | 'STRIPE' | 'SANDBOX_MOCK'
-
-  @IsString()
-  @IsNotEmpty()
   callbackUrl!: string;
 }
 

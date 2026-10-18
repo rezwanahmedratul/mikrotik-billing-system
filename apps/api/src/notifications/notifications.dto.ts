@@ -1,35 +1,18 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsEnum } from 'class-validator';
 import { SmsStatus, SmsTemplateType } from '@mikrotik-billing/shared';
 
 export class SendDirectSmsDto {
-  @IsString()
-  @IsNotEmpty()
   recipientPhone!: string;
-
-  @IsString()
-  @IsNotEmpty()
   message!: string;
 }
 
 export class SendTemplateSmsDto {
-  @IsString()
-  @IsNotEmpty()
   recipientPhone!: string;
-
-  @IsEnum(SmsTemplateType)
   type!: SmsTemplateType;
-
-  @IsOptional()
   variables?: Record<string, string | number>;
 }
 
 export class UpdateTemplateDto {
-  @IsString()
-  @IsNotEmpty()
   templateText!: string;
-
-  @IsBoolean()
-  @IsOptional()
   isEnabled?: boolean;
 }
 

@@ -38,12 +38,12 @@ export function ConfirmDialog({
         <div className="text-xs text-neutral-600 leading-relaxed">{message}</div>
       </div>
 
-      <div className="mt-5 flex justify-end gap-2 border-t border-border pt-4">
+      <div className="mt-5 flex justify-end gap-2 border-t border-neutral-100 pt-4">
         <button
           type="button"
           disabled={isLoading}
           onClick={onClose}
-          className="rounded border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:opacity-50"
+          className="rounded-xl border border-neutral-200/90 bg-white px-4 py-2 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:opacity-50"
         >
           {cancelLabel}
         </button>
@@ -51,7 +51,7 @@ export function ConfirmDialog({
           type="button"
           disabled={isLoading}
           onClick={onConfirm}
-          className={`inline-flex items-center gap-1.5 rounded px-3.5 py-1.5 text-xs font-medium text-white transition disabled:opacity-50 ${
+          className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-medium text-white transition shadow-xs disabled:opacity-50 ${
             isDestructive ? 'bg-rose-600 hover:bg-rose-700' : 'bg-neutral-900 hover:bg-neutral-800'
           }`}
         >

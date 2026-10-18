@@ -133,14 +133,14 @@ export default function DashboardOverviewPage() {
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* Card 1: Active Subscribers */}
-          <div className="rounded border border-border bg-surface p-4 shadow-sm">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-neutral-500">Active Subscribers</span>
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-neutral-100 text-neutral-700">
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Active Subscribers</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
                 <Users className="h-4 w-4" />
               </div>
             </div>
-            <div className="mt-2 flex items-baseline gap-2">
+            <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold tracking-tight text-neutral-900">326</span>
               <span className="text-xs font-medium text-emerald-600">+12 this month</span>
             </div>
@@ -150,17 +150,17 @@ export default function DashboardOverviewPage() {
           </div>
 
           {/* Card 2: Online PPPoE Sessions */}
-          <div className="rounded border border-border bg-surface p-4 shadow-sm">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-neutral-500">Live PPPoE Sessions</span>
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-neutral-100 text-neutral-700">
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Live PPPoE Sessions</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
                 <Radio className="h-4 w-4" />
               </div>
             </div>
-            <div className="mt-2 flex items-baseline gap-2">
+            <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold tracking-tight text-neutral-900">{totalSessions}</span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live
               </span>
             </div>
             <div className="mt-2 text-[11px] text-neutral-500">
@@ -169,33 +169,33 @@ export default function DashboardOverviewPage() {
           </div>
 
           {/* Card 3: Routers Status */}
-          <div className="rounded border border-border bg-surface p-4 shadow-sm">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-neutral-500">Router Gateways</span>
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-neutral-100 text-neutral-700">
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Router Gateways</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
                 <RouterIcon className="h-4 w-4" />
               </div>
             </div>
-            <div className="mt-2 flex items-baseline gap-2">
+            <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold tracking-tight text-neutral-900">
                 {routers.filter((r) => r.status === 'ONLINE').length} / {routers.length}
               </span>
               <span className="text-xs font-medium text-neutral-600">100% Online</span>
             </div>
             <div className="mt-2 text-[11px] text-neutral-500">
-              Avg CPU: 18% &bull; Health: Good
+              Avg CPU: 18% &bull; Health: Optimal
             </div>
           </div>
 
           {/* Card 4: Revenue & Collection */}
-          <div className="rounded border border-border bg-surface p-4 shadow-sm">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs transition-all hover:shadow-sm">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-neutral-500">Current Month Billed</span>
-              <div className="flex h-7 w-7 items-center justify-center rounded bg-neutral-100 text-neutral-700">
+              <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Current Month Billed</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
                 <Receipt className="h-4 w-4" />
               </div>
             </div>
-            <div className="mt-2 flex items-baseline gap-2">
+            <div className="mt-3 flex items-baseline gap-2">
               <span className="text-2xl font-bold tracking-tight text-neutral-900">৳245,800</span>
               <span className="text-xs font-medium text-emerald-600">৳198k Paid</span>
             </div>
@@ -206,7 +206,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Routers Inventory & Health Status */}
-        <div className="rounded border border-border bg-surface p-5 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs">
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold text-neutral-900">MikroTik Router Gateways</h2>
@@ -216,7 +216,7 @@ export default function DashboardOverviewPage() {
             </div>
             <Link
               href="/dashboard/routers"
-              className="inline-flex items-center gap-1 text-xs font-medium text-neutral-700 hover:text-neutral-900"
+              className="inline-flex items-center gap-1 rounded-xl border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 transition hover:bg-neutral-50"
             >
               <span>Manage Routers</span>
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -225,20 +225,20 @@ export default function DashboardOverviewPage() {
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-border bg-neutral-50 text-[11px] font-medium uppercase tracking-wider text-neutral-500">
+              <thead className="border-b border-neutral-100 bg-neutral-50/70 text-[11px] font-medium uppercase tracking-wider text-neutral-500">
                 <tr>
-                  <th className="px-4 py-2.5">Router Name</th>
-                  <th className="px-4 py-2.5">API Address</th>
-                  <th className="px-4 py-2.5">Status</th>
-                  <th className="px-4 py-2.5">CPU Load</th>
-                  <th className="px-4 py-2.5">Memory</th>
-                  <th className="px-4 py-2.5">PPPoE Sessions</th>
-                  <th className="px-4 py-2.5 text-right">Last Sync</th>
+                  <th className="px-4 py-3">Router Name</th>
+                  <th className="px-4 py-3">API Address</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">CPU Load</th>
+                  <th className="px-4 py-3">Memory</th>
+                  <th className="px-4 py-3">PPPoE Sessions</th>
+                  <th className="px-4 py-3 text-right">Last Sync</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-neutral-100">
                 {routers.map((router) => (
-                  <tr key={router.id} className="hover:bg-neutral-50/50">
+                  <tr key={router.id} className="transition-colors hover:bg-neutral-50/60">
                     <td className="px-4 py-3 font-medium text-neutral-900">
                       <div className="flex items-center gap-2">
                         <RouterIcon className="h-3.5 w-3.5 text-neutral-500" />
@@ -253,7 +253,7 @@ export default function DashboardOverviewPage() {
                       <div className="flex items-center gap-2">
                         <div className="h-1.5 w-16 overflow-hidden rounded-full bg-neutral-100">
                           <div
-                            className="h-full bg-neutral-800"
+                            className="h-full rounded-full bg-neutral-800"
                             style={{ width: `${router.cpuUsage}%` }}
                           />
                         </div>
@@ -266,7 +266,7 @@ export default function DashboardOverviewPage() {
                       <div className="flex items-center gap-2">
                         <div className="h-1.5 w-16 overflow-hidden rounded-full bg-neutral-100">
                           <div
-                            className="h-full bg-neutral-800"
+                            className="h-full rounded-full bg-neutral-800"
                             style={{ width: `${router.memoryUsage}%` }}
                           />
                         </div>
@@ -291,14 +291,14 @@ export default function DashboardOverviewPage() {
         {/* Two-Column Lower Section: Quick Operations & Recent Audit Activity */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Quick Operations Panel */}
-          <div className="rounded border border-border bg-surface p-5 shadow-sm lg:col-span-1">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs lg:col-span-1">
             <h2 className="text-sm font-semibold text-neutral-900">Quick Operations</h2>
             <p className="text-xs text-neutral-500">Frequently executed ISP actions</p>
 
             <div className="mt-4 space-y-2">
               <Link
                 href="/dashboard/routers"
-                className="flex items-center justify-between rounded border border-border p-3 transition-colors hover:bg-neutral-50"
+                className="flex items-center justify-between rounded-xl border border-neutral-200/80 p-3 transition hover:bg-neutral-50"
               >
                 <div>
                   <div className="text-xs font-medium text-neutral-900">Add Router Gateway</div>
@@ -309,7 +309,7 @@ export default function DashboardOverviewPage() {
 
               <Link
                 href="/dashboard/subscribers"
-                className="flex items-center justify-between rounded border border-border p-3 transition-colors hover:bg-neutral-50"
+                className="flex items-center justify-between rounded-xl border border-neutral-200/80 p-3 transition hover:bg-neutral-50"
               >
                 <div>
                   <div className="text-xs font-medium text-neutral-900">Provision PPPoE User</div>
@@ -320,7 +320,7 @@ export default function DashboardOverviewPage() {
 
               <Link
                 href="/dashboard/invoices"
-                className="flex items-center justify-between rounded border border-border p-3 transition-colors hover:bg-neutral-50"
+                className="flex items-center justify-between rounded-xl border border-neutral-200/80 p-3 transition hover:bg-neutral-50"
               >
                 <div>
                   <div className="text-xs font-medium text-neutral-900">Collect Payment</div>
@@ -331,7 +331,7 @@ export default function DashboardOverviewPage() {
 
               <Link
                 href="/dashboard/staff"
-                className="flex items-center justify-between rounded border border-border p-3 transition-colors hover:bg-neutral-50"
+                className="flex items-center justify-between rounded-xl border border-neutral-200/80 p-3 transition hover:bg-neutral-50"
               >
                 <div>
                   <div className="text-xs font-medium text-neutral-900">Manage Staff Access</div>
@@ -343,7 +343,7 @@ export default function DashboardOverviewPage() {
           </div>
 
           {/* Recent Operations & Audit Trail */}
-          <div className="rounded border border-border bg-surface p-5 shadow-sm lg:col-span-2">
+          <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-xs lg:col-span-2">
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-semibold text-neutral-900">Recent Operations Trail</h2>
@@ -351,19 +351,19 @@ export default function DashboardOverviewPage() {
                   Audit events across router sync, billing runs, and network bindings
                 </p>
               </div>
-              <span className="text-[11px] text-neutral-400">Real-time log</span>
+              <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-mono text-neutral-600">Real-time log</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {recentActivities.map((act) => (
                 <div
                   key={act.id}
-                  className="flex items-start justify-between rounded border border-border/80 bg-neutral-50/40 p-3 text-xs"
+                  className="flex items-start justify-between rounded-xl border border-neutral-200/70 bg-neutral-50/50 p-3.5 text-xs transition hover:bg-neutral-50"
                 >
                   <div className="space-y-1">
                     <div className="font-medium text-neutral-900">{act.action}</div>
                     <div className="flex items-center gap-2 text-[11px] text-neutral-500">
-                      <span className="rounded bg-neutral-200/60 px-1.5 py-0.2 font-mono text-[10px] text-neutral-700">
+                      <span className="rounded-full bg-neutral-200/70 px-2 py-0.2 font-mono text-[10px] text-neutral-700">
                         {act.entityType}
                       </span>
                       <span>Initiator: {act.user}</span>

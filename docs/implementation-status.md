@@ -739,7 +739,92 @@
   - Provider failure isolation and manual retry verified.
   - Automated tests guarantee zero real SMS network requests.
 - **Next Step:**
-  - Section 15: Automated Billing and Service Lifecycle (Suspensions & Restorations).
+  - Section 15: Automated Billing and Service Lifecycle (COMPLETED).
+
+---
+
+### Milestone Log: Section 15 — Automated Billing and Service Lifecycle
+
+- **Completed Work:**
+  - Implemented core lifecycle orchestrator in `apps/api/src/lifecycle/service-lifecycle.service.ts`:
+    - Phase 1: Automated Restorations:
+      - Automatically detects subscribers who settled all overdue balances and restores their subscriptions from `SUSPENDED` to `ACTIVE`.
+      - Automatically invokes `PppoeProvisioningService` to unblock and re-enable their PPPoE credentials on the assigned RouterOS gateway.
+      - Dispatches `SERVICE_RESTORED` SMS notifications.
+    - Phase 2: Due Date Reminders:
+      - Automatically detects subscriptions nearing due date (within 3 days).
+      - Checks invoice balance and enforces 48-hour deduplication to prevent notification spam.
+      - Dispatches `DUE_REMINDER` notifications.
+    - Phase 3: Automated Suspensions:
+      - Calculates grace period cutoff based on tenant settings (`gracePeriodDays`).
+      - Strictly verifies client balance before suspension: clients with zero overdue balance are never suspended.
+      - Transitions subscription status to `SUSPENDED`, records audit trail and `ServiceEvent`.
+      - Calls `PppoeProvisioningService` to disable the secret on the router and immediately terminate active sessions.
+      - Dispatches `SERVICE_SUSPENDED` notification.
+    - Resilient Router Operations:
+      - Router communication failures log warnings without crashing or blocking business state transitions in the database.
+    - Audited Manual Overrides:
+      - Allows authorized operators to trigger manual `SUSPEND`, `RESTORE`, or `EXTEND_GRACE` with mandatory audit reason logging.
+    - Service State Reconciliation:
+      - `getReconciliationReport` inspects subscriptions across the database and detects any mismatch with active router secrets.
+  - Implemented controller and module:
+    - `apps/api/src/lifecycle/service-lifecycle.controller.ts`: Role-guarded endpoints (`POST /lifecycle/run`, `GET /lifecycle/reconciliation`, `POST /lifecycle/manual-override`).
+    - `apps/api/src/lifecycle/service-lifecycle.module.ts`: Modular provider registration in `AppModule`.
+  - Co-located integration test suite:
+    - `apps/api/src/lifecycle/service-lifecycle.test.ts` (6/6 tests passed).
+  - Implemented modular frontend components with monochrome rounded-2xl design:
+    - `apps/web/src/components/lifecycle/lifecycle.types.ts`: Domain models for lifecycle runs, reconciliation discrepancies, and overrides.
+    - `apps/web/src/components/lifecycle/LifecycleStatsCards.tsx`: 4 monochrome KPI summary cards with rounded-2xl corners (Active Online, Suspended, Auto Restorations, Discrepancies).
+    - `apps/web/src/components/lifecycle/LifecycleRunModal.tsx`: Dry-run and execution trigger modal with simulation indicator.
+    - `apps/web/src/components/lifecycle/ManualOverrideModal.tsx`: Audited action modal for emergency suspensions, restorations, or grace extensions.
+    - `apps/web/src/app/dashboard/lifecycle/page.tsx`: Clean orchestrator table displaying discrepancies, quick filters, and action triggers.
+    - Integrated into `AppShell.tsx` navigation.
+  - Comprehensive design polish across web application:
+    - Modernized `AppShell.tsx`, `DataTable.tsx`, `StatusBadge.tsx`, `Toast.tsx`, `ConfirmDialog.tsx`, `SubscriberStatsCards.tsx`, `SubscriberFiltersBar.tsx`, `PackageStatsCards.tsx`, `PackageFiltersBar.tsx`, and `InvoiceFiltersBar.tsx` with rounded corners (`rounded-2xl`, `rounded-xl`, `rounded-full`), monochrome minimal aesthetic, subtle borders, and smooth transitions.
+  - Verification & testing:
+    - Co-located integration test passed (6/6 tests).
+    - Full monorepo test suite passed (103/103 tests).
+    - Next.js production build succeeded with exit code 0 (18/18 static routes compiled).
+    - Verified HTTP 200 on `/dashboard/lifecycle` and core dashboard pages.
+- **Files Changed:**
+  - `apps/api/src/lifecycle/service-lifecycle.dto.ts`
+  - `apps/api/src/lifecycle/service-lifecycle.service.ts`
+  - `apps/api/src/lifecycle/service-lifecycle.controller.ts`
+  - `apps/api/src/lifecycle/service-lifecycle.module.ts`
+  - `apps/api/src/lifecycle/service-lifecycle.test.ts`
+  - `apps/api/src/app.module.ts`
+  - `apps/web/src/components/lifecycle/lifecycle.types.ts`
+  - `apps/web/src/components/lifecycle/LifecycleStatsCards.tsx`
+  - `apps/web/src/components/lifecycle/LifecycleRunModal.tsx`
+  - `apps/web/src/components/lifecycle/ManualOverrideModal.tsx`
+  - `apps/web/src/app/dashboard/lifecycle/page.tsx`
+  - `apps/web/src/components/layout/AppShell.tsx`
+  - `apps/web/src/components/ui/DataTable.tsx`
+  - `apps/web/src/components/ui/StatusBadge.tsx`
+  - `apps/web/src/components/ui/Toast.tsx`
+  - `apps/web/src/components/ui/ConfirmDialog.tsx`
+  - `apps/web/src/components/subscribers/SubscriberStatsCards.tsx`
+  - `apps/web/src/components/subscribers/SubscriberFiltersBar.tsx`
+  - `apps/web/src/components/packages/PackageStatsCards.tsx`
+  - `apps/web/src/components/packages/PackageFiltersBar.tsx`
+  - `apps/web/src/components/billing/InvoiceFiltersBar.tsx`
+  - `apps/web/src/app/dashboard/page.tsx`
+  - `docs/implementation-status.md`
+- **Commands Executed:**
+  - `pnpm --filter @mikrotik-billing/api test -- apps/api/src/lifecycle/service-lifecycle.test.ts` (6/6 tests passed)
+  - `pnpm test` (All 103 tests passed across the monorepo)
+  - `pnpm --filter @mikrotik-billing/web run build` (All 18 static routes compiled with code 0)
+  - `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/dashboard/lifecycle` (HTTP 200 OK)
+- **Tests & Verification:**
+  - Settled balance auto-restoration verified.
+  - Reminder notification deduplication (48h window) verified.
+  - Zero-balance accounts never suspended verified.
+  - Offline router resilience during lifecycle runs verified.
+  - Audited manual overrides with mandatory reason verified.
+  - Dry-run mode non-mutating execution verified.
+- **Next Step:**
+  - Section 16: Dashboard, Reports, and Audit Trail.
+
 
 
 

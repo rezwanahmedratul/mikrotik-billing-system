@@ -15,7 +15,7 @@ export function PackageStatsCards({ packages }: PackageStatsCardsProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <div className="bg-white border border-neutral-200 rounded-xl p-5 shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
             Total Packages
@@ -26,7 +26,7 @@ export function PackageStatsCards({ packages }: PackageStatsCardsProps) {
         <div className="text-xs text-neutral-500 mt-1">Configured service tiers</div>
       </div>
 
-      <div className="bg-white border border-neutral-200 rounded-xl p-5 shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
             Active Plans
@@ -37,7 +37,7 @@ export function PackageStatsCards({ packages }: PackageStatsCardsProps) {
         <div className="text-xs text-emerald-600 font-medium mt-1">Available for new sales</div>
       </div>
 
-      <div className="bg-white border border-neutral-200 rounded-xl p-5 shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
             Archived Plans
@@ -48,7 +48,7 @@ export function PackageStatsCards({ packages }: PackageStatsCardsProps) {
         <div className="text-xs text-neutral-500 mt-1">Grandfathered or retired</div>
       </div>
 
-      <div className="bg-white border border-neutral-200 rounded-xl p-5 shadow-sm">
+      <div className="bg-white border border-neutral-200/80 rounded-2xl p-5 shadow-xs transition hover:shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
             Subscribed Users

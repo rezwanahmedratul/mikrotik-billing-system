@@ -1,35 +1,13 @@
-import { IsBoolean, IsOptional, IsInt, Min, IsString, IsNotEmpty, IsIn } from 'class-validator';
-
 export class RunLifecycleCycleDto {
-  @IsBoolean()
-  @IsOptional()
   isDryRun?: boolean = false;
-
-  @IsInt()
-  @Min(0)
-  @IsOptional()
   gracePeriodDays?: number = 3;
-
-  @IsString()
-  @IsOptional()
   targetDate?: string;
 }
 
 export class ManualLifecycleOverrideDto {
-  @IsString()
-  @IsNotEmpty()
   subscriptionId!: string;
-
-  @IsIn(['SUSPEND', 'RESTORE', 'EXTEND_GRACE'])
   action!: 'SUSPEND' | 'RESTORE' | 'EXTEND_GRACE';
-
-  @IsString()
-  @IsNotEmpty()
   reason!: string;
-
-  @IsInt()
-  @Min(1)
-  @IsOptional()
   graceDays?: number;
 }
 

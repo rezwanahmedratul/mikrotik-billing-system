@@ -37,14 +37,14 @@ export function InvoiceFiltersBar({
 
       <div className="flex flex-wrap items-center gap-3">
         {/* Status Pills */}
-        <div className="inline-flex rounded-xl border border-neutral-200 p-1 bg-neutral-50">
+        <div className="inline-flex rounded-full border border-neutral-200/80 p-1 bg-neutral-50/80">
           {['ALL', 'ISSUED', 'PARTIALLY_PAID', 'PAID', 'OVERDUE', 'VOID'].map((s) => (
             <button
               key={s}
               onClick={() => onStatusChange(s)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+              className={`px-3 py-1 text-xs font-medium rounded-full transition-all ${
                 statusFilter === s
-                  ? 'bg-white text-neutral-900 shadow-xs'
+                  ? 'bg-neutral-900 text-white shadow-xs'
                   : 'text-neutral-500 hover:text-neutral-900'
               }`}
             >
