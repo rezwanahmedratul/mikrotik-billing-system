@@ -257,23 +257,23 @@ export default function SubscribersPage() {
       action={
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium rounded-xl transition-colors shadow-xs"
         >
           <UserPlus className="w-4 h-4" />
-          Register Subscriber
+          <span>Register Subscriber</span>
         </button>
       }
     >
       {/* Alert Banners */}
       {successMessage && (
-        <div className="mb-6 p-4 rounded-xl border border-emerald-950/20 bg-emerald-50 text-emerald-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-200 bg-neutral-900 text-white flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-            <p className="text-sm font-medium">{successMessage}</p>
+            <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0" />
+            <p className="text-xs font-medium">{successMessage}</p>
           </div>
           <button
             onClick={() => setSuccessMessage('')}
-            className="text-xs text-emerald-700 hover:underline"
+            className="text-xs text-neutral-300 hover:text-white underline"
           >
             Dismiss
           </button>
@@ -281,14 +281,14 @@ export default function SubscribersPage() {
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-xl border border-red-950/20 bg-red-50 text-red-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-sm font-medium">{errorMessage}</p>
+            <AlertCircle className="w-5 h-5 text-neutral-900 flex-shrink-0" />
+            <p className="text-xs font-medium">{errorMessage}</p>
           </div>
           <button
             onClick={() => setErrorMessage('')}
-            className="text-xs text-red-700 hover:underline"
+            className="text-xs text-neutral-600 hover:underline"
           >
             Dismiss
           </button>
@@ -445,7 +445,7 @@ export default function SubscribersPage() {
                 <div className="flex items-center justify-end gap-1.5">
                   <Link
                     href={`/dashboard/subscribers/${sub.id}`}
-                    className="px-2.5 py-1 text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-neutral-100 hover:bg-neutral-200 rounded-md transition-colors"
+                    className="px-2.5 py-1 text-xs font-medium text-neutral-700 hover:text-neutral-900 bg-neutral-100 hover:bg-neutral-200 rounded-xl transition-colors"
                   >
                     Details
                   </Link>
@@ -456,7 +456,7 @@ export default function SubscribersPage() {
                         action: isSuspended ? 'RESTORE' : 'SUSPEND',
                       })
                     }
-                    className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                    className={`px-2.5 py-1 text-xs font-medium rounded-xl transition-colors ${
                       isSuspended
                         ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
                         : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200'

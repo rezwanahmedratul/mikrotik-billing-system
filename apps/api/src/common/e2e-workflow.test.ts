@@ -136,9 +136,9 @@ describe('End-to-End Platform Lifecycle Workflow (Section 19)', () => {
       tenant.id,
       router.id,
       {
+        ...plan.parameters,
         confirmed: true,
         planId: plan.planId,
-        parameters: plan.parameters,
       },
       admin.id
     );

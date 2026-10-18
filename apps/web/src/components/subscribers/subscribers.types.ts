@@ -54,12 +54,16 @@ export interface SubscriberItem {
   pppoeAccount?: PppoeAccountInfo | null;
 }
 
+import { InvoiceItem, PaymentItem } from '@/components/billing/billing.types';
+
 export interface SubscriberDetail extends SubscriberItem {
   subscriptions: SubscriptionInfo[];
-  serviceEvents: ServiceEventInfo[];
-  invoicesCount: number;
-  paymentsCount: number;
-  outstandingBalanceMinor: number;
+  serviceEvents?: ServiceEventInfo[];
+  invoicesCount?: number;
+  paymentsCount?: number;
+  outstandingBalanceMinor?: number;
+  invoices?: InvoiceItem[];
+  payments?: PaymentItem[];
 }
 
 export interface CreateSubscriberFormData {

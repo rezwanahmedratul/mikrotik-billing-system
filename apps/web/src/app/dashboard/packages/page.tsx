@@ -213,23 +213,23 @@ export default function PackagesPage() {
             setEditingPackage(null);
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-medium rounded-xl transition-colors shadow-xs"
         >
           <Plus className="w-4 h-4" />
-          Create Package
+          <span>Create Package</span>
         </button>
       }
     >
       {/* Alert Banners */}
       {successMessage && (
-        <div className="mb-6 p-4 rounded-xl border border-emerald-950/20 bg-emerald-50 text-emerald-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-200 bg-neutral-900 text-white flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-            <p className="text-sm font-medium">{successMessage}</p>
+            <CheckCircle2 className="w-5 h-5 text-white flex-shrink-0" />
+            <p className="text-xs font-medium">{successMessage}</p>
           </div>
           <button
             onClick={() => setSuccessMessage('')}
-            className="text-xs text-emerald-700 hover:underline"
+            className="text-xs text-neutral-300 hover:text-white underline"
           >
             Dismiss
           </button>
@@ -237,14 +237,14 @@ export default function PackagesPage() {
       )}
 
       {errorMessage && (
-        <div className="mb-6 p-4 rounded-xl border border-red-950/20 bg-red-50 text-red-900 flex items-center justify-between animate-in fade-in">
+        <div className="mb-6 p-4 rounded-2xl border border-neutral-300 bg-neutral-100 text-neutral-900 flex items-center justify-between animate-in fade-in">
           <div className="flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-sm font-medium">{errorMessage}</p>
+            <AlertCircle className="w-5 h-5 text-neutral-900 flex-shrink-0" />
+            <p className="text-xs font-medium">{errorMessage}</p>
           </div>
           <button
             onClick={() => setErrorMessage('')}
-            className="text-xs text-red-700 hover:underline"
+            className="text-xs text-neutral-600 hover:underline"
           >
             Dismiss
           </button>
@@ -370,14 +370,14 @@ export default function PackagesPage() {
                     setEditingPackage(pkg);
                     setIsModalOpen(true);
                   }}
-                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-md transition-colors"
+                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
                   title="Edit Package"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setPackageToArchiveToggle(pkg)}
-                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-md transition-colors"
+                  className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
                   title={pkg.isArchived ? 'Restore to Active' : 'Archive Package'}
                 >
                   {pkg.isArchived ? (
@@ -388,7 +388,7 @@ export default function PackagesPage() {
                 </button>
                 <button
                   onClick={() => setPackageToDelete(pkg)}
-                  className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                  className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
                   title="Delete Package"
                 >
                   <Trash2 className="w-4 h-4" />

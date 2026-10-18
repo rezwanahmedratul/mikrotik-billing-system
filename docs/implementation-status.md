@@ -15,18 +15,18 @@
 | **Section 5**  | UI Foundation & Monochrome Design System    | Completed   | Monochrome design system, AppShell, components & tests passed  |
 | **Section 6**  | Router Inventory & Secure Connections       | Completed   | AES-256-GCM, RouterAdapter, inventory API, worker poller, UI   |
 | **Section 7**  | PPPoE Setup & Router Configuration          | Completed   | Guided workflow, pre-flight checks, dry-run, post-verification |
-| **Section 8**  | Internet Packages                           | In Progress | Bandwidth limits, pricing, lifecycle, validation               |
-| **Section 9**  | Subscriber & Subscription Management        | Pending     | Subscriber CRUD, PPPoE secret generation, state history        |
-| **Section 10** | Active PPPoE Sessions & Usage Monitoring    | Pending     | Session inspection, normalization, fresh indicators            |
-| **Section 11** | Invoices & Billing Ledger                   | Pending     | Idempotent billing runs, integer cents, invoice lifecycle      |
-| **Section 12** | Manual Payments & Reconciliation            | Pending     | Allocation, idempotency, receipts, reversals                   |
-| **Section 13** | Payment Gateway Integration                 | Pending     | Provider adapters, HMAC webhook verification, sandbox          |
-| **Section 14** | SMS & Notification System                   | Pending     | Template engine, background queue, retry policy                |
-| **Section 15** | Automated Billing & Service Lifecycle       | Pending     | Grace periods, automated suspension/restoration                |
-| **Section 16** | Dashboard, Reports & Audit Trail            | Pending     | Metrics, caching, tenant-scoped reports, audit logs            |
-| **Section 17** | Performance & Scale                         | Pending     | Query indexing, pagination, load testing                       |
-| **Section 18** | Security Review & Hardening                 | Pending     | Security audit, secret scan, vulnerability scan                |
-| **Section 19** | End-to-End Testing & Release Readiness      | Pending     | Playwright tests, backup/restore, release checklists           |
+| **Section 8**  | Internet Packages                           | Completed   | Bandwidth limits, pricing, lifecycle, validation, UI & tests   |
+| **Section 9**  | Subscriber & Subscription Management        | Completed   | Subscriber CRUD, PPPoE secret generation, state history, UI    |
+| **Section 10** | Active PPPoE Sessions & Usage Monitoring    | Completed   | Session inspection, normalization, fresh indicators, UI        |
+| **Section 11** | Invoices & Billing Ledger                   | Completed   | Idempotent billing runs, integer cents, invoice lifecycle      |
+| **Section 12** | Manual Payments & Reconciliation            | Completed   | Allocation, idempotency, receipts, reversals, UI & tests       |
+| **Section 13** | Payment Gateway Integration                 | Completed   | Provider adapters, HMAC webhook verification, sandbox, UI      |
+| **Section 14** | SMS & Notification System                   | Completed   | Template engine, background queue, retry policy, UI & tests    |
+| **Section 15** | Automated Billing & Service Lifecycle       | Completed   | Grace periods, automated suspension/restoration, UI & tests    |
+| **Section 16** | Dashboard, Reports & Audit Trail            | Completed   | Metrics, caching, tenant-scoped reports, audit logs, UI & tests|
+| **Section 17** | Performance & Scale                         | Completed   | Query indexing, pagination, load testing, docs/performance.md  |
+| **Section 18** | Security Review & Hardening                 | Completed   | Security audit, secret redaction, Docker isolation, security.md|
+| **Section 19** | End-to-End Testing & Release Readiness      | Completed   | 10-step E2E journey, release checklist, docs/release-handover  |
 
 ---
 
@@ -1054,6 +1054,34 @@
   - Monorepo ready for release.
 - **Project Status:**
   - **ALL 19 SECTIONS COMPLETED ACCORDING TO SPECIFICATION.**
+
+---
+
+### Milestone Log: UI Modernization & Modularization
+
+- **Completed Work:**
+  - **Modular Component Architecture:**
+    - Split complex monolithic pages into focused, single-responsibility components under dedicated feature directories:
+      - `apps/web/src/components/dashboard/`: `dashboard.types.ts`, `DashboardStatsCards.tsx`, `RouterGatewayTelemetryTable.tsx`, `QuickOperationsCard.tsx`, `RecentOperationsLogCard.tsx`.
+      - `apps/web/src/components/subscribers/`: `subscribers.types.ts`, `SubscriberProfileHeader.tsx`, `SubscriberNetworkCard.tsx`, `SubscriberSubscriptionsTable.tsx`, `SubscriberInvoicesTable.tsx`, `SubscriberPaymentsTable.tsx`, `SubscriberStatsCards.tsx`, `SubscriberFiltersBar.tsx`, `SubscriberFormModal.tsx`, `ServiceStatusDialog.tsx`.
+      - `apps/web/src/components/settings/`: `settings.types.ts`, `GeneralSettingsForm.tsx`, `BillingPolicyCard.tsx`, `GatewayCredentialsCard.tsx`, `SystemDiagnosticsCard.tsx`.
+      - `apps/web/src/components/routers/`: `routers.types.ts`, `RouterStatsCards.tsx`, `RouterFormModal.tsx`, `RouterTestResultModal.tsx`.
+      - `apps/web/src/components/staff/`: `staff.types.ts`, `StaffStatsCards.tsx`, `StaffFormModal.tsx`.
+      - `apps/web/src/components/billing/`: `billing.types.ts`, `InvoiceStatsCards.tsx`, `InvoiceFiltersBar.tsx`, `InvoiceReceiptModal.tsx`, `OnlinePaymentModal.tsx`, `PaymentStatsCards.tsx`, `PaymentFiltersBar.tsx`, `RecordPaymentModal.tsx`, `ReconciliationReportModal.tsx`, `WebhookAuditModal.tsx`.
+      - `apps/web/src/components/sessions/`: `sessions.types.ts`, `SessionStatsCards.tsx`, `SessionFiltersBar.tsx`, `DisconnectDialog.tsx`.
+      - `apps/web/src/components/lifecycle/`: `lifecycle.types.ts`, `LifecycleStatsCards.tsx`, `LifecycleRunModal.tsx`, `ManualOverrideModal.tsx`.
+      - `apps/web/src/components/notifications/`: `notifications.types.ts`, `NotificationStatsCards.tsx`, `NotificationLogsTable.tsx`, `NotificationTemplatesList.tsx`, `SendSmsModal.tsx`, `TemplateEditorModal.tsx`.
+      - `apps/web/src/components/reports/`: `reports.types.ts`, `ReportMetricsCards.tsx`, `CollectionsReportView.tsx`, `AgingReportView.tsx`, `SubscriberGrowthView.tsx`, `AuditLogsTableView.tsx`.
+  - **Modern, Minimal, Monochrome Design System:**
+    - Standardized rounded corners: `rounded-2xl` for containers, modal dialogs, and KPI widgets; `rounded-xl` for interactive buttons, inputs, and form controls; `rounded-full` for status badges and filter pills.
+    - Curated monochrome palette: high-contrast dark accents (`bg-neutral-900`, `text-white`), subtle neutral borders (`border-neutral-200/80`), refined backgrounds (`bg-neutral-50/50`, `bg-neutral-50/70`), and crisp monospace typography for network telemetry and financial numbers.
+    - Implemented `/dashboard/settings` covering tenant profile, grace period policies, payment gateway integrations, and real-time core daemon diagnostics.
+- **Commands Executed:**
+  - `pnpm run typecheck` (Exited 0 across all 5 workspace projects).
+  - `pnpm test` (Exited 0, all 134 tests passed).
+  - `pnpm --filter @mikrotik-billing/web run build` (Exited 0, 20/20 routes statically/dynamically optimized).
+  - Live server verification on `http://localhost:3000` (HTTP 200 OK across landing, login, dashboard, settings, routers, subscribers).
+
 
 
 
