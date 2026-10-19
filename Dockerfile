@@ -106,10 +106,8 @@ CMD ["node", "apps/worker/dist/main.js"]
 # ------------------------------------------------------------
 # 6. Target: Web (Next.js Standalone Frontend - Alpine)
 # ------------------------------------------------------------
-FROM node:20-alpine AS web
+FROM base AS web
 WORKDIR /app
-
-RUN apk add --no-cache curl
 
 ENV NODE_ENV=production
 ENV PORT=3000

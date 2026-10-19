@@ -33,6 +33,7 @@ services:
       start_period: 3s
 
   api:
+    image: mikrotik-billing-api:latest
     container_name: mikrotik-billing-api
     restart: unless-stopped
     network_mode: host
@@ -65,6 +66,7 @@ services:
       start_period: 15s
 
   worker:
+    image: mikrotik-billing-worker:latest
     container_name: mikrotik-billing-worker
     restart: unless-stopped
     network_mode: host
@@ -88,6 +90,7 @@ services:
         condition: service_healthy
 
   web:
+    image: mikrotik-billing-web:latest
     container_name: mikrotik-billing-web
     restart: unless-stopped
     network_mode: host

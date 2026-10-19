@@ -23,9 +23,8 @@ ENV DOCKER_BUILD=1
 RUN pnpm --filter @mikrotik-billing/shared run build && \
     pnpm --filter @mikrotik-billing/web run build
 
-FROM node:20-alpine AS runner
+FROM base AS runner
 WORKDIR /app
-RUN apk add --no-cache curl
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
