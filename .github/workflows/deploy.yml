@@ -11,13 +11,18 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   # ============================================================================
-  # 1. BUILD STAGE (Runs on GitHub Cloud Runner)
+  # 1. BUILD STAGE (Runs on GitHub Cloud Runner -> Pushes to GHCR)
   # ============================================================================
   build:
-    name: Build Docker Images (GitHub Hosted)
+    name: Build & Push Images to GitHub Container Registry
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -25,37 +30,36 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker Images
+      - name: Log in to GitHub Container Registry (ghcr.io)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Images
         run: |
+          # Lowercase repo name for docker image tagging
+          IMAGE_PREFIX=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+
           echo "========================================================"
-          echo "Building Docker images on GitHub-hosted runner..."
+          echo "Building & Pushing images to GHCR: ${IMAGE_PREFIX}"
           echo "Branch: ${{ github.ref_name }} | Commit: ${{ github.sha }}"
           echo "========================================================"
 
-          echo "--- Building API Image (mikrotik-billing-api:latest) ---"
-          docker build --target api -t mikrotik-billing-api:latest .
+          echo "--- Building & Pushing API Image ---"
+          docker build --target api -t ${IMAGE_PREFIX}/api:latest .
+          docker push ${IMAGE_PREFIX}/api:latest
 
-          echo "--- Building Worker Image (mikrotik-billing-worker:latest) ---"
-          docker build --target worker -t mikrotik-billing-worker:latest .
+          echo "--- Building & Pushing Worker Image ---"
+          docker build --target worker -t ${IMAGE_PREFIX}/worker:latest .
+          docker push ${IMAGE_PREFIX}/worker:latest
 
-          echo "--- Building Web UI Image (mikrotik-billing-web:latest) ---"
-          docker build --target web -t mikrotik-billing-web:latest .
+          echo "--- Building & Pushing Web UI Image ---"
+          docker build --target web -t ${IMAGE_PREFIX}/web:latest .
+          docker push ${IMAGE_PREFIX}/web:latest
 
-          echo "--- Exporting and Compressing Images Archive ---"
-          docker save \
-            mikrotik-billing-api:latest \
-            mikrotik-billing-worker:latest \
-            mikrotik-billing-web:latest | gzip -1 > mikrotik-billing-images.tar.gz
-
-          echo "Built images archive size:"
-          ls -lh mikrotik-billing-images.tar.gz
-
-      - name: Upload Docker Images Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: mikrotik-billing-images
-          path: mikrotik-billing-images.tar.gz
-          retention-days: 1
+          echo "==> All images successfully built and published to GHCR!"
 
   # ============================================================================
   # 2. DEPLOY STAGE - PRODUCTION (ratul@10.0.0.76 from 'main')
@@ -64,6 +68,7 @@ jobs:
     name: Deploy to Production (ratul@10.0.0.76)
     needs: build
     runs-on: self-hosted
+    timeout-minutes: 15
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
@@ -73,14 +78,10 @@ jobs:
       TARGET_USER: "ratul"
       TARGET_DIR: "/home/ratul/docker/mikrotik-billing-system"
       SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=15"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout Code on Runner
         uses: actions/checkout@v4
-
-      - name: Download Built Images Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: mikrotik-billing-images
 
       - name: Ensure Production Directory Exists
         run: |
@@ -88,7 +89,7 @@ jobs:
 
       - name: Sync Configuration and Compose Files
         run: |
-          echo "==> Syncing repository deployment files to Production (${TARGET_HOST})..."
+          echo "==> Syncing deployment files to Production (${TARGET_HOST})..."
           if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
             echo "Using rsync over SSH..."
             rsync -avz \
@@ -98,7 +99,6 @@ jobs:
               --exclude 'dist' \
               --exclude 'coverage' \
               --exclude '.env' \
-              --exclude 'mikrotik-billing-images.tar.gz' \
               -e "ssh ${SSH_OPTS}" \
               ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
           else
@@ -110,38 +110,44 @@ jobs:
               --exclude='dist' \
               --exclude='coverage' \
               --exclude='.env' \
-              --exclude='mikrotik-billing-images.tar.gz' \
               -czf - . | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
           fi
 
-      - name: Stream and Load Docker Images to Production
+      - name: Pull and Deploy Images on Production Server
         run: |
-          echo "==> Locating built Docker images archive..."
-          IMAGE_FILE=$(find . -name "mikrotik-billing-images.tar.gz" | head -n 1)
-          if [ -z "$IMAGE_FILE" ] || [ ! -f "$IMAGE_FILE" ]; then
-            echo "ERROR: mikrotik-billing-images.tar.gz not found!"
-            exit 1
-          fi
-          echo "==> Streaming images ($IMAGE_FILE) to Production (${TARGET_HOST})..."
-          set -o pipefail
-          cat "$IMAGE_FILE" | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "gunzip | docker load"
-          rm -f "$IMAGE_FILE"
-          echo "==> Images loaded successfully on ${TARGET_HOST}."
+          IMAGE_PREFIX=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "==> Deploying to Production (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
 
-      - name: Launch Production Services
-        run: |
-          echo "==> Launching containers on Production (${TARGET_HOST})..."
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
             set -e
+            echo '--- Authenticating with GitHub Container Registry (ghcr.io) ---'
+            echo '${GITHUB_TOKEN}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+            echo '--- Pulling updated Docker images with layer caching ---'
+            docker pull ${IMAGE_PREFIX}/api:latest
+            docker pull ${IMAGE_PREFIX}/worker:latest
+            docker pull ${IMAGE_PREFIX}/web:latest
+
+            echo '--- Tagging images for Docker Compose ---'
+            docker tag ${IMAGE_PREFIX}/api:latest mikrotik-billing-api:latest
+            docker tag ${IMAGE_PREFIX}/worker:latest mikrotik-billing-worker:latest
+            docker tag ${IMAGE_PREFIX}/web:latest mikrotik-billing-web:latest
+
             cd ${TARGET_DIR}
             if [ ! -f .env ]; then
               echo 'Creating initial .env from template...'
               cp .env.example .env
             fi
+
             echo '--- Starting containers via Docker Compose ---'
             docker compose up -d
+
             echo '--- Pruning obsolete dangling images ---'
             docker image prune -f
+
+            echo '--- Logging out of ghcr.io ---'
+            docker logout ghcr.io || true
+
             echo '--- Production Container Status ---'
             docker compose ps
           "
@@ -169,6 +175,7 @@ jobs:
     name: Deploy to Testing (ratul@10.0.0.78)
     needs: build
     runs-on: self-hosted
+    timeout-minutes: 15
     if: github.ref == 'refs/heads/development'
     environment:
       name: testing
@@ -178,14 +185,10 @@ jobs:
       TARGET_USER: "ratul"
       TARGET_DIR: "/home/ratul/docker/mikrotik-billing-system"
       SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=15"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout Code on Runner
         uses: actions/checkout@v4
-
-      - name: Download Built Images Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: mikrotik-billing-images
 
       - name: Ensure Testing Directory Exists
         run: |
@@ -193,7 +196,7 @@ jobs:
 
       - name: Sync Configuration and Compose Files
         run: |
-          echo "==> Syncing repository deployment files to Testing (${TARGET_HOST})..."
+          echo "==> Syncing deployment files to Testing (${TARGET_HOST})..."
           if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
             echo "Using rsync over SSH..."
             rsync -avz \
@@ -203,7 +206,6 @@ jobs:
               --exclude 'dist' \
               --exclude 'coverage' \
               --exclude '.env' \
-              --exclude 'mikrotik-billing-images.tar.gz' \
               -e "ssh ${SSH_OPTS}" \
               ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
           else
@@ -215,38 +217,44 @@ jobs:
               --exclude='dist' \
               --exclude='coverage' \
               --exclude='.env' \
-              --exclude='mikrotik-billing-images.tar.gz' \
               -czf - . | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
           fi
 
-      - name: Stream and Load Docker Images to Testing
+      - name: Pull and Deploy Images on Testing Server
         run: |
-          echo "==> Locating built Docker images archive..."
-          IMAGE_FILE=$(find . -name "mikrotik-billing-images.tar.gz" | head -n 1)
-          if [ -z "$IMAGE_FILE" ] || [ ! -f "$IMAGE_FILE" ]; then
-            echo "ERROR: mikrotik-billing-images.tar.gz not found!"
-            exit 1
-          fi
-          echo "==> Streaming images ($IMAGE_FILE) to Testing (${TARGET_HOST})..."
-          set -o pipefail
-          cat "$IMAGE_FILE" | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "gunzip | docker load"
-          rm -f "$IMAGE_FILE"
-          echo "==> Images loaded successfully on ${TARGET_HOST}."
+          IMAGE_PREFIX=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "==> Deploying to Testing (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
 
-      - name: Launch Testing Services
-        run: |
-          echo "==> Launching containers on Testing (${TARGET_HOST})..."
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
             set -e
+            echo '--- Authenticating with GitHub Container Registry (ghcr.io) ---'
+            echo '${GITHUB_TOKEN}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+            echo '--- Pulling updated Docker images with layer caching ---'
+            docker pull ${IMAGE_PREFIX}/api:latest
+            docker pull ${IMAGE_PREFIX}/worker:latest
+            docker pull ${IMAGE_PREFIX}/web:latest
+
+            echo '--- Tagging images for Docker Compose ---'
+            docker tag ${IMAGE_PREFIX}/api:latest mikrotik-billing-api:latest
+            docker tag ${IMAGE_PREFIX}/worker:latest mikrotik-billing-worker:latest
+            docker tag ${IMAGE_PREFIX}/web:latest mikrotik-billing-web:latest
+
             cd ${TARGET_DIR}
             if [ ! -f .env ]; then
               echo 'Creating initial .env from template...'
               cp .env.example .env
             fi
+
             echo '--- Starting containers via Docker Compose ---'
             docker compose up -d
+
             echo '--- Pruning obsolete dangling images ---'
             docker image prune -f
+
+            echo '--- Logging out of ghcr.io ---'
+            docker logout ghcr.io || true
+
             echo '--- Testing Container Status ---'
             docker compose ps
           "

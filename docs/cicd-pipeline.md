@@ -1,113 +1,81 @@
 # GitHub Actions CI/CD Pipeline Architecture & Operations Guide
 
-This document details the automated continuous integration and continuous deployment (CI/CD) architecture for the **MikroTik ISP Billing & RouterOS Operations Platform** running on **GitHub Actions**.
+This document details the automated continuous integration and continuous deployment (CI/CD) architecture for the **MikroTik ISP Billing & RouterOS Operations Platform** running on **GitHub Actions** backed by **GitHub Container Registry (`ghcr.io`)**.
 
 ---
 
 ## 1. Pipeline Topology & Node Inventory
 
-The workflow splits image building (GitHub Cloud) from production/testing deployment (Self-Hosted Runner over private LAN):
+The workflow leverages GitHub Cloud for builds and GitHub Container Registry (`ghcr.io`) for instant, layer-cached container distribution:
 
 ```mermaid
 flowchart TD
-    subgraph GitHubCloud["GitHub Cloud / Hosted Runners (ubuntu-latest)"]
+    subgraph GitHubCloud["GitHub Cloud Runner (ubuntu-latest)"]
         PushMain["git push origin main"]
         PushDev["git push origin development"]
-        GHBuild["GitHub Build Job\n- docker build api, worker, web\n- export to mikrotik-billing-images.tar.gz\n- upload-artifact@v4"]
+        GHBuild["Build Stage\n- docker build api, worker, web\n- docker push ghcr.io/<repo>/<image>:latest"]
+    end
+
+    subgraph GHCR["GitHub Container Registry (ghcr.io)"]
+        Registry["Private Container Registry (ghcr.io)\n- Incremental layer caching\n- Zero blob artifact downloads"]
     end
 
     subgraph RunnerNode["Self-Hosted Action Runner Server (runs-on: self-hosted)"]
-        Runner["GitHub Actions Runner\n(User: github-runner)\n- downloads images artifact\n- streams images via SSH\n⚠️ Zero Docker builds locally"]
+        Runner["GitHub Actions Runner (User: github-runner)\n- Orchestrates deployment over SSH\n⚠️ Zero Docker builds locally"]
     end
 
     subgraph ProdNode["Production Server (ratul@10.0.0.76)"]
-        ProdCompose["Docker Compose (network_mode: host)\n- Web: 3000\n- API: 4000\n- PostgreSQL: 5432\n- Redis: 6379\n- Worker"]
+        Prod["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3000 / API: 4000 / DB: 5432"]
     end
 
     subgraph TestNode["Testing Server (ratul@10.0.0.78)"]
-        TestCompose["Docker Compose (network_mode: host)\n- Web: 3000\n- API: 4000\n- PostgreSQL: 5432\n- Redis: 6379\n- Worker"]
+        Test["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3000 / API: 4000 / DB: 5432"]
     end
 
     PushMain --> GHBuild
     PushDev --> GHBuild
-    GHBuild -- "Artifact Transfer" --> Runner
+    GHBuild --> Registry
 
-    Runner -- "main branch: Stream Images (cat | ssh gunzip docker load)" --> ProdNode
-    Runner -- "main branch: SSH docker compose up -d" --> ProdNode
+    Registry -. "docker pull with layer cache" .-> Prod
+    Registry -. "docker pull with layer cache" .-> Test
 
-    Runner -- "development branch: Stream Images (cat | ssh gunzip docker load)" --> TestNode
-    Runner -- "development branch: SSH docker compose up -d" --> TestNode
+    Runner -- "main: SSH trigger pull & compose up -d" --> Prod
+    Runner -- "development: SSH trigger pull & compose up -d" --> Test
 ```
 
 ### Server & Job Matrix
 
 | Role | Environment | Runner / Host | Responsibilities | Trigger |
 |---|---|---|---|---|
-| **Build Job** | GitHub Hosted | `ubuntu-latest` | Builds Docker images (`api`, `worker`, `web`) on GitHub's infrastructure and uploads compressed archive. | All pushes to `main` & `development` |
-| **Self-Hosted Runner** | Local Subnet | `github-runner` (`self-hosted`) | Orchestrates deployment. Downloads artifact and streams images directly to target servers over SSH. **Builds zero images.** | After build completion |
-| **Production Server** | Production | `ratul@10.0.0.76` | Receives loaded images, runs `docker compose up -d` in host network mode, and exposes services. | `main` branch |
-| **Testing Server** | Staging / QA | `ratul@10.0.0.78` | Receives loaded images, runs `docker compose up -d` in host network mode, and exposes services. | `development` branch |
+| **Build Job** | GitHub Hosted | `ubuntu-latest` | Builds Docker images and publishes to GitHub Container Registry (`ghcr.io`). | All pushes to `main` & `development` |
+| **Self-Hosted Runner** | Local Subnet | `github-runner` (`self-hosted`) | Connects via SSH to target servers to orchestrate pulls and restarts. **Builds zero images.** | After build completion |
+| **Production Server** | Production | `ratul@10.0.0.76` | Pulls images from `ghcr.io`, updates `.env`, launches Compose stack in host mode. | `main` branch |
+| **Testing Server** | Staging / QA | `ratul@10.0.0.78` | Pulls images from `ghcr.io`, updates `.env`, launches Compose stack in host mode. | `development` branch |
 
 ---
 
-## 2. Security & SSH Key Configuration
+## 2. Why GHCR Eliminates Artifact Download Freezes
 
-The GitHub self-hosted runner executes jobs under the system user **`github-runner`**. It uses pre-configured SSH keys to access `ratul@10.0.0.76` and `ratul@10.0.0.78`.
+In GitHub Actions, workflow artifacts (`actions/upload-artifact` and `actions/download-artifact`) upload raw zip files to **Azure Blob Storage**. When downloading a 340+ MB artifact onto a self-hosted runner:
+1. `download-artifact@v4` uses a single Node.js HTTP stream without connection timeouts.
+2. Cross-border networks or ISP firewalls frequently stall or drop these large streaming connections, causing the job to hang indefinitely (e.g. 26+ minutes).
+3. Artifacts must be downloaded completely from scratch on every run.
 
-### Verification from the Action Runner Server
+**With GitHub Container Registry (`ghcr.io`)**:
+- Docker pulls directly from GitHub's CDN using native Go multi-threaded chunking with automatic exponential backoff retries.
+- **Layer Caching**: Only the changed application files (2–5 MB) are downloaded on each deploy—the base Alpine OS, Node.js runtime, and Prisma engines are cached permanently on the server.
+- Deploys take seconds instead of minutes.
 
-To verify that the `github-runner` user has valid passwordless SSH access to both servers:
+---
 
+## 3. Security & Authentication
+
+### Automatic Single-Use Authentication via `GITHUB_TOKEN`
+The pipeline uses GitHub's built-in ephemeral `GITHUB_TOKEN` (`permissions: packages: write`). During deployment, the runner passes the token to the target server via SSH:
 ```bash
-# Switch to the github-runner user
-sudo su - github-runner
-
-# Test SSH connection to Production Server (10.0.0.76)
-ssh -o StrictHostKeyChecking=no ratul@10.0.0.76 "echo 'Connected to Production (10.0.0.76) as \$(whoami)'"
-
-# Test SSH connection to Testing Server (10.0.0.78)
-ssh -o StrictHostKeyChecking=no ratul@10.0.0.78 "echo 'Connected to Testing (10.0.0.78) as \$(whoami)'"
+echo '${GITHUB_TOKEN}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
 ```
-
----
-
-## 3. Pipeline Stages & Execution Flow
-
-### Stage 1: Cloud Image Build (`build`)
-
-- **Runs On**: `ubuntu-latest` (GitHub Hosted Cloud Runner)
-- **Workflow**:
-  1. Checks out repository code.
-  2. Builds the three production images via Docker BuildKit:
-     ```bash
-     docker build --target api -t mikrotik-billing-api:latest .
-     docker build --target worker -t mikrotik-billing-worker:latest .
-     docker build --target web -t mikrotik-billing-web:latest .
-     ```
-  3. Saves and compresses all three images into a single transfer archive:
-     ```bash
-     docker save mikrotik-billing-api:latest mikrotik-billing-worker:latest mikrotik-billing-web:latest | gzip -1 > mikrotik-billing-images.tar.gz
-     ```
-  4. Uploads archive as a GitHub Actions workflow artifact with 1-day retention.
-
-### Stage 2: In-Memory Streaming Deployment (`deploy-production` / `deploy-testing`)
-
-- **Runs On**: `self-hosted` (Your Action Runner server, running as `github-runner`)
-- **Workflow**:
-  1. Checks out repository files and downloads the built images artifact.
-  2. Synchronizes repository configuration (`docker-compose.yml`, scripts) to the target server, strictly excluding `.env` to preserve production secrets.
-  3. **Direct Image Streaming**: Streams the Docker images directly to the target server's Docker daemon without saving intermediate files to the target disk:
-     ```bash
-     cat mikrotik-billing-images.tar.gz | ssh ratul@<target-host> "gunzip | docker load"
-     ```
-  4. Immediately removes the downloaded archive from the runner to preserve runner disk space.
-  5. Ensures `.env` exists (initializes from `.env.example` if fresh install).
-  6. Launches services via Docker Compose:
-     ```bash
-     docker compose up -d
-     ```
-  7. Prunes obsolete dangling images (`docker image prune -f`).
-  8. Probes `http://127.0.0.1:4000/api/v1/health` up to 15 times to verify that the NestJS API is operational.
+You **do not need to create or manage any Personal Access Tokens (PATs)** on your production or testing servers. The token is automatically created per-run and invalidated after the deployment completes.
 
 ---
 
@@ -117,7 +85,7 @@ ssh -o StrictHostKeyChecking=no ratul@10.0.0.78 "echo 'Connected to Testing (10.
 |---|---|---|---|
 | `git push origin development` | `development` | `build` $\rightarrow$ `deploy-testing` | **Testing Server** (`http://10.0.0.78:3000`) |
 | `git push origin main` | `main` | `build` $\rightarrow$ `deploy-production` | **Production Server** (`http://10.0.0.76:3000`) |
-| Manual Run (`workflow_dispatch`) | Selected branch | Runs build and deploys to the environment matching the selected branch | Dependent on branch |
+| Manual Run (`workflow_dispatch`) | Selected branch | Runs build and deploys to the selected branch's environment | Dependent on branch |
 
 ---
 
@@ -141,7 +109,7 @@ ssh ratul@10.0.0.76 "cd /home/ratul/docker/mikrotik-billing-system && docker com
 ssh ratul@10.0.0.76 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f web"
 ```
 
-#### 3. Manual API Health Probe:
+#### 3. Manual Health Endpoint Probe:
 ```bash
 curl -I http://10.0.0.76:4000/api/v1/health
 # Expected: HTTP/1.1 200 OK
