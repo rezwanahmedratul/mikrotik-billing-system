@@ -125,36 +125,85 @@ console.log(' - SESSION_SECRET (32-byte hex)');
 
 #### Understanding Environment Configuration Variables
 
-| Variable | Default (Docker) | Default (Local) | Purpose |
-|---|---|---|---|
-| `APP_ENCRYPTION_KEY` | *(Generated 64-char hex)* | *(Generated 64-char hex)* | AES-256-GCM database credential encryption key |
-| `JWT_SECRET` | *(Generated base64)* | *(Generated base64)* | Token signature secret for bearer authorization |
-| `SESSION_SECRET` | *(Generated hex)* | *(Generated hex)* | Internal session and CSRF signature string |
-| `DATABASE_URL` | `postgresql://billing_user:...@postgres:5432/mikrotik_billing?schema=public` | `postgresql://...localhost:5432/...` | PostgreSQL connection URL |
-| `REDIS_HOST` | `redis` | `localhost` | Redis container host for BullMQ queues and cache |
-| `REDIS_PORT` | `6379` | `6379` | Redis TCP service port |
-| `NEXT_PUBLIC_API_URL` | `http://localhost:4000` | `http://localhost:4000` | URL of the NestJS API accessed by the browser UI |
-| `ROUTER_MOCK_MODE` | `true` | `true` | Set to `false` when connecting to real physical RouterOS hardware |
-| `SMS_MOCK_MODE` | `true` | `true` | Set to `false` when connecting to live telecom SMS gateway APIs |
-| `PAYMENT_MOCK_MODE` | `true` | `true` | Set to `false` when using live bKash/Nagad/SSLCommerz merchant accounts |
+| Variable | Default (Host Mode & Local) | Purpose |
+|---|---|---|
+| `APP_ENCRYPTION_KEY` | *(Generated 64-char hex)* | AES-256-GCM database credential encryption key |
+| `JWT_SECRET` | *(Generated base64)* | Token signature secret for bearer authorization |
+| `SESSION_SECRET` | *(Generated hex)* | Internal session and CSRF signature string |
+| `DATABASE_URL` | `postgresql://postgres:postgres@127.0.0.1:5432/mikrotik_billing?schema=public` | PostgreSQL connection URL (binds directly to host) |
+| `REDIS_URL` | `redis://127.0.0.1:6379` | Redis TCP service URL (binds directly to host) |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:4000` | URL of the NestJS API accessed by the browser UI |
+| `ROUTER_MOCK_MODE` | `true` | Set to `false` when connecting to real physical RouterOS hardware |
+| `SMS_MOCK_MODE` | `true` | Set to `false` when connecting to live telecom SMS gateway APIs |
+| `PAYMENT_MOCK_MODE` | `true` | Set to `false` when using live bKash/Nagad/SSLCommerz merchant accounts |
 
-### 3. Build & Launch Containers (Alpine Linux)
+---
 
-The platform is containerized using ultra-lightweight **Alpine Linux** (`node:20-alpine`, `postgres:16-alpine`, `redis:7-alpine`) with automated mirror failovers for fast, secure builds.
+### 3. Network Architecture: Host Network Mode (`network_mode: host`)
 
-Run the root Docker Compose file to build images and launch all containers in detached mode:
+This project is configured to run natively in **Network Mode Host** (`network_mode: host`) across all services (PostgreSQL, Redis, NestJS API, BullMQ Worker, and Next.js Web UI).
+
+#### Why Host Networking is Critical for MikroTik Operations:
+1. **Direct Layer 2/3 Router Reachability**: The NestJS API and background worker communicate directly with physical CCR, CHR, and RB devices across local management subnets (e.g. `10.x.x.x`, `192.168.x.x`, VLANs) without Docker bridge NAT traversal hurdles or IP masquerade issues.
+2. **RADIUS Accounting & Authentication**: Enables direct reception of incoming UDP RADIUS packets (`1812`/`1813`) from RouterOS without port forwarding collisions.
+3. **High-Throughput Telemetry**: Zero network translation overhead for continuous PPPoE interface traffic polling (`/interface/monitor-traffic`) and active connection tracking.
+4. **Unified Localhost Loopback**: PostgreSQL, Redis, API, and Worker communicate with sub-millisecond latency over `127.0.0.1`.
+
+---
+
+### 4. How to Build the Docker Images as Network Mode Host
+
+When building Docker containers on cloud VPS servers (such as DigitalOcean, Hetzner, AWS, Linode, or bare-metal ISP servers), Docker's default bridge network may experience DNS resolution timeouts (`dl-cdn.alpinelinux.org` or `registry.npmjs.org` failure) due to provider firewall rules or `systemd-resolved` loopback bindings.
+
+Building with **Network Mode Host** allows the build process to share the host's direct network connection and DNS resolver.
+
+#### Method A: Direct Docker CLI (Recommended)
+You can build all container stages with host networking in one command using the pre-configured script or standard Docker CLI:
 
 ```bash
+# Using pnpm monorepo shortcut:
+pnpm docker:build:host
+
+# Or using Docker CLI directly:
+docker build --network=host --target api -t mikrotik-billing-api:latest .
+docker build --network=host --target worker -t mikrotik-billing-worker:latest .
+docker build --network=host --target web -t mikrotik-billing-web:latest .
+```
+
+#### Method B: Docker Compose with Host Build Override
+We provide [`docker-compose.host-build.yml`](docker-compose.host-build.yml) which sets `network: host` for all service build configurations:
+
+```bash
+# Using pnpm monorepo shortcut:
+pnpm docker:host:build
+
+# Or using Docker Compose directly:
+DOCKER_BUILDKIT=0 docker compose -f docker-compose.yml -f docker-compose.host-build.yml build
+```
+
+---
+
+### 5. Launching the Platform (Network Mode Host)
+
+Once the images are built (or to build and launch in one step):
+
+```bash
+# Start all containers in detached mode (using host networking)
+docker compose up -d
+
+# Or build and launch simultaneously:
 docker compose up --build -d
 ```
 
 > [!TIP]
-> **VPS Network Optimization:** If your cloud host or VPS provider has strict DNS or outbound firewall rules during container builds, you can run:
+> **VPS DNS / BuildKit Optimization:** If your VPS provider requires legacy builder fallback:
 > ```bash
-> DOCKER_BUILDKIT=0 docker compose up --build -d
+> DOCKER_BUILDKIT=0 docker compose -f docker-compose.yml -f docker-compose.host-build.yml up --build -d
 > ```
 
-### 4. Automatic Database Migrations & Seeding
+---
+
+### 6. Automatic Database Migrations & Seeding
 The API container automatically runs database migrations upon startup via [`infrastructure/docker-entrypoint-api.sh`](infrastructure/docker-entrypoint-api.sh).
 
 To seed initial demo data (FastNet Broadband tenant, tariff packages, sample subscribers, and mock routers):
@@ -163,7 +212,9 @@ To seed initial demo data (FastNet Broadband tenant, tariff packages, sample sub
 docker compose exec api pnpm --filter @mikrotik-billing/database prisma db seed
 ```
 
-### 5. Services & Port Map
+---
+
+### 7. Services & Port Map
 
 Once running, the platform services are accessible at:
 
@@ -177,7 +228,9 @@ Once running, the platform services are accessible at:
 | **Redis** | `localhost:6379` | `6379` | Telemetry Cache & BullMQ Queue Broker |
 | **Worker** | Background Process | — | Billing scheduler, session polling & sync |
 
-### 6. Container Management & Useful Commands
+---
+
+### 8. Container Management & Useful Commands
 
 ```bash
 # View live streaming logs across all containers

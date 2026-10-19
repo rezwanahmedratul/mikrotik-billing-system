@@ -14,6 +14,8 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:build": "docker compose build",
+    "docker:build:host": "docker build --network=host --target api -t mikrotik-billing-api:latest . && docker build --network=host --target worker -t mikrotik-billing-worker:latest . && docker build --network=host --target web -t mikrotik-billing-web:latest .",
+    "docker:host:build": "DOCKER_BUILDKIT=0 docker compose -f docker-compose.yml -f docker-compose.host-build.yml build",
     "docker:logs": "docker compose logs -f",
     "docker:infra:up": "docker compose -f infrastructure/docker-compose.yml up -d",
     "docker:infra:down": "docker compose -f infrastructure/docker-compose.yml down",
