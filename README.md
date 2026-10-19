@@ -222,12 +222,21 @@ console.log(' - SESSION_SECRET (32-byte hex)');
 | `SMS_MOCK_MODE` | `true` | `true` | Set to `false` when connecting to live telecom SMS gateway APIs |
 | `PAYMENT_MOCK_MODE` | `true` | `true` | Set to `false` when using live bKash/Nagad/SSLCommerz merchant accounts |
 
-### 3. Build & Launch Containers
+### 3. Build & Launch Containers (Alpine Linux)
+
+The platform is containerized using ultra-lightweight **Alpine Linux** (`node:20-alpine`, `postgres:16-alpine`, `redis:7-alpine`) with automated mirror failovers for fast, secure builds.
+
 Run the root Docker Compose file to build images and launch all containers in detached mode:
 
 ```bash
 docker compose up --build -d
 ```
+
+> [!TIP]
+> **VPS Network Optimization:** If your cloud host or VPS provider has strict DNS or outbound firewall rules during container builds, you can run:
+> ```bash
+> DOCKER_BUILDKIT=0 docker compose up --build -d
+> ```
 
 ### 4. Automatic Database Migrations & Seeding
 The API container automatically runs database migrations upon startup via [`infrastructure/docker-entrypoint-api.sh`](infrastructure/docker-entrypoint-api.sh).

@@ -1,10 +1,9 @@
 # syntax=docker/dockerfile:1
-FROM node:20-slim AS base
+FROM node:20-alpine AS base
 WORKDIR /app
-RUN apt-get update -qq && \
-    apt-get install -y -qq --no-install-recommends openssl ca-certificates curl && \
-    npm install -g pnpm@12.14.0 && \
-    rm -rf /var/lib/apt/lists/*
+RUN (apk add --no-cache openssl ca-certificates curl libc6-compat || \
+     (sed -i 's/dl-cdn.alpinelinux.org/mirrors.edge.kernel.org/g' /etc/apk/repositories && apk add --no-cache openssl ca-certificates curl libc6-compat)) && \
+    (corepack enable && corepack prepare pnpm@12.14.0 --activate || npm install -g pnpm@12.14.0)
 ENV NODE_ENV=production
 
 FROM base AS builder

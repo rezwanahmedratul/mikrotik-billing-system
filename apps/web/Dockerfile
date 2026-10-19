@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
-FROM node:20-slim AS base
+FROM node:20-alpine AS base
 WORKDIR /app
-RUN npm install -g pnpm@12.14.0
+RUN (apk add --no-cache curl libc6-compat || \
+     (sed -i 's/dl-cdn.alpinelinux.org/mirrors.edge.kernel.org/g' /etc/apk/repositories && apk add --no-cache curl libc6-compat)) && \
+    (corepack enable && corepack prepare pnpm@12.14.0 --activate || npm install -g pnpm@12.14.0)
 
 FROM base AS builder
 WORKDIR /app
@@ -21,8 +23,9 @@ ENV DOCKER_BUILD=1
 RUN pnpm --filter @mikrotik-billing/shared run build && \
     pnpm --filter @mikrotik-billing/web run build
 
-FROM node:20-slim AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
+RUN apk add --no-cache curl
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
