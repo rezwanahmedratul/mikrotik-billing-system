@@ -3,10 +3,19 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { Redis } from 'ioredis';
 import pg from 'pg';
+import { Public } from './common/decorators.js';
 
 @ApiTags('Health')
+@Public()
 @Controller('health')
 export class HealthController {
+  @Get()
+  @ApiOperation({ summary: 'Default health check probe' })
+  @ApiResponse({ status: 200, description: 'Application process is alive' })
+  getHealth() {
+    return this.getLiveness();
+  }
+
   @Get('live')
   @ApiOperation({ summary: 'Liveness probe endpoint' })
   @ApiResponse({ status: 200, description: 'Application process is alive' })

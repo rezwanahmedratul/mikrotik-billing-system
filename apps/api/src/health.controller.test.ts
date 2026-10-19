@@ -4,6 +4,13 @@ import { HealthController } from './health.controller.js';
 describe('HealthController', () => {
   const controller = new HealthController();
 
+  it('returns ok for root health probe', () => {
+    const health = controller.getHealth();
+    expect(health.status).toBe('ok');
+    expect(health.uptimeSeconds).toBeGreaterThanOrEqual(0);
+    expect(health.timestamp).toBeDefined();
+  });
+
   it('returns ok for liveness probe', () => {
     const live = controller.getLiveness();
     expect(live.status).toBe('ok');

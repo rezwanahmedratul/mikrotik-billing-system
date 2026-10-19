@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import { RouterHealthPoller } from './router-poller.js';
+
 export interface QueueJobDefinition<T = unknown> {
   id: string;
   name: string;
@@ -9,15 +11,32 @@ export interface QueueJobDefinition<T = unknown> {
 
 export class BackgroundWorker {
   public isRunning = false;
+  private timer: NodeJS.Timeout | null = null;
+  private poller = new RouterHealthPoller();
 
   async start(): Promise<void> {
     this.isRunning = true;
     console.log('[Worker] Background processing service initialized.');
     console.log('[Worker] Listening for Router, Billing, and SMS jobs...');
+
+    const runPolling = async () => {
+      try {
+        await this.poller.pollAllRouters();
+      } catch (err: any) {
+        console.error('[Worker] Error during router health poll:', err?.message || err);
+      }
+    };
+
+    runPolling().catch(() => {});
+    this.timer = setInterval(runPolling, 30000);
   }
 
   async stop(): Promise<void> {
     this.isRunning = false;
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
     console.log('[Worker] Worker stopped gracefully.');
   }
 
