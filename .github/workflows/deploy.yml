@@ -1,0 +1,268 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ============================================================================
+  # 1. BUILD STAGE (Runs on GitHub Cloud Runner)
+  # ============================================================================
+  build:
+    name: Build Docker Images (GitHub Hosted)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Images
+        run: |
+          echo "========================================================"
+          echo "Building Docker images on GitHub-hosted runner..."
+          echo "Branch: ${{ github.ref_name }} | Commit: ${{ github.sha }}"
+          echo "========================================================"
+
+          echo "--- Building API Image (mikrotik-billing-api:latest) ---"
+          docker build --target api -t mikrotik-billing-api:latest .
+
+          echo "--- Building Worker Image (mikrotik-billing-worker:latest) ---"
+          docker build --target worker -t mikrotik-billing-worker:latest .
+
+          echo "--- Building Web UI Image (mikrotik-billing-web:latest) ---"
+          docker build --target web -t mikrotik-billing-web:latest .
+
+          echo "--- Exporting and Compressing Images Archive ---"
+          docker save \
+            mikrotik-billing-api:latest \
+            mikrotik-billing-worker:latest \
+            mikrotik-billing-web:latest | gzip -1 > mikrotik-billing-images.tar.gz
+
+          echo "Built images archive size:"
+          ls -lh mikrotik-billing-images.tar.gz
+
+      - name: Upload Docker Images Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mikrotik-billing-images
+          path: mikrotik-billing-images.tar.gz
+          retention-days: 1
+
+  # ============================================================================
+  # 2. DEPLOY STAGE - PRODUCTION (ratul@10.0.0.76 from 'main')
+  # ============================================================================
+  deploy-production:
+    name: Deploy to Production (ratul@10.0.0.76)
+    needs: build
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: http://10.0.0.76:3000
+    env:
+      TARGET_HOST: "10.0.0.76"
+      TARGET_USER: "ratul"
+      TARGET_DIR: "/home/ratul/docker/mikrotik-billing-system"
+      SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=15"
+    steps:
+      - name: Checkout Code on Runner
+        uses: actions/checkout@v4
+
+      - name: Download Built Images Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mikrotik-billing-images
+
+      - name: Ensure Production Directory Exists
+        run: |
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "mkdir -p ${TARGET_DIR}"
+
+      - name: Sync Configuration and Compose Files
+        run: |
+          echo "==> Syncing repository deployment files to Production (${TARGET_HOST})..."
+          if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
+            echo "Using rsync over SSH..."
+            rsync -avz \
+              --exclude '.git' \
+              --exclude 'node_modules' \
+              --exclude '.next' \
+              --exclude 'dist' \
+              --exclude 'coverage' \
+              --exclude '.env' \
+              --exclude 'mikrotik-billing-images.tar.gz' \
+              -e "ssh ${SSH_OPTS}" \
+              ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
+          else
+            echo "Using streaming tar over SSH..."
+            tar \
+              --exclude='.git' \
+              --exclude='node_modules' \
+              --exclude='.next' \
+              --exclude='dist' \
+              --exclude='coverage' \
+              --exclude='.env' \
+              --exclude='mikrotik-billing-images.tar.gz' \
+              -czf - . | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
+          fi
+
+      - name: Stream and Load Docker Images to Production
+        run: |
+          echo "==> Locating built Docker images archive..."
+          IMAGE_FILE=$(find . -name "mikrotik-billing-images.tar.gz" | head -n 1)
+          if [ -z "$IMAGE_FILE" ] || [ ! -f "$IMAGE_FILE" ]; then
+            echo "ERROR: mikrotik-billing-images.tar.gz not found!"
+            exit 1
+          fi
+          echo "==> Streaming images ($IMAGE_FILE) to Production (${TARGET_HOST})..."
+          set -o pipefail
+          cat "$IMAGE_FILE" | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "gunzip | docker load"
+          rm -f "$IMAGE_FILE"
+          echo "==> Images loaded successfully on ${TARGET_HOST}."
+
+      - name: Launch Production Services
+        run: |
+          echo "==> Launching containers on Production (${TARGET_HOST})..."
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
+            set -e
+            cd ${TARGET_DIR}
+            if [ ! -f .env ]; then
+              echo 'Creating initial .env from template...'
+              cp .env.example .env
+            fi
+            echo '--- Starting containers via Docker Compose ---'
+            docker compose up -d
+            echo '--- Pruning obsolete dangling images ---'
+            docker image prune -f
+            echo '--- Production Container Status ---'
+            docker compose ps
+          "
+
+      - name: Verify Production API Health Probe
+        run: |
+          echo "==> Verifying Production API Health Probe..."
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
+            echo 'Waiting for production services to initialize...'
+            for i in \$(seq 1 15); do
+              if curl -s -f http://127.0.0.1:4000/api/v1/health >/dev/null 2>&1; then
+                echo 'SUCCESS: Production API is healthy and operational!'
+                exit 0
+              fi
+              echo 'Probing API health (attempt '\$i'/15)...'
+              sleep 3
+            done
+            echo 'WARNING: Health probe timeout; check container logs with: docker compose logs api'
+          "
+
+  # ============================================================================
+  # 3. DEPLOY STAGE - TESTING (ratul@10.0.0.78 from 'development')
+  # ============================================================================
+  deploy-testing:
+    name: Deploy to Testing (ratul@10.0.0.78)
+    needs: build
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/development'
+    environment:
+      name: testing
+      url: http://10.0.0.78:3000
+    env:
+      TARGET_HOST: "10.0.0.78"
+      TARGET_USER: "ratul"
+      TARGET_DIR: "/home/ratul/docker/mikrotik-billing-system"
+      SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=15"
+    steps:
+      - name: Checkout Code on Runner
+        uses: actions/checkout@v4
+
+      - name: Download Built Images Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mikrotik-billing-images
+
+      - name: Ensure Testing Directory Exists
+        run: |
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "mkdir -p ${TARGET_DIR}"
+
+      - name: Sync Configuration and Compose Files
+        run: |
+          echo "==> Syncing repository deployment files to Testing (${TARGET_HOST})..."
+          if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
+            echo "Using rsync over SSH..."
+            rsync -avz \
+              --exclude '.git' \
+              --exclude 'node_modules' \
+              --exclude '.next' \
+              --exclude 'dist' \
+              --exclude 'coverage' \
+              --exclude '.env' \
+              --exclude 'mikrotik-billing-images.tar.gz' \
+              -e "ssh ${SSH_OPTS}" \
+              ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
+          else
+            echo "Using streaming tar over SSH..."
+            tar \
+              --exclude='.git' \
+              --exclude='node_modules' \
+              --exclude='.next' \
+              --exclude='dist' \
+              --exclude='coverage' \
+              --exclude='.env' \
+              --exclude='mikrotik-billing-images.tar.gz' \
+              -czf - . | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
+          fi
+
+      - name: Stream and Load Docker Images to Testing
+        run: |
+          echo "==> Locating built Docker images archive..."
+          IMAGE_FILE=$(find . -name "mikrotik-billing-images.tar.gz" | head -n 1)
+          if [ -z "$IMAGE_FILE" ] || [ ! -f "$IMAGE_FILE" ]; then
+            echo "ERROR: mikrotik-billing-images.tar.gz not found!"
+            exit 1
+          fi
+          echo "==> Streaming images ($IMAGE_FILE) to Testing (${TARGET_HOST})..."
+          set -o pipefail
+          cat "$IMAGE_FILE" | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "gunzip | docker load"
+          rm -f "$IMAGE_FILE"
+          echo "==> Images loaded successfully on ${TARGET_HOST}."
+
+      - name: Launch Testing Services
+        run: |
+          echo "==> Launching containers on Testing (${TARGET_HOST})..."
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
+            set -e
+            cd ${TARGET_DIR}
+            if [ ! -f .env ]; then
+              echo 'Creating initial .env from template...'
+              cp .env.example .env
+            fi
+            echo '--- Starting containers via Docker Compose ---'
+            docker compose up -d
+            echo '--- Pruning obsolete dangling images ---'
+            docker image prune -f
+            echo '--- Testing Container Status ---'
+            docker compose ps
+          "
+
+      - name: Verify Testing API Health Probe
+        run: |
+          echo "==> Verifying Testing API Health Probe..."
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
+            echo 'Waiting for testing services to initialize...'
+            for i in \$(seq 1 15); do
+              if curl -s -f http://127.0.0.1:4000/api/v1/health >/dev/null 2>&1; then
+                echo 'SUCCESS: Testing API is healthy and operational!'
+                exit 0
+              fi
+              echo 'Probing API health (attempt '\$i'/15)...'
+              sleep 3
+            done
+            echo 'WARNING: Health probe timeout; check container logs with: docker compose logs api'
+          "
