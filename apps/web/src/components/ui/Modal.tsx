@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -37,6 +38,12 @@ export function Modal({
   children,
   maxWidth = 'max-w-md',
 }: ModalProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -51,11 +58,11 @@ export function Modal({
 
   const resolvedMaxWidth = MAX_WIDTH_MAP[maxWidth] || maxWidth || 'max-w-md';
 
-  return (
+  const modalContent = (
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs animate-fluid-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/25 p-4 backdrop-blur-xs animate-fluid-fade-in transition-colors dark:bg-black/65"
     >
       <div
         className={`w-full ${resolvedMaxWidth} max-h-[90vh] flex flex-col rounded-2xl border border-neutral-200/80 bg-white p-5 sm:p-6 shadow-2xl animate-fluid-scale dark:border-neutral-800 dark:bg-black transition-colors`}
@@ -80,4 +87,10 @@ export function Modal({
       </div>
     </div>
   );
+
+  if (typeof document !== 'undefined' && mounted) {
+    return createPortal(modalContent, document.body);
+  }
+
+  return modalContent;
 }
