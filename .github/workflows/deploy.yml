@@ -87,39 +87,23 @@ jobs:
         run: |
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "mkdir -p ${TARGET_DIR}"
 
-      - name: Sync Configuration and Compose Files
+      - name: Transfer Compose Configuration Only (Zero Source Code)
         run: |
-          echo "==> Syncing deployment files to Production (${TARGET_HOST})..."
-          if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
-            echo "Using rsync over SSH..."
-            rsync -avz \
-              --exclude '.git' \
-              --exclude 'node_modules' \
-              --exclude '.next' \
-              --exclude 'dist' \
-              --exclude 'coverage' \
-              --exclude '.env' \
-              -e "ssh ${SSH_OPTS}" \
-              ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
-          else
-            echo "Using streaming tar over SSH..."
-            tar \
-              --exclude='.git' \
-              --exclude='node_modules' \
-              --exclude='.next' \
-              --exclude='dist' \
-              --exclude='coverage' \
-              --exclude='.env' \
-              -czf - . | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
-          fi
+          echo "==> Transferring docker-compose.yml and .env.example to Production (${TARGET_HOST})..."
+          scp ${SSH_OPTS} docker-compose.yml .env.example ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
-      - name: Pull and Deploy Images on Production Server
+      - name: Pull Images and Launch Production Containers
         run: |
           IMAGE_PREFIX=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          echo "==> Deploying to Production (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
+          echo "==> Deploying on Production (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
 
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
             set -e
+            cd ${TARGET_DIR}
+
+            echo '--- Cleaning up any legacy source code directories ---'
+            rm -rf apps packages infrastructure docs screenshots scripts .github Dockerfile tsconfig*.json pnpm-*.yaml
+
             echo '--- Authenticating with GitHub Container Registry (ghcr.io) ---'
             echo '${GITHUB_TOKEN}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
 
@@ -133,14 +117,13 @@ jobs:
             docker tag ${IMAGE_PREFIX}/worker:latest mikrotik-billing-worker:latest
             docker tag ${IMAGE_PREFIX}/web:latest mikrotik-billing-web:latest
 
-            cd ${TARGET_DIR}
             if [ ! -f .env ]; then
               echo 'Creating initial .env from template...'
               cp .env.example .env
             fi
 
             echo '--- Starting containers via Docker Compose ---'
-            docker compose up -d
+            docker compose up -d --no-build
 
             echo '--- Pruning obsolete dangling images ---'
             docker image prune -f
@@ -194,39 +177,23 @@ jobs:
         run: |
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "mkdir -p ${TARGET_DIR}"
 
-      - name: Sync Configuration and Compose Files
+      - name: Transfer Compose Configuration Only (Zero Source Code)
         run: |
-          echo "==> Syncing deployment files to Testing (${TARGET_HOST})..."
-          if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
-            echo "Using rsync over SSH..."
-            rsync -avz \
-              --exclude '.git' \
-              --exclude 'node_modules' \
-              --exclude '.next' \
-              --exclude 'dist' \
-              --exclude 'coverage' \
-              --exclude '.env' \
-              -e "ssh ${SSH_OPTS}" \
-              ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
-          else
-            echo "Using streaming tar over SSH..."
-            tar \
-              --exclude='.git' \
-              --exclude='node_modules' \
-              --exclude='.next' \
-              --exclude='dist' \
-              --exclude='coverage' \
-              --exclude='.env' \
-              -czf - . | ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
-          fi
+          echo "==> Transferring docker-compose.yml and .env.example to Testing (${TARGET_HOST})..."
+          scp ${SSH_OPTS} docker-compose.yml .env.example ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
-      - name: Pull and Deploy Images on Testing Server
+      - name: Pull Images and Launch Testing Containers
         run: |
           IMAGE_PREFIX=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           echo "==> Deploying to Testing (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
 
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
             set -e
+            cd ${TARGET_DIR}
+
+            echo '--- Cleaning up any legacy source code directories ---'
+            rm -rf apps packages infrastructure docs screenshots scripts .github Dockerfile tsconfig*.json pnpm-*.yaml
+
             echo '--- Authenticating with GitHub Container Registry (ghcr.io) ---'
             echo '${GITHUB_TOKEN}' | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
 
@@ -240,14 +207,13 @@ jobs:
             docker tag ${IMAGE_PREFIX}/worker:latest mikrotik-billing-worker:latest
             docker tag ${IMAGE_PREFIX}/web:latest mikrotik-billing-web:latest
 
-            cd ${TARGET_DIR}
             if [ ! -f .env ]; then
               echo 'Creating initial .env from template...'
               cp .env.example .env
             fi
 
             echo '--- Starting containers via Docker Compose ---'
-            docker compose up -d
+            docker compose up -d --no-build
 
             echo '--- Pruning obsolete dangling images ---'
             docker image prune -f

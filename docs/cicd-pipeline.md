@@ -68,7 +68,26 @@ In GitHub Actions, workflow artifacts (`actions/upload-artifact` and `actions/do
 
 ---
 
-## 3. Security & Authentication
+## 3. Zero Source Code Footprint on Target Servers
+
+A key architectural advantage of containerized cloud builds is that **production and testing servers never receive raw source code**:
+
+```text
+Target Server Directory (/home/ratul/docker/mikrotik-billing-system/):
+├── docker-compose.yml       # Orchestrates container lifecycles & port bindings
+├── .env                     # Server secrets (encryption keys, DB passwords)
+└── .env.example             # Initial template if .env does not exist yet
+```
+
+### Why No Source Code is Needed:
+1. **Self-Contained Images**: The NestJS REST API, Next.js web application, BullMQ worker, and Prisma client are compiled inside the Docker images during the GitHub cloud build.
+2. **Enhanced Security**: Production servers do not store source code, Git history, TypeScript configurations, test suites, or development dependencies.
+3. **Instant Deployment Speed**: Instead of transferring thousands of files over SSH, the runner transfers only `docker-compose.yml` (a few kilobytes) in milliseconds.
+4. **Clean Filesystem**: The deployment step automatically prunes any legacy source directories (`apps`, `packages`, `infrastructure`, etc.) left behind from earlier build styles.
+
+---
+
+## 4. Security & Authentication
 
 ### Automatic Single-Use Authentication via `GITHUB_TOKEN`
 The pipeline uses GitHub's built-in ephemeral `GITHUB_TOKEN` (`permissions: packages: write`). During deployment, the runner passes the token to the target server via SSH:
