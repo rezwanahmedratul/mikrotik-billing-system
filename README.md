@@ -12,113 +12,29 @@ A modern, multi-tenant ISP billing system and automated MikroTik RouterOS orches
 
 ---
 
-## Visual Platform Tour (Dark & Light Theme)
+## Visual Platform Highlights
 
-### 1. Operations Command Center (Dashboard)
-Real-time fleet health, 24-hour granular live aggregated PPPoE network throughput telemetry, monthly ledger collection rates, active tariff distribution, and quick cashier actions.
+Here is a glimpse of the platform in both dark and light modes, featuring our bespoke monochrome design system, fluid spring animations, and real-time network telemetry:
 
-| Dark Theme (Default) | Light Theme |
+| Operations Command Center (Dark Theme) | Operations Command Center (Light Theme) |
 |:---:|:---:|
 | ![Dashboard Dark](screenshots/dashboard-dark.png) | ![Dashboard Light](screenshots/dashboard-light.png) |
 
----
-
-### 2. MikroTik Router Gateways Fleet
-Centralized management of physical CCR appliances, virtual CHRs, and RB-series devices with live CPU/RAM telemetry, connection diagnostic testing, socket health sync, and ROS version tracking.
-
-| Dark Theme | Light Theme |
+| MikroTik Router Gateways Fleet | Guided Zero-Downtime PPPoE Wizard |
 |:---:|:---:|
-| ![Routers Fleet Dark](screenshots/routers-dark.png) | ![Routers Fleet Light](screenshots/routers-light.png) |
+| ![Routers Fleet Dark](screenshots/routers-dark.png) | ![PPPoE Wizard Dark](screenshots/router-pppoe-wizard-dark.png) |
 
----
+<br />
 
-### 3. Guided Zero-Downtime PPPoE Setup Wizard
-Step-by-step interactive configuration wizard for RouterOS devices. Automatically provisions IP pools, PPPoE server services, authentication profiles, and firewall rules with pre-execution dry-run diff safety inspection.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![PPPoE Wizard Dark](screenshots/router-pppoe-wizard-dark.png) | ![PPPoE Wizard Light](screenshots/router-pppoe-wizard-light.png) |
-
----
-
-### 4. Subscriber Management & Detailed 360° Profile
-Customer directory with advanced filtering, real-time service statuses, assigned bandwidth plans, live interface telemetry, billing ledger balances, and payment transaction logs.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Subscribers List Dark](screenshots/subscribers-dark.png) | ![Subscribers List Light](screenshots/subscribers-light.png) |
-| ![Subscriber Detail Dark](screenshots/subscriber-detail-dark.png) | ![Subscriber Detail Light](screenshots/subscriber-detail-light.png) |
-
----
-
-### 5. Live PPPoE Active Sessions
-Real-time subscriber tunnel monitoring polled via MikroTik API `/interface/monitor-traffic`, session duration brackets, core gateway load distribution, and one-click remote session disconnection.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Sessions Dark](screenshots/sessions-dark.png) | ![Sessions Light](screenshots/sessions-light.png) |
-
----
-
-### 6. Bandwidth Tariff Packages & Pool Allocation
-Broadband rate card management with symmetrical/asymmetrical speeds, burst limits, priority levels, RouterOS PPP profile associations, and pool capacity tracking.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Packages Dark](screenshots/packages-dark.png) | ![Packages Light](screenshots/packages-light.png) |
-
----
-
-### 7. Invoices, Billing Cycles & Recurring Runs
-Automated recurring invoice generation, prorated billing runs, overdue aging calculations, payment recordings, and printable thermal cashier receipts.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Invoices Dark](screenshots/invoices-dark.png) | ![Invoices Light](screenshots/invoices-light.png) |
-| ![Billing Runs Dark](screenshots/billing-runs-dark.png) | ![Billing Runs Light](screenshots/billing-runs-light.png) |
-
----
-
-### 8. Subscriber Service Lifecycle & Grace Policies
-Automated suspension rules for overdue balances, customizable grace periods, non-destructive speed throttling profiles, and manual administrative overrides.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Lifecycle Dark](screenshots/lifecycle-dark.png) | ![Lifecycle Light](screenshots/lifecycle-light.png) |
-
----
-
-### 9. Financial Collections & Audit Trail Logs
-Visual revenue channel breakdowns (bKash, Nagad, Bank, Cash), daily collection volume trends, monthly collection rates, and immutable tenant-scoped audit trails.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Collections Dark](screenshots/reports-collections-dark.png) | ![Collections Light](screenshots/reports-collections-light.png) |
-| ![Audit Trail Dark](screenshots/reports-audit-dark.png) | ![Audit Trail Light](screenshots/reports-audit-light.png) |
-
----
-
-### 10. SMS Alerts, Staff Roles & System Settings
-Multi-channel SMS template editor, cashier invite workflows, role-based access permissions, and ISP tenant branding settings.
-
-| Dark Theme | Light Theme |
-|:---:|:---:|
-| ![Notifications Dark](screenshots/notifications-dark.png) | ![Notifications Light](screenshots/notifications-light.png) |
-| ![Staff Roles Dark](screenshots/staff-dark.png) | ![Staff Roles Light](screenshots/staff-light.png) |
-| ![Settings Dark](screenshots/settings-dark.png) | ![Settings Light](screenshots/settings-light.png) |
-
----
-
-### 11. Modal Dialogs & Operational Workflows
-
-| Action | Dark Theme | Light Theme |
-|---|:---:|:---:|
-| **Record Payment** | ![Record Payment Dark](screenshots/modal-record-payment-dark.png) | ![Record Payment Light](screenshots/modal-record-payment-light.png) |
-| **Printable Receipt** | ![Invoice Receipt Dark](screenshots/modal-invoice-receipt-dark.png) | ![Invoice Receipt Light](screenshots/modal-invoice-receipt-light.png) |
-| **Register Router** | ![Register Router Dark](screenshots/modal-register-router-dark.png) | ![Register Router Light](screenshots/modal-register-router-light.png) |
-| **Router Diagnostics** | ![Diagnostic Test Dark](screenshots/modal-router-test-result-dark.png) | ![Diagnostic Test Light](screenshots/modal-router-test-result-light.png) |
-| **Add Subscriber** | ![Add Subscriber Dark](screenshots/modal-add-subscriber-dark.png) | ![Add Subscriber Light](screenshots/modal-add-subscriber-light.png) |
-| **Disconnect Session** | ![Disconnect Session Dark](screenshots/modal-disconnect-session-dark.png) | ![Disconnect Session Light](screenshots/modal-disconnect-session-light.png) |
+<div align="center">
+  <a href="SCREENSHOTS.md">
+    <img src="https://img.shields.io/badge/📸_VIEW_FULL_SCREENSHOT_GALLERY_(42+_VIEWS)-000000?style=for-the-badge&logoColor=white" alt="View All Screenshots" height="42" />
+  </a>
+  <p>
+    <strong><a href="SCREENSHOTS.md">👉 Click here to view all 42+ screenshots in SCREENSHOTS.md (Dark & Light Themes) →</a></strong><br />
+    <em>Explore all modules including Subscribers 360°, Live Sessions, Invoices, Billing Cycles, Service Lifecycle, Reports, and Interactive Dialogs.</em>
+  </p>
+</div>
 
 ---
 
