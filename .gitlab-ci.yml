@@ -1,0 +1,220 @@
+# ==============================================================================
+# GitLab CI/CD Pipeline - MikroTik ISP Billing & Operations Platform
+# ==============================================================================
+# Architecture Overview:
+#   - Runner: Self-hosted runner (tag: self-hosted-linux, user: gitlab-runner)
+#   - Runner Constraint: The runner server does NOT build any Docker images.
+#   - Image Builder Server: ratul@10.0.0.79
+#       * Runner SSHs into 10.0.0.79
+#       * Builds images with host networking (--network=host)
+#   - Production Server:    ratul@10.0.0.76
+#       * Triggered on pushes to the 'main' branch
+#       * Images streamed builder (10.0.0.79) -> production (10.0.0.76)
+#       * Launched via Docker Compose in host network mode
+#   - Testing Server:       ratul@10.0.0.78
+#       * Triggered on pushes to the 'development' branch
+#       * Images streamed builder (10.0.0.79) -> testing (10.0.0.78)
+#       * Launched via Docker Compose in host network mode
+# ==============================================================================
+
+variables:
+  # Image Builder Server
+  BUILDER_HOST: "10.0.0.79"
+  BUILDER_USER: "ratul"
+  BUILDER_DIR: "/home/ratul/docker/mikrotik-billing-system"
+
+  # Production Environment (main branch)
+  PROD_HOST: "10.0.0.76"
+  PROD_USER: "ratul"
+  PROD_DIR: "/home/ratul/docker/mikrotik-billing-system"
+
+  # Testing Environment (development branch)
+  TEST_HOST: "10.0.0.78"
+  TEST_USER: "ratul"
+  TEST_DIR: "/home/ratul/docker/mikrotik-billing-system"
+
+  # Non-interactive SSH automation flags
+  SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=15"
+
+stages:
+  - build
+  - deploy
+
+default:
+  tags:
+    - self-hosted-linux
+
+# ------------------------------------------------------------------------------
+# 1. BUILD STAGE (Runs on Image Builder: ratul@10.0.0.79 via SSH)
+# ------------------------------------------------------------------------------
+
+.build_template:
+  stage: build
+  script:
+    - echo "===================================================================="
+    - echo "  Triggering Remote Build on Image Builder (${BUILDER_USER}@${BUILDER_HOST})"
+    - echo "  Branch: ${CI_COMMIT_REF_NAME} | Commit: ${CI_COMMIT_SHORT_SHA}"
+    - echo "===================================================================="
+    # 1. Ensure target directory exists on image-builder server
+    - ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "mkdir -p ${BUILDER_DIR}"
+
+    # 2. Sync workspace files to image builder (supports rsync with tar fallback)
+    - echo "==> Syncing repository files to image builder (${BUILDER_HOST})..."
+    - |
+      if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "command -v rsync" >/dev/null 2>&1; then
+        echo "Using rsync over SSH..."
+        rsync -avz --delete \
+          --exclude '.git' \
+          --exclude 'node_modules' \
+          --exclude '.next' \
+          --exclude 'dist' \
+          --exclude 'coverage' \
+          -e "ssh ${SSH_OPTS}" \
+          ./ ${BUILDER_USER}@${BUILDER_HOST}:${BUILDER_DIR}/
+      else
+        echo "Using tar streaming over SSH..."
+        tar --exclude='.git' --exclude='node_modules' --exclude='.next' --exclude='dist' --exclude='coverage' -czf - . | \
+          ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "tar -xzf - -C ${BUILDER_DIR}"
+      fi
+
+    # 3. Build Docker images on image builder with host networking
+    - echo "==> Executing Docker builds on ${BUILDER_HOST} with host networking..."
+    - |
+      ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "
+        set -e
+        cd ${BUILDER_DIR}
+        echo '--- Building API Image (mikrotik-billing-api:latest) ---'
+        docker build --network=host --target api -t mikrotik-billing-api:latest .
+        echo '--- Building Worker Image (mikrotik-billing-worker:latest) ---'
+        docker build --network=host --target worker -t mikrotik-billing-worker:latest .
+        echo '--- Building Web UI Image (mikrotik-billing-web:latest) ---'
+        docker build --network=host --target web -t mikrotik-billing-web:latest .
+        echo '--- Cleaning dangling build cache layers ---'
+        docker image prune -f
+        echo '--- Verifying built images on ${BUILDER_HOST} ---'
+        docker images | grep mikrotik-billing
+      "
+    - echo "==> Image build completed successfully on ${BUILDER_HOST}."
+
+# Build job for Main branch (Production)
+build:production:
+  extends: .build_template
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# Build job for Development branch (Testing)
+build:testing:
+  extends: .build_template
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'
+
+# ------------------------------------------------------------------------------
+# 2. DEPLOY TEMPLATE (Streams images builder -> target, launches Compose)
+# ------------------------------------------------------------------------------
+
+.deploy_template:
+  stage: deploy
+  script:
+    - echo "===================================================================="
+    - echo "  Deploying to ${DEPLOY_ENV_NAME} Server (${TARGET_USER}@${TARGET_HOST})"
+    - echo "  Branch: ${CI_COMMIT_REF_NAME} | Commit: ${CI_COMMIT_SHORT_SHA}"
+    - echo "===================================================================="
+    # 1. Ensure target directory exists on target server
+    - ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "mkdir -p ${TARGET_DIR}"
+
+    # 2. Sync deployment compose and config files to target server
+    - echo "==> Syncing configuration files to ${TARGET_HOST}..."
+    - |
+      if command -v rsync >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v rsync" >/dev/null 2>&1; then
+        echo "Using rsync over SSH..."
+        rsync -avz \
+          --exclude '.git' \
+          --exclude 'node_modules' \
+          --exclude '.next' \
+          --exclude '.env' \
+          -e "ssh ${SSH_OPTS}" \
+          ./ ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
+      else
+        echo "Using tar streaming over SSH..."
+        tar --exclude='.git' --exclude='node_modules' --exclude='.next' --exclude='.env' -czf - . | \
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "tar -xzf - -C ${TARGET_DIR}"
+      fi
+
+    # 3. Stream built Docker images from image builder (10.0.0.79) to target server
+    - echo "==> Streaming Docker images from builder (${BUILDER_HOST}) to target (${TARGET_HOST})..."
+    - |
+      set -o pipefail
+      if ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "command -v gzip" >/dev/null 2>&1 && ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "command -v gunzip" >/dev/null 2>&1; then
+        echo "Streaming compressed Docker images (gzip)..."
+        ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "docker save mikrotik-billing-api:latest mikrotik-billing-worker:latest mikrotik-billing-web:latest | gzip -1" | \
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "gunzip | docker load"
+      else
+        echo "Streaming uncompressed Docker images..."
+        ssh ${SSH_OPTS} ${BUILDER_USER}@${BUILDER_HOST} "docker save mikrotik-billing-api:latest mikrotik-billing-worker:latest mikrotik-billing-web:latest" | \
+          ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "docker load"
+      fi
+
+    # 4. Ensure target .env exists and launch containers in host mode
+    - echo "==> Launching services on target server (${TARGET_HOST})..."
+    - |
+      ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
+        set -e
+        cd ${TARGET_DIR}
+        if [ ! -f .env ]; then
+          echo 'Creating initial .env from template...'
+          cp .env.example .env
+        fi
+        echo '--- Starting containers via Docker Compose ---'
+        docker compose up -d
+        echo '--- Pruning obsolete dangling images ---'
+        docker image prune -f
+        echo '--- Container Status ---'
+        docker compose ps
+      "
+
+    # 5. Healthcheck verification probe
+    - echo "==> Verifying API health probe..."
+    - |
+      ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
+        echo 'Waiting for services to initialize...'
+        for i in \$(seq 1 15); do
+          if curl -s -f http://127.0.0.1:4000/api/v1/health >/dev/null 2>&1; then
+            echo \"SUCCESS: ${DEPLOY_ENV_NAME} API is healthy and operational!\"
+            exit 0
+          fi
+          echo \"Probing API health (attempt \$i/15)...\"
+          sleep 3
+        done
+        echo 'WARNING: Health probe timeout; check container logs with: docker compose logs api'
+      "
+    - echo "==> ${DEPLOY_ENV_NAME} deployment completed successfully!"
+
+# ------------------------------------------------------------------------------
+# 3. DEPLOY JOBS (Production from 'main', Testing from 'development')
+# ------------------------------------------------------------------------------
+
+deploy:production:
+  extends: .deploy_template
+  variables:
+    TARGET_HOST: ${PROD_HOST}
+    TARGET_USER: ${PROD_USER}
+    TARGET_DIR: ${PROD_DIR}
+    DEPLOY_ENV_NAME: "PRODUCTION"
+  environment:
+    name: production
+    url: http://10.0.0.76:3000
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+deploy:testing:
+  extends: .deploy_template
+  variables:
+    TARGET_HOST: ${TEST_HOST}
+    TARGET_USER: ${TEST_USER}
+    TARGET_DIR: ${TEST_DIR}
+    DEPLOY_ENV_NAME: "TESTING"
+  environment:
+    name: testing
+    url: http://10.0.0.78:3000
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'

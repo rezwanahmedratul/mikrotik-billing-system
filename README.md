@@ -256,6 +256,21 @@ docker compose down -v
 
 ---
 
+## Automated GitLab CI/CD Pipeline
+
+The project includes an enterprise-grade automated CI/CD pipeline configuration ([`.gitlab-ci.yml`](.gitlab-ci.yml)) optimized for self-hosted multi-server environments:
+
+- **Self-Hosted Runner**: Tagged `self-hosted-linux` (user `gitlab-runner`). **Zero Docker builds executed on the runner.**
+- **Remote Image Builder Server (`ratul@10.0.0.79`)**: Runner triggers remote builds with `--network=host` for maximum build reliability and network parity.
+- **Production Server (`ratul@10.0.0.76`)**: Pushes to `main` stream images directly from the builder to production and launch with `docker compose up -d`.
+- **Testing Server (`ratul@10.0.0.78`)**: Pushes to `development` stream images directly to the testing server and launch with `docker compose up -d`.
+- **Zero External Registry Overhead**: Images are streamed directly between servers over SSH (`docker save | gzip -1 | gunzip | docker load`), requiring no Docker Hub or GitLab Container Registry credentials.
+- **Automated Health Probes**: Validates API connectivity against `/api/v1/health` after every deployment.
+
+👉 Read the full architecture and setup guide in [**`docs/cicd-pipeline.md`**](docs/cicd-pipeline.md).
+
+---
+
 ## Local Development (Non-Docker)
 
 If you prefer running services directly on your host machine:
