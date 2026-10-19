@@ -40,7 +40,7 @@ Here is a glimpse of the platform in both dark and light modes, featuring our be
 
 ## Core Capabilities
 
-- **MikroTik RouterOS Integration**: Supports RouterOS v6 and v7 via REST HTTPS, API-SSL, and Plaintext API sockets.
+- **MikroTik RouterOS Integration**: Supports RouterOS v6 and v7 also CHR via REST HTTPS, API-SSL, and Plaintext API sockets.
 - **PPPoE Automation**: Dynamic secret creation, profile provisioning, queue shaping, grace-period speed throttling, and session disconnection.
 - **Automated Recurring Billing Engine**: Automated monthly invoice dispatching, partial/full payment reconciliations, and overdue interest calculators.
 - **Payment Gateways**: Native integration support for bKash, Nagad, Rocket, SSLCommerz, and manual cashier cash receipting.
