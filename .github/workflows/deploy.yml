@@ -152,19 +152,19 @@ jobs:
           "
 
   # ============================================================================
-  # 3. DEPLOY STAGE - TESTING (ratul@10.0.0.78 from 'development')
+  # 3. DEPLOY STAGE - DEVELOPMENT (ratul@10.0.0.86 from 'development')
   # ============================================================================
-  deploy-testing:
-    name: Deploy to Testing (ratul@10.0.0.78)
+  deploy-development:
+    name: Deploy to Development (ratul@10.0.0.86)
     needs: build
     runs-on: self-hosted
     timeout-minutes: 15
     if: github.ref == 'refs/heads/development'
     environment:
-      name: testing
-      url: http://10.0.0.78:3000
+      name: development
+      url: http://10.0.0.86:3000
     env:
-      TARGET_HOST: "10.0.0.78"
+      TARGET_HOST: "10.0.0.86"
       TARGET_USER: "ratul"
       TARGET_DIR: "/home/ratul/docker/mikrotik-billing-system"
       SSH_OPTS: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=15"
@@ -173,19 +173,19 @@ jobs:
       - name: Checkout Code on Runner
         uses: actions/checkout@v4
 
-      - name: Ensure Testing Directory Exists
+      - name: Ensure Development Directory Exists
         run: |
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "mkdir -p ${TARGET_DIR}"
 
       - name: Transfer Compose Configuration Only (Zero Source Code)
         run: |
-          echo "==> Transferring docker-compose.yml and .env.example to Testing (${TARGET_HOST})..."
+          echo "==> Transferring docker-compose.yml and .env.example to Development (${TARGET_HOST})..."
           scp ${SSH_OPTS} docker-compose.yml .env.example ${TARGET_USER}@${TARGET_HOST}:${TARGET_DIR}/
 
-      - name: Pull Images and Launch Testing Containers
+      - name: Pull Images and Launch Development Containers
         run: |
           IMAGE_PREFIX=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
-          echo "==> Deploying to Testing (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
+          echo "==> Deploying to Development (${TARGET_HOST}) with image prefix: ${IMAGE_PREFIX}..."
 
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
             set -e
@@ -213,7 +213,18 @@ jobs:
             fi
 
             echo '--- Starting containers via Docker Compose ---'
-            docker compose up -d --no-build
+            if ! docker compose up -d --no-build; then
+              echo '========================================================'
+              echo 'ERROR: docker compose up failed. Dumping container logs:'
+              echo '========================================================'
+              docker compose logs postgres || true
+              docker compose logs redis || true
+              docker compose logs api || true
+              docker compose logs worker || true
+              docker compose logs web || true
+              docker ps -a || true
+              exit 1
+            fi
 
             echo '--- Pruning obsolete dangling images ---'
             docker image prune -f
@@ -221,22 +232,46 @@ jobs:
             echo '--- Logging out of ghcr.io ---'
             docker logout ghcr.io || true
 
-            echo '--- Testing Container Status ---'
+            echo '--- Development Container Status ---'
             docker compose ps
           "
 
-      - name: Verify Testing API Health Probe
+      - name: Verify Development Health Probes
         run: |
-          echo "==> Verifying Testing API Health Probe..."
+          echo "==> Verifying Development Health Probes..."
           ssh ${SSH_OPTS} ${TARGET_USER}@${TARGET_HOST} "
-            echo 'Waiting for testing services to initialize...'
-            for i in \$(seq 1 15); do
+            echo 'Waiting for development services to initialize...'
+            API_HEALTHY=false
+            for i in \$(seq 1 30); do
               if curl -s -f http://127.0.0.1:4000/api/v1/health >/dev/null 2>&1; then
-                echo 'SUCCESS: Testing API is healthy and operational!'
-                exit 0
+                echo 'SUCCESS: Development Backend API is healthy and operational!'
+                API_HEALTHY=true
+                break
               fi
-              echo 'Probing API health (attempt '\$i'/15)...'
+              echo 'Probing API health (attempt '\$i'/30)...'
               sleep 3
             done
-            echo 'WARNING: Health probe timeout; check container logs with: docker compose logs api'
+
+            if [ \"\$API_HEALTHY\" != \"true\" ]; then
+              echo 'ERROR: Development Backend API failed health probe.'
+              docker compose logs api --tail=50 || true
+              exit 1
+            fi
+
+            WEB_HEALTHY=false
+            for i in \$(seq 1 20); do
+              if curl -s -f http://127.0.0.1:3000 >/dev/null 2>&1; then
+                echo 'SUCCESS: Development Frontend Web UI is healthy and operational!'
+                WEB_HEALTHY=true
+                break
+              fi
+              echo 'Probing Web UI health (attempt '\$i'/20)...'
+              sleep 2
+            done
+
+            if [ \"\$WEB_HEALTHY\" != \"true\" ]; then
+              echo 'ERROR: Development Frontend Web UI failed health probe.'
+              docker compose logs web --tail=50 || true
+              exit 1
+            fi
           "
