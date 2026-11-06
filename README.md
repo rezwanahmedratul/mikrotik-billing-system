@@ -263,7 +263,7 @@ The project includes an enterprise-grade automated CI/CD pipeline configuration 
 - **Cloud Image Builds**: GitHub cloud runners (`ubuntu-latest`) build the production Docker images (`api`, `worker`, `web`) and create a compressed transfer artifact. **Zero images are built on the action runner.**
 - **Self-Hosted Runner (`runs-on: self-hosted`)**: The action runner (running as `github-runner`) downloads the built images artifact and orchestrates deployment over your private LAN via SSH.
 - **Production Deployment (`ratul@10.0.0.76`)**: Pushes to `main` stream images directly to the production server and launch via `docker compose up -d`.
-- **Testing Deployment (`ratul@10.0.0.78`)**: Pushes to `development` stream images directly to the testing server and launch via `docker compose up -d`.
+- **Development Deployment (`ratul@10.0.0.86`)**: Pushes to `development` stream images directly to the development server and launch via `docker compose up -d`.
 - **Zero External Registry Overhead**: Images are streamed directly between machines over SSH (`cat images.tar.gz | ssh gunzip | docker load`), requiring no Docker Hub credentials or container registry setups on target servers.
 - **Automated Health Probes**: Validates API connectivity against `/api/v1/health` after every deployment.
 

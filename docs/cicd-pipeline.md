@@ -28,8 +28,8 @@ flowchart TD
         Prod["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3000 / API: 4000 / DB: 5432"]
     end
 
-    subgraph TestNode["Testing Server (ratul@10.0.0.78)"]
-        Test["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3000 / API: 4000 / DB: 5432"]
+    subgraph DevNode["Development Server (ratul@10.0.0.86)"]
+        Dev["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3000 / API: 4000 / DB: 5432"]
     end
 
     PushMain --> GHBuild
@@ -37,10 +37,10 @@ flowchart TD
     GHBuild --> Registry
 
     Registry -. "docker pull with layer cache" .-> Prod
-    Registry -. "docker pull with layer cache" .-> Test
+    Registry -. "docker pull with layer cache" .-> Dev
 
     Runner -- "main: SSH trigger pull & compose up -d" --> Prod
-    Runner -- "development: SSH trigger pull & compose up -d" --> Test
+    Runner -- "development: SSH trigger pull & compose up -d" --> Dev
 ```
 
 ### Server & Job Matrix
@@ -50,7 +50,7 @@ flowchart TD
 | **Build Job** | GitHub Hosted | `ubuntu-latest` | Builds Docker images and publishes to GitHub Container Registry (`ghcr.io`). | All pushes to `main` & `development` |
 | **Self-Hosted Runner** | Local Subnet | `github-runner` (`self-hosted`) | Connects via SSH to target servers to orchestrate pulls and restarts. **Builds zero images.** | After build completion |
 | **Production Server** | Production | `ratul@10.0.0.76` | Pulls images from `ghcr.io`, updates `.env`, launches Compose stack in host mode. | `main` branch |
-| **Testing Server** | Staging / QA | `ratul@10.0.0.78` | Pulls images from `ghcr.io`, updates `.env`, launches Compose stack in host mode. | `development` branch |
+| **Development Server** | Development | `ratul@10.0.0.86` | Pulls images from `ghcr.io`, updates `.env`, launches Compose stack in host mode. | `development` branch |
 
 ---
 
@@ -102,7 +102,7 @@ You **do not need to create or manage any Personal Access Tokens (PATs)** on you
 
 | Git Action | Target Branch | Pipeline Jobs Executed | Target Deployment |
 |---|---|---|---|
-| `git push origin development` | `development` | `build` $\rightarrow$ `deploy-testing` | **Testing Server** (`http://10.0.0.78:3000`) |
+| `git push origin development` | `development` | `build` $\rightarrow$ `deploy-development` | **Development Server** (`http://10.0.0.86:3000`) |
 | `git push origin main` | `main` | `build` $\rightarrow$ `deploy-production` | **Production Server** (`http://10.0.0.76:3000`) |
 | Manual Run (`workflow_dispatch`) | Selected branch | Runs build and deploys to the selected branch's environment | Dependent on branch |
 
@@ -117,19 +117,30 @@ You **do not need to create or manage any Personal Access Tokens (PATs)** on you
 # Production
 ssh ratul@10.0.0.76 "cd /home/ratul/docker/mikrotik-billing-system && docker compose ps"
 
-# Testing
-ssh ratul@10.0.0.78 "cd /home/ratul/docker/mikrotik-billing-system && docker compose ps"
+# Development
+ssh ratul@10.0.0.86 "cd /home/ratul/docker/mikrotik-billing-system && docker compose ps"
 ```
 
 #### 2. Streaming Container Logs:
 ```bash
+# Production
 ssh ratul@10.0.0.76 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f api"
 ssh ratul@10.0.0.76 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f worker"
 ssh ratul@10.0.0.76 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f web"
+
+# Development
+ssh ratul@10.0.0.86 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f api"
+ssh ratul@10.0.0.86 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f worker"
+ssh ratul@10.0.0.86 "cd /home/ratul/docker/mikrotik-billing-system && docker compose logs -f web"
 ```
 
 #### 3. Manual Health Endpoint Probe:
 ```bash
+# Production
 curl -I http://10.0.0.76:4000/api/v1/health
+# Expected: HTTP/1.1 200 OK
+
+# Development
+curl -I http://10.0.0.86:4000/api/v1/health
 # Expected: HTTP/1.1 200 OK
 ```
