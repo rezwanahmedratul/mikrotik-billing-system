@@ -29,7 +29,7 @@ flowchart TD
     end
 
     subgraph DevNode["Development Server (ratul@10.0.0.86)"]
-        Dev["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3000 / API: 4000 / DB: 5432"]
+        Dev["Docker Compose (network_mode: host)\n- Pulls from ghcr.io with layer caching\n- Web: 3050 / API: 4000 / DB: 5432"]
     end
 
     PushMain --> GHBuild
@@ -102,7 +102,7 @@ You **do not need to create or manage any Personal Access Tokens (PATs)** on you
 
 | Git Action | Target Branch | Pipeline Jobs Executed | Target Deployment |
 |---|---|---|---|
-| `git push origin development` | `development` | `build` $\rightarrow$ `deploy-development` | **Development Server** (`http://10.0.0.86:3000`) |
+| `git push origin development` | `development` | `build` $\rightarrow$ `deploy-development` | **Development Server** (`http://10.0.0.86:3050`) |
 | `git push origin main` | `main` | `build` $\rightarrow$ `deploy-production` | **Production Server** (`http://10.0.0.76:3000`) |
 | Manual Run (`workflow_dispatch`) | Selected branch | Runs build and deploys to the selected branch's environment | Dependent on branch |
 

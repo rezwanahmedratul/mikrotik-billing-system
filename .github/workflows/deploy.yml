@@ -162,7 +162,7 @@ jobs:
     if: github.ref == 'refs/heads/development'
     environment:
       name: development
-      url: http://10.0.0.86:3000
+      url: http://10.0.0.86:3050
     env:
       TARGET_HOST: "10.0.0.86"
       TARGET_USER: "ratul"
@@ -210,6 +210,13 @@ jobs:
             if [ ! -f .env ]; then
               echo 'Creating initial .env from template...'
               cp .env.example .env
+            else
+              # Ensure WEB_PORT is set to 3050 to prevent port conflicts with other containers
+              if grep -q "^WEB_PORT=" .env; then
+                sed -i 's/^WEB_PORT=.*/WEB_PORT=3050/' .env
+              else
+                echo "WEB_PORT=3050" >> .env
+              fi
             fi
 
             echo '--- Starting containers via Docker Compose ---'
@@ -260,12 +267,12 @@ jobs:
 
             WEB_HEALTHY=false
             for i in \$(seq 1 20); do
-              if curl -s -f http://127.0.0.1:3000 >/dev/null 2>&1; then
-                echo 'SUCCESS: Development Frontend Web UI is healthy and operational!'
+              if curl -s -f http://127.0.0.1:3050 >/dev/null 2>&1; then
+                echo 'SUCCESS: Development Frontend Web UI is healthy and operational on port 3050!'
                 WEB_HEALTHY=true
                 break
               fi
-              echo 'Probing Web UI health (attempt '\$i'/20)...'
+              echo 'Probing Web UI health on port 3050 (attempt '\$i'/20)...'
               sleep 2
             done
 
