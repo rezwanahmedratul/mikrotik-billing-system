@@ -32,6 +32,8 @@ pipeline {
         TEST_USER      = 'ratul'
         TEST_DIR       = '/home/ratul/docker/mikrotik-billing-system'
 
+        POSTGRES_IMAGE = 'postgres:16-alpine'
+        REDIS_IMAGE    = 'redis:7-alpine'
         API_IMAGE      = 'mikrotik-billing-api'
         WORKER_IMAGE   = 'mikrotik-billing-worker'
         WEB_IMAGE      = 'mikrotik-billing-web'
@@ -62,6 +64,10 @@ pipeline {
                 script {
                     notifyGitHub('build', 'pending', "Building API, Worker & Web Docker images (tag: ${env.IMAGE_TAG})...")
                 }
+                echo "==> Pulling base infrastructure images (Postgres & Redis)..."
+                sh 'docker pull ${POSTGRES_IMAGE}'
+                sh 'docker pull ${REDIS_IMAGE}'
+
                 echo "==> Building API Docker image (tag: ${API_IMAGE}:${env.IMAGE_TAG})..."
                 sh 'docker build --network=host --target api -t ${API_IMAGE}:${IMAGE_TAG} .'
 
@@ -109,8 +115,8 @@ pipeline {
                         echo "==> Ensuring deployment directory exists on test server (${TEST_HOST})..."
                         ssh ${SSH_OPTS} ${SSH_USER}@${TEST_HOST} "mkdir -p ${TEST_DIR}"
 
-                        echo "==> Streaming built Docker images directly to test server (${TEST_HOST})..."
-                        docker save ${API_IMAGE}:${IMAGE_TAG} ${WORKER_IMAGE}:${IMAGE_TAG} ${WEB_IMAGE}:${IMAGE_TAG} | ssh ${SSH_OPTS} ${SSH_USER}@${TEST_HOST} "docker load"
+                        echo "==> Streaming Docker images directly to test server (${TEST_HOST})..."
+                        docker save ${API_IMAGE}:${IMAGE_TAG} ${WORKER_IMAGE}:${IMAGE_TAG} ${WEB_IMAGE}:${IMAGE_TAG} ${POSTGRES_IMAGE} ${REDIS_IMAGE} | ssh ${SSH_OPTS} ${SSH_USER}@${TEST_HOST} "docker load"
 
                         echo "==> Retagging deployed images to latest on test server (${TEST_HOST})..."
                         ssh ${SSH_OPTS} ${SSH_USER}@${TEST_HOST} "
