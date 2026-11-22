@@ -141,7 +141,18 @@ pipeline {
                             fi
 
                             echo 'Starting containers via Docker Compose...'
-                            docker compose up -d --no-build
+                            if ! docker compose up -d --no-build; then
+                                echo '========================================================'
+                                echo 'ERROR: docker compose up failed. Dumping container logs:'
+                                echo '========================================================'
+                                docker compose logs postgres || true
+                                docker compose logs redis || true
+                                docker compose logs api --tail=100 || true
+                                docker compose logs worker --tail=50 || true
+                                docker compose logs web --tail=50 || true
+                                docker ps -a || true
+                                exit 1
+                            fi
 
                             echo 'Pruning obsolete dangling images...'
                             docker image prune -f
