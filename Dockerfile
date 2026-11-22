@@ -8,7 +8,7 @@ WORKDIR /app
 
 RUN (apk add --no-cache openssl ca-certificates curl libc6-compat || \
      (sed -i 's/dl-cdn.alpinelinux.org/mirrors.edge.kernel.org/g' /etc/apk/repositories && apk add --no-cache openssl ca-certificates curl libc6-compat)) && \
-    (corepack enable && corepack prepare pnpm@12.14.0 --activate || npm install -g pnpm@12.14.0)
+    npm install -g pnpm@12.14.0
 
 ENV NODE_ENV=production
 
